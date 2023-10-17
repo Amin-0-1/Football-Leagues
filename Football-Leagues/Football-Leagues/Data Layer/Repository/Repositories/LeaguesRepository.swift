@@ -8,7 +8,7 @@
 import Foundation
 
 protocol LeaguesRepoInterface{
-    func fetch(completion:@escaping (Result<LeagueDataModel,Error>)->Void)
+    func fetch(endPoint:EndPoint,completion:@escaping (Result<LeagueDataModel,Error>)->Void)
 }
 class LeaguesReposiotory:LeaguesRepoInterface{
     
@@ -17,8 +17,9 @@ class LeaguesReposiotory:LeaguesRepoInterface{
     init(appRepo: RepositoryInterface!) {
         self.appRepo = appRepo
     }
-    
-    func fetch(completion: @escaping (Result<LeagueDataModel, Error>) -> Void) {
-        appRepo.fetch(completion: completion)
+
+    func fetch(endPoint: EndPoint, completion: @escaping (Result<LeagueDataModel, Error>) -> Void) {
+        appRepo.fetch(endPoint: endPoint, completion: completion)
     }
+    
 }

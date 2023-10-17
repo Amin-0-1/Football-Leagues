@@ -10,7 +10,7 @@ protocol APIClientProtocol{
     func execute<T:Codable>(request:EndPoint, completion:@escaping (Swift.Result<T,Error>)->Void)
 }
 
-class APIClient:NSObject, URLSessionDataDelegate, URLSessionTaskDelegate,APIClientProtocol{
+class APIClient:NSObject, URLSessionDataDelegate,APIClientProtocol{
     
     private var session: URLSession!
     
@@ -33,6 +33,7 @@ class APIClient:NSObject, URLSessionDataDelegate, URLSessionTaskDelegate,APIClie
                     completion(Result.failure(NetworkError.jsonParsingFailure(data: data)))
                     return
                 }
+                
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3){
                     completion(.success(model))
                 }
@@ -47,9 +48,4 @@ class APIClient:NSObject, URLSessionDataDelegate, URLSessionTaskDelegate,APIClie
         }
         task.resume()
     }
-    func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
-        let progress = Float(totalBytesSent) / Float(totalBytesExpectedToSend)
-        print("Upload progress: \(progress)")
-    }
-    
 }

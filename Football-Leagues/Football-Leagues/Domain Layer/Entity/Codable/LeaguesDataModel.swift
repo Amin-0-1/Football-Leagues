@@ -7,29 +7,39 @@
 
 import Foundation
 
-struct LeagueDataModel: Decodable {
+struct LeagueDataModel: Codable {
     let count: Int?
     let competitions: [Competition]
 }
 
-struct Competition: Decodable {
+struct Competition: Codable {
     let id: Int?
     let area: Area?
     let name, code, type: String?
     let emblem: String?
-    let currentSeason: CurrentSeason
-    let numberOfAvailableSeasons: Int
-    let lastUpdated: Date
+    let currentSeason: CurrentSeason?
+    let numberOfAvailableSeasons: Int?
+    let lastUpdated: String?
+    
+    enum CoodingKeys:String,CodingKey{
+        case id
+        case are
+        case name,code,type
+        case emblem
+        case currentSeason
+        case numberOfAvailableSeasons
+        case lastUpdated
+    }
 }
 
-struct Area: Decodable {
-    let id: Int
-    let name, code: String
+struct Area: Codable {
+    let id: Int?
+    let name, code: String?
     let flag: String?
 }
 
-struct CurrentSeason: Decodable {
-    let id: Int
-    let startDate, endDate: String
-    let currentMatchday: Int
+struct CurrentSeason: Codable {
+    let id: Int?
+    let startDate, endDate: String?
+    let currentMatchday: Int?
 }

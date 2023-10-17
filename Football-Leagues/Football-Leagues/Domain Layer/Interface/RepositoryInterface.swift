@@ -8,5 +8,5 @@
 import Foundation
 
 protocol RepositoryInterface{
-    func fetch<T:Decodable>(completion: @escaping (Result<T,Error>)->Void)
+    func fetch<T:Codable>(endPoint:EndPoint?,completion: @escaping (Result<T,Error>)->Void)
 }
