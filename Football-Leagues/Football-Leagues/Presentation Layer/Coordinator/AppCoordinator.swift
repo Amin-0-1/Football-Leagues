@@ -30,9 +30,7 @@ class AppCoordinator:Coordinator{
     }
     func start() {
         let vc = LeaguesViewController()
-        let appRepo = AppRepository(local: LocalDataSource(), remote: RemoteDataSource())
-        let repo = LeaguesReposiotory(appRepo: appRepo)
-        let usecase = LeaguesUsecase(leaguesRepo: repo)
+        let usecase = LeaguesUsecase()
         let viewModel = LeaguesViewModel(usecase: usecase)
         vc.viewModel = viewModel
         vc.coordinator = self

@@ -27,7 +27,6 @@ class LeaguesViewModel:LeaguesVMProtocol{
     private func bind(){
         input.onScreenAppeared.bind { [weak self] _ in
             guard let self = self else {return}
-            usecase.fetch()
         }.disposed(by: bag)
     }
 }

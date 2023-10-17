@@ -32,13 +32,6 @@
 		271EC4202ADE01380029B86C /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271EC41F2ADE01380029B86C /* NetworkError.swift */; };
 		271EC4242ADE02210029B86C /* LeaguesEndPoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271EC4232ADE02210029B86C /* LeaguesEndPoints.swift */; };
 		271EC4262ADE04D00029B86C /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271EC4252ADE04D00029B86C /* AppConfiguration.swift */; };
-		271EC42D2ADE8AF50029B86C /* RepositoryInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271EC42C2ADE8AF50029B86C /* RepositoryInterface.swift */; };
-		271EC4312ADE8E0E0029B86C /* LeaguesDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271EC4302ADE8E0E0029B86C /* LeaguesDataModel.swift */; };
-		271EC4332ADE92510029B86C /* AppRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271EC4322ADE92510029B86C /* AppRepository.swift */; };
-		271EC4352ADE94490029B86C /* LocalDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271EC4342ADE94490029B86C /* LocalDataSource.swift */; };
-		271EC4372ADE94620029B86C /* RemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271EC4362ADE94620029B86C /* RemoteDataSource.swift */; };
-		271EC43C2ADE9B1A0029B86C /* LeaguesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271EC43B2ADE9B1A0029B86C /* LeaguesRepository.swift */; };
-		271EC4412ADE9F310029B86C /* Connectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271EC4402ADE9F310029B86C /* Connectivity.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,13 +79,6 @@
 		271EC41F2ADE01380029B86C /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		271EC4232ADE02210029B86C /* LeaguesEndPoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaguesEndPoints.swift; sourceTree = "<group>"; };
 		271EC4252ADE04D00029B86C /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
-		271EC42C2ADE8AF50029B86C /* RepositoryInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryInterface.swift; sourceTree = "<group>"; };
-		271EC4302ADE8E0E0029B86C /* LeaguesDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaguesDataModel.swift; sourceTree = "<group>"; };
-		271EC4322ADE92510029B86C /* AppRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRepository.swift; sourceTree = "<group>"; };
-		271EC4342ADE94490029B86C /* LocalDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataSource.swift; sourceTree = "<group>"; };
-		271EC4362ADE94620029B86C /* RemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDataSource.swift; sourceTree = "<group>"; };
-		271EC43B2ADE9B1A0029B86C /* LeaguesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaguesRepository.swift; sourceTree = "<group>"; };
-		271EC4402ADE9F310029B86C /* Connectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connectivity.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,7 +162,6 @@
 		271EC3E82ADDBD3C0029B86C /* Application */ = {
 			isa = PBXGroup;
 			children = (
-				271EC43D2ADE9EDD0029B86C /* Common */,
 				271EC3B52ADDBB450029B86C /* AppDelegate.swift */,
 				271EC3B72ADDBB450029B86C /* SceneDelegate.swift */,
 				271EC4252ADE04D00029B86C /* AppConfiguration.swift */,
@@ -285,7 +270,6 @@
 		271EC40E2ADDF5F80029B86C /* Interface */ = {
 			isa = PBXGroup;
 			children = (
-				271EC42C2ADE8AF50029B86C /* RepositoryInterface.swift */,
 			);
 			path = Interface;
 			sourceTree = "<group>";
@@ -301,8 +285,6 @@
 		271EC4102ADDF60A0029B86C /* Entity */ = {
 			isa = PBXGroup;
 			children = (
-				271EC42F2ADE8B9D0029B86C /* Custom */,
-				271EC42E2ADE8B920029B86C /* Codable */,
 			);
 			path = Entity;
 			sourceTree = "<group>";
@@ -319,8 +301,6 @@
 		271EC4132ADDF6920029B86C /* Repository */ = {
 			isa = PBXGroup;
 			children = (
-				271EC4392ADE9AB70029B86C /* Shared */,
-				271EC43A2ADE9AC10029B86C /* Repositories */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -351,87 +331,6 @@
 				271EC4232ADE02210029B86C /* LeaguesEndPoints.swift */,
 			);
 			path = EndPoints;
-			sourceTree = "<group>";
-		};
-		271EC42A2ADE8AE00029B86C /* Local */ = {
-			isa = PBXGroup;
-			children = (
-				271EC4342ADE94490029B86C /* LocalDataSource.swift */,
-			);
-			path = Local;
-			sourceTree = "<group>";
-		};
-		271EC42B2ADE8AE30029B86C /* Remote */ = {
-			isa = PBXGroup;
-			children = (
-				271EC4362ADE94620029B86C /* RemoteDataSource.swift */,
-			);
-			path = Remote;
-			sourceTree = "<group>";
-		};
-		271EC42E2ADE8B920029B86C /* Codable */ = {
-			isa = PBXGroup;
-			children = (
-				271EC4302ADE8E0E0029B86C /* LeaguesDataModel.swift */,
-			);
-			path = Codable;
-			sourceTree = "<group>";
-		};
-		271EC42F2ADE8B9D0029B86C /* Custom */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Custom;
-			sourceTree = "<group>";
-		};
-		271EC4382ADE94890029B86C /* Interface */ = {
-			isa = PBXGroup;
-			children = (
-				271EC4322ADE92510029B86C /* AppRepository.swift */,
-			);
-			path = Interface;
-			sourceTree = "<group>";
-		};
-		271EC4392ADE9AB70029B86C /* Shared */ = {
-			isa = PBXGroup;
-			children = (
-				271EC4382ADE94890029B86C /* Interface */,
-				271EC42B2ADE8AE30029B86C /* Remote */,
-				271EC42A2ADE8AE00029B86C /* Local */,
-			);
-			path = Shared;
-			sourceTree = "<group>";
-		};
-		271EC43A2ADE9AC10029B86C /* Repositories */ = {
-			isa = PBXGroup;
-			children = (
-				271EC43B2ADE9B1A0029B86C /* LeaguesRepository.swift */,
-			);
-			path = Repositories;
-			sourceTree = "<group>";
-		};
-		271EC43D2ADE9EDD0029B86C /* Common */ = {
-			isa = PBXGroup;
-			children = (
-				271EC43F2ADE9F1A0029B86C /* Utility */,
-				271EC43E2ADE9EF00029B86C /* Extensions */,
-			);
-			path = Common;
-			sourceTree = "<group>";
-		};
-		271EC43E2ADE9EF00029B86C /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
-		271EC43F2ADE9F1A0029B86C /* Utility */ = {
-			isa = PBXGroup;
-			children = (
-				271EC4402ADE9F310029B86C /* Connectivity.swift */,
-			);
-			path = Utility;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -574,25 +473,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				271EC3F32ADDBFAD0029B86C /* AppCoordinator.swift in Sources */,
-				271EC4372ADE94620029B86C /* RemoteDataSource.swift in Sources */,
 				271EC4202ADE01380029B86C /* NetworkError.swift in Sources */,
 				271EC4052ADDCFBE0029B86C /* LeaguesViewModelProtocols.swift in Sources */,
-				271EC43C2ADE9B1A0029B86C /* LeaguesRepository.swift in Sources */,
 				271EC40A2ADDE6BF0029B86C /* LeaguesDetailsView.swift in Sources */,
 				271EC4242ADE02210029B86C /* LeaguesEndPoints.swift in Sources */,
 				271EC4182ADDFE3C0029B86C /* APIClient.swift in Sources */,
-				271EC4312ADE8E0E0029B86C /* LeaguesDataModel.swift in Sources */,
 				271EC41A2ADDFED00029B86C /* EndPoint.swift in Sources */,
 				271EC3C02ADDBB450029B86C /* Football_Leagues.xcdatamodeld in Sources */,
-				271EC4332ADE92510029B86C /* AppRepository.swift in Sources */,
-				271EC4412ADE9F310029B86C /* Connectivity.swift in Sources */,
-				271EC4352ADE94490029B86C /* LocalDataSource.swift in Sources */,
 				271EC3F82ADDC0E40029B86C /* LeaguesViewController.swift in Sources */,
 				271EC41E2ADDFFAD0029B86C /* ParameterEncoding.swift in Sources */,
 				271EC4262ADE04D00029B86C /* AppConfiguration.swift in Sources */,
 				271EC3FE2ADDCC870029B86C /* LeaguesViewModel.swift in Sources */,
 				271EC41C2ADDFF630029B86C /* HTTPMethods.swift in Sources */,
-				271EC42D2ADE8AF50029B86C /* RepositoryInterface.swift in Sources */,
 				271EC3B62ADDBB450029B86C /* AppDelegate.swift in Sources */,
 				271EC4162ADDF9A30029B86C /* LeaguesUsecase.swift in Sources */,
 				271EC3B82ADDBB450029B86C /* SceneDelegate.swift in Sources */,
