@@ -8,7 +8,6 @@
 import Foundation
 
 protocol LeaguesUsecaseProtocol{
-    
 }
 struct LeaguesUsecase : LeaguesUsecaseProtocol{
     
