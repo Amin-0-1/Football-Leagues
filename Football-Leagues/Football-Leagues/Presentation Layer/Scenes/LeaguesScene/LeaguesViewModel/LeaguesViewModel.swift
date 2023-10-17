@@ -21,12 +21,14 @@ class LeaguesViewModel:LeaguesVMProtocol{
         self.input = LeaguesVMInput()
         self.outPut = LeaguesVMOutput()
         self.usecase = usecase
+        bag = DisposeBag()
         bind()
     }
     
     private func bind(){
         input.onScreenAppeared.bind { [weak self] _ in
             guard let self = self else {return}
+            usecase.fetch()
         }.disposed(by: bag)
     }
 }
