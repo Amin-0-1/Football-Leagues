@@ -30,8 +30,9 @@ class AppCoordinator:Coordinator{
     }
     func start() {
         let vc = LeaguesViewController()
-        let viewModel = 
-        vc.viewModel =
+        let usecase = LeaguesUsecase()
+        let viewModel = LeaguesViewModel(usecase: usecase)
+        vc.viewModel = viewModel
         vc.coordinator = self
         self.navigationController.setViewControllers([vc], animated: false)
     }
