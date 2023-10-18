@@ -19,9 +19,10 @@ struct AppRepository:RepositoryInterface{
         self.remote = remote
     }
     
-    func fetch<T:Codable>(endPoint:EndPoint?,completion: @escaping (Result<T,Error>)->Void) {
+    func fetch<T:Codable>(endPoint:EndPoint?,completion: @escaping (Result<T,NetworkError>)->Void) {
         isConnected { connected in
-            connected ? remote.fetch(endPoint: endPoint,completion: completion) : local.fetch(endPoint:nil,completion: completion)
+            print(connected)
+            connected ? remote.fetch(endPoint: endPoint,completion: completion) : local.fetch(endPoint:endPoint,completion: completion)
         }
     }
 }

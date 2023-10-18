@@ -6,7 +6,7 @@
 //
 
 import Foundation
-public enum NetworkError: Error {
+public enum NetworkError: Error,CustomStringConvertible{
     case parametersNil
     case encodingFailed
     case missingURL
@@ -15,7 +15,8 @@ public enum NetworkError: Error {
     case invalidData
     case responseUnsuccessful
     case jsonParsingFailure(data: Data)
-    var localizedDescription: String {
+    case serialized(message:String)
+    public var description: String {
         switch self {
             case .parametersNil: return "Parameters were nil."
             case .encodingFailed: return "Parameters encoding failed."
@@ -25,6 +26,7 @@ public enum NetworkError: Error {
             case .responseUnsuccessful: return "Response Unsuccessful"
             case .jsonParsingFailure: return "JSON Parsing Failure"
             case .jsonConversionFailure: return "JSON Conversion Failure"
+            case .serialized(let str): return str
         }
     }
     

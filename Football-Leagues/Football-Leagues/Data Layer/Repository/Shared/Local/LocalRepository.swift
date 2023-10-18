@@ -9,7 +9,7 @@ import Foundation
 
 struct LocalRepository:RepositoryInterface{
     
-    func fetch<T:Decodable>(endPoint:EndPoint?,completion: @escaping (Result<T,Error>)->Void) {
+    func fetch<T:Decodable>(endPoint:EndPoint?,completion: @escaping (Result<T,NetworkError>)->Void) {
         
     }
 }

@@ -46,6 +46,11 @@
 		2740B2662ADEF0C800379194 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740B2652ADEF0C800379194 /* ActivityIndicator.swift */; };
 		2740B2692ADEF8DF00379194 /* LeaguesViewDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740B2682ADEF8DF00379194 /* LeaguesViewDataModel.swift */; };
 		2740B2712ADF499D00379194 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 2740B2702ADF499D00379194 /* SDWebImage */; };
+		2740B2732ADF512900379194 /* SeasonDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740B2722ADF512900379194 /* SeasonDataModel.swift */; };
+		2740B2782ADF53C200379194 /* LeaguesCompletions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740B2772ADF53C200379194 /* LeaguesCompletions.swift */; };
+		2740B27A2ADF557A00379194 /* TeamsDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740B2792ADF557A00379194 /* TeamsDataModel.swift */; };
+		2740B27C2ADF569D00379194 /* MatchesDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740B27B2ADF569D00379194 /* MatchesDataModel.swift */; };
+		2740B27E2ADFABEB00379194 /* CustomDomainError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740B27D2ADFABEB00379194 /* CustomDomainError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,6 +111,11 @@
 		2740B2632ADEEAB700379194 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		2740B2652ADEF0C800379194 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		2740B2682ADEF8DF00379194 /* LeaguesViewDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaguesViewDataModel.swift; sourceTree = "<group>"; };
+		2740B2722ADF512900379194 /* SeasonDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonDataModel.swift; sourceTree = "<group>"; };
+		2740B2772ADF53C200379194 /* LeaguesCompletions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaguesCompletions.swift; sourceTree = "<group>"; };
+		2740B2792ADF557A00379194 /* TeamsDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamsDataModel.swift; sourceTree = "<group>"; };
+		2740B27B2ADF569D00379194 /* MatchesDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesDataModel.swift; sourceTree = "<group>"; };
+		2740B27D2ADFABEB00379194 /* CustomDomainError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDomainError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -315,6 +325,7 @@
 		271EC4102ADDF60A0029B86C /* Entity */ = {
 			isa = PBXGroup;
 			children = (
+				2740B2762ADF539A00379194 /* Custom */,
 				271EC42E2ADE8B920029B86C /* Codable */,
 			);
 			path = Entity;
@@ -386,6 +397,9 @@
 			isa = PBXGroup;
 			children = (
 				271EC4302ADE8E0E0029B86C /* LeaguesDataModel.swift */,
+				2740B2722ADF512900379194 /* SeasonDataModel.swift */,
+				2740B2792ADF557A00379194 /* TeamsDataModel.swift */,
+				2740B27B2ADF569D00379194 /* MatchesDataModel.swift */,
 			);
 			path = Codable;
 			sourceTree = "<group>";
@@ -476,6 +490,15 @@
 				2740B2682ADEF8DF00379194 /* LeaguesViewDataModel.swift */,
 			);
 			path = LeaguesViewDataModel;
+			sourceTree = "<group>";
+		};
+		2740B2762ADF539A00379194 /* Custom */ = {
+			isa = PBXGroup;
+			children = (
+				2740B2772ADF53C200379194 /* LeaguesCompletions.swift */,
+				2740B27D2ADFABEB00379194 /* CustomDomainError.swift */,
+			);
+			path = Custom;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -621,6 +644,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				271EC3F32ADDBFAD0029B86C /* AppCoordinator.swift in Sources */,
+				2740B27C2ADF569D00379194 /* MatchesDataModel.swift in Sources */,
 				271EC4372ADE94620029B86C /* RemoteRepository.swift in Sources */,
 				271EC4202ADE01380029B86C /* NetworkError.swift in Sources */,
 				271EC43C2ADE9B1A0029B86C /* LeaguesRepository.swift in Sources */,
@@ -633,9 +657,12 @@
 				2740B2602ADEC34800379194 /* NibLoadable.swift in Sources */,
 				271EC3C02ADDBB450029B86C /* Football_Leagues.xcdatamodeld in Sources */,
 				2740B2622ADEC37400379194 /* ReusableView.swift in Sources */,
+				2740B27A2ADF557A00379194 /* TeamsDataModel.swift in Sources */,
+				2740B2782ADF53C200379194 /* LeaguesCompletions.swift in Sources */,
 				271EC4332ADE92510029B86C /* AppRepository.swift in Sources */,
 				2740B25C2ADEC2E500379194 /* LeagueCell.swift in Sources */,
 				271EC4412ADE9F310029B86C /* Connectivity.swift in Sources */,
+				2740B27E2ADFABEB00379194 /* CustomDomainError.swift in Sources */,
 				271EC4352ADE94490029B86C /* LocalRepository.swift in Sources */,
 				2740B2662ADEF0C800379194 /* ActivityIndicator.swift in Sources */,
 				271EC41E2ADDFFAD0029B86C /* ParameterEncoding.swift in Sources */,
@@ -643,6 +670,7 @@
 				271EC3FE2ADDCC870029B86C /* LeaguesViewModel.swift in Sources */,
 				271EC41C2ADDFF630029B86C /* HTTPMethods.swift in Sources */,
 				2740B2642ADEEAB700379194 /* UIViewController.swift in Sources */,
+				2740B2732ADF512900379194 /* SeasonDataModel.swift in Sources */,
 				271EC42D2ADE8AF50029B86C /* RepositoryInterface.swift in Sources */,
 				270339832ADEB5F2009655E3 /* LeaguesViewController.swift in Sources */,
 				271EC3B62ADDBB450029B86C /* AppDelegate.swift in Sources */,
@@ -824,6 +852,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -853,6 +882,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

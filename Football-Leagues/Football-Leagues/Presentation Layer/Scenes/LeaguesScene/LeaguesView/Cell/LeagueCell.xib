@@ -28,80 +28,92 @@
                                         <rect key="frame" x="16" y="8" width="100" height="137"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="V2I-aB-Utz">
-                                                <rect key="frame" x="0.0" y="0.0" width="100" height="117.33333333333333"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="100" height="107"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="9So-If-Pdj">
-                                                        <rect key="frame" x="0.0" y="8.6666666666666714" width="100" height="100"/>
+                                                        <rect key="frame" x="0.0" y="3.6666666666666643" width="100" height="100"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="100" id="sSJ-Ke-FBn"/>
-                                                            <constraint firstAttribute="height" constant="100" id="yR8-zq-WSp"/>
+                                                            <constraint firstAttribute="width" priority="999" constant="100" id="sSJ-Ke-FBn"/>
+                                                            <constraint firstAttribute="height" priority="750" constant="100" id="yR8-zq-WSp"/>
                                                         </constraints>
                                                     </imageView>
                                                 </subviews>
                                             </stackView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="asdfasdfasdfasdfasdf" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="Lof-Yv-qqh">
-                                                <rect key="frame" x="0.0" y="125.33333333333336" width="100" height="11.666666666666671"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <rect key="frame" x="0.0" y="115" width="100" height="22"/>
+                                                <fontDescription key="fontDescription" name="Verdana-Bold" family="Verdana" pointSize="20"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="size" keyPath="layer.shadowOffset">
+                                                        <size key="value" width="5" height="5"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.shadowOpacity">
+                                                        <real key="value" value="0.5"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.shadowRadius">
+                                                        <integer key="value" value="5"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
                                             </label>
                                         </subviews>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="WB3-jN-6y3">
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" translatesAutoresizingMaskIntoConstraints="NO" id="WB3-jN-6y3">
                                         <rect key="frame" x="126" y="8" width="349" height="137"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ged-46-0MB">
-                                                <rect key="frame" x="140.33333333333331" y="0.0" width="68.333333333333314" height="45.666666666666664"/>
+                                                <rect key="frame" x="16" y="8.0000000000000018" width="317" height="20.666666666666671"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="3" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCk-Bg-TBl">
-                                                        <rect key="frame" x="0.0" y="12.66666666666667" width="10.333333333333334" height="20.333333333333329"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <nil key="textColor"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Teams:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wCC-eZ-VBj">
+                                                        <rect key="frame" x="0.0" y="0.0" width="296.66666666666669" height="20.666666666666668"/>
+                                                        <fontDescription key="fontDescription" name="Verdana" family="Verdana" pointSize="17"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Teams" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wCC-eZ-VBj">
-                                                        <rect key="frame" x="18.333333333333371" y="12.66666666666667" width="50" height="20.333333333333329"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <nil key="textColor"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCk-Bg-TBl">
+                                                        <rect key="frame" x="304.66666666666669" y="0.0" width="12.333333333333314" height="20.666666666666668"/>
+                                                        <fontDescription key="fontDescription" name="Verdana-Bold" family="Verdana" pointSize="17"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="CLb-0y-mq6">
-                                                <rect key="frame" x="138.66666666666669" y="45.666666666666671" width="72" height="45.666666666666671"/>
+                                                <rect key="frame" x="16" y="58.333333333333321" width="317" height="20.666666666666664"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="6" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oaw-HG-BeD">
-                                                        <rect key="frame" x="0.0" y="0.0" width="10.666666666666666" height="45.666666666666664"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <nil key="textColor"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Games:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l6G-xw-UgQ">
+                                                        <rect key="frame" x="0.0" y="0.0" width="296.66666666666669" height="20.666666666666668"/>
+                                                        <fontDescription key="fontDescription" name="Verdana" family="Verdana" pointSize="17"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Games" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l6G-xw-UgQ">
-                                                        <rect key="frame" x="18.666666666666632" y="0.0" width="53.333333333333343" height="45.666666666666664"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <nil key="textColor"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oaw-HG-BeD">
+                                                        <rect key="frame" x="304.66666666666669" y="0.0" width="12.333333333333314" height="20.666666666666668"/>
+                                                        <fontDescription key="fontDescription" name="Verdana-Bold" family="Verdana" pointSize="17"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="esx-vc-r1N">
-                                                <rect key="frame" x="119.33333333333331" y="91.333333333333329" width="110.33333333333331" height="45.666666666666671"/>
+                                                <rect key="frame" x="16" y="108.33333333333333" width="317" height="20.666666666666671"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1235" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MIc-d9-CxF">
-                                                        <rect key="frame" x="0.0" y="0.0" width="37.666666666666664" height="45.666666666666664"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <nil key="textColor"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Seasons:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FNS-DK-adz">
+                                                        <rect key="frame" x="0.0" y="0.0" width="296.66666666666669" height="20.666666666666668"/>
+                                                        <fontDescription key="fontDescription" name="Verdana" family="Verdana" pointSize="17"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Seasons" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FNS-DK-adz">
-                                                        <rect key="frame" x="45.666666666666693" y="0.0" width="64.666666666666686" height="45.666666666666664"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <nil key="textColor"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MIc-d9-CxF">
+                                                        <rect key="frame" x="304.66666666666669" y="0.0" width="12.333333333333314" height="20.666666666666668"/>
+                                                        <fontDescription key="fontDescription" name="Verdana-Bold" family="Verdana" pointSize="17"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                 </subviews>
                                             </stackView>
                                         </subviews>
+                                        <edgeInsets key="layoutMargins" top="8" left="16" bottom="8" right="16"/>
                                     </stackView>
                                 </subviews>
                                 <edgeInsets key="layoutMargins" top="8" left="16" bottom="8" right="16"/>
@@ -133,10 +145,13 @@
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
                 <outlet property="uiExtraDetailsStack" destination="WB3-jN-6y3" id="ax9-fw-9wb"/>
+                <outlet property="uiGamesStack" destination="CLb-0y-mq6" id="aqz-Yr-DFY"/>
                 <outlet property="uiLogo" destination="9So-If-Pdj" id="8KZ-Eb-rxL"/>
                 <outlet property="uiNumberOfGames" destination="oaw-HG-BeD" id="ND8-ce-RlZ"/>
                 <outlet property="uiNumberOfSeasons" destination="MIc-d9-CxF" id="jHM-cc-yCs"/>
                 <outlet property="uiNumberOfTeams" destination="NCk-Bg-TBl" id="ceg-fP-9kN"/>
+                <outlet property="uiSeasonStack" destination="esx-vc-r1N" id="gvL-6B-toL"/>
+                <outlet property="uiTeamsStack" destination="ged-46-0MB" id="upl-N8-mZe"/>
                 <outlet property="uiTitle" destination="Lof-Yv-qqh" id="hzV-aq-pPs"/>
             </connections>
             <point key="canvasLocation" x="-93.89312977099236" y="70.774647887323951"/>
@@ -144,6 +159,9 @@
     </objects>
     <resources>
         <image name="logo" width="626" height="626"/>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="tertiarySystemFillColor">
             <color red="0.46274509803921571" green="0.46274509803921571" blue="0.50196078431372548" alpha="0.12" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

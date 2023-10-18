@@ -11,13 +11,13 @@ import RxCocoa
 
 
 protocol LeaguesVMInputProtocol{
-    var onScreenAppeared: PublishSubject<Void>{get}
+    var onScreenAppeared: PublishSubject<Bool>{get}
 }
 struct LeaguesVMInput:LeaguesVMInputProtocol{
-    var onScreenAppeared: PublishSubject<Void>
+    var onScreenAppeared: PublishSubject<Bool>
     
     init() {
-        self.onScreenAppeared = PublishSubject<Void>()
+        self.onScreenAppeared = PublishSubject<Bool>()
     }
 }
 
@@ -25,27 +25,46 @@ class LeaguesViewController: UIViewController {
 
     var viewModel:LeaguesVMProtocol!
     var coordinator:Coordinating!
+    
+    private var refreshControl : UIRefreshControl!
     private var bag:DisposeBag!
     @IBOutlet private weak var uiTableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
         bind()
-        viewModel.input.onScreenAppeared.onNext(())
+        viewModel.input.onScreenAppeared.onNext(false)
     }
     private func configureView(){
         title = "Football Leagues"
+        
+        refreshControl = UIRefreshControl()
+        refreshControl.tintColor = .systemGreen
+        uiTableView.addSubview(refreshControl)
         uiTableView.register(UINib(nibName: LeagueCell.nibName, bundle: nil), forCellReuseIdentifier: LeagueCell.reuseIdentifier)
         bag = DisposeBag()
     }
     private func bind(){
         
+        // MARK: - View Binding
+        refreshControl.rx.controlEvent(.valueChanged).bind{ [weak self] _ in
+            guard let self = self else {return}
+            viewModel.input.onScreenAppeared.onNext(true)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3){
+                self.refreshControl.endRefreshing()
+            }
+            
+        }.disposed(by: bag)
+        
+        
+        // MARK: - View Model Binding
         viewModel.outPut.progress.asObservable().bind { [weak self] value in
             guard let self = self else {return}
             value ? self.showProgress() : self.hideProgress()
         }.disposed(by: bag)
         
-        viewModel.outPut.showError.asObservable().subscribe { [weak self] message in
+        
+        viewModel.outPut.showError.drive { [weak self] message in
             guard let self = self else {return}
             self.showError(message: message)
         }.disposed(by: bag)
@@ -57,5 +76,4 @@ class LeaguesViewController: UIViewController {
         }.disposed(by: bag)
         
     }
-
 }

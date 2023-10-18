@@ -13,6 +13,6 @@ struct LeaguesVieweDataModel{
     let title: String?
     let code: String?
     var numberOfTeams: Int?
-    var numberOfLeagues: Int?
+    var numberOfMatches: Int?
     var numberOfSeasons: Int?
 }

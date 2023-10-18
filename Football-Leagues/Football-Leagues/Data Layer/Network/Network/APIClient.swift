@@ -6,8 +6,9 @@
 //
 
 import Foundation
+var count = 0
 protocol APIClientProtocol{
-    func execute<T:Codable>(request:EndPoint, completion:@escaping (Swift.Result<T,Error>)->Void)
+    func execute<T:Codable>(request:EndPoint, completion:@escaping (Swift.Result<T,NetworkError>)->Void)
 }
 
 class APIClient:NSObject, URLSessionDataDelegate,APIClientProtocol{
@@ -23,9 +24,10 @@ class APIClient:NSObject, URLSessionDataDelegate,APIClientProtocol{
         self.init(config: .default)
     }
     
-    func execute<T: Codable>(request: EndPoint, completion: @escaping (Result<T, Error>) -> Void) {
+    func execute<T:Codable>(request:EndPoint, completion:@escaping (Swift.Result<T,NetworkError>)->Void) {
         let task = session.dataTask(with: request.request) { data, response, error in
-            
+            count += 1
+            print(count,T.self)
             if let response = response as? HTTPURLResponse,
                response.statusCode >= 200, response.statusCode < 300,
                let data = data  {
@@ -42,7 +44,12 @@ class APIClient:NSObject, URLSessionDataDelegate,APIClientProtocol{
                     completion(.failure(NetworkError.invalidData))
                     return
                 }
-                completion(.failure(NetworkError.requestFailed(data: data)))
+                guard let serialized = try? JSONSerialization.jsonObject(with: data) as? [String:Any] else {
+                    completion(.failure(NetworkError.requestFailed(data: data)))
+                    return
+                }
+                guard let message = serialized["message"] as? String else {return}
+                completion(.failure(NetworkError.serialized(message: message)))
             }
             
         }

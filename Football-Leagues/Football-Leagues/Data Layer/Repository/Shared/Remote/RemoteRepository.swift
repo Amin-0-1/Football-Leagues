@@ -13,7 +13,7 @@ struct RemoteRepository:RepositoryInterface{
     init(apiClinet: APIClientProtocol!) {
         self.apiClinet = apiClinet
     }
-    func fetch<T:Codable>(endPoint:EndPoint?,completion: @escaping (Result<T,Error>)->Void) {
+    func fetch<T:Codable>(endPoint:EndPoint?,completion: @escaping (Result<T,NetworkError>)->Void) {
         guard let endPoint = endPoint else {return}
         apiClinet.execute(request: endPoint, completion: completion)
     }
