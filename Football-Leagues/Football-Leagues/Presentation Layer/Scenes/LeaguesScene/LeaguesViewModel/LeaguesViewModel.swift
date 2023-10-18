@@ -72,57 +72,21 @@ class LeaguesViewModel:LeaguesVMProtocol{
             guard let self = self else {return}
             
             isPullToRefresh ? nil : self.outPut.progressSubject.onNext(true)
-            
-            
-            usecase.fetch(completions: .init(
-                leaguesCompletion: { result in
-                isPullToRefresh ? nil : self.outPut.progressSubject.onNext(false)
-                switch result{
-                    case .success(let leagues):
-                        let models = self.handle(data: leagues.competitions)
-                        self.leagues = models
-                        self.outPut.onFinishFetchingLeaguesSubject.onNext(models)
-                    case .failure(let error):
-                        self.outPut.showErrorSubject.onNext(error.description)
-                        debugPrint(error)
-
+            usecase.fetch { dataModel in
+                self.outPut.progressSubject.onNext(false)
+                guard let dataModel = dataModel else {
+                    print("an error occured")
+                    return
                 }
-            }, seasonsCompletion: { result in
-                switch result{
-                    case .success(let model):
-                        if let index = self.leagues.firstIndex(where: {$0.code == model.code}){
-                            let position = self.leagues.distance(from: 0, to: index)
-                            self.leagues[position].numberOfSeasons = model.seasons?.count
-                        }
-                    case .failure(let error):
-                        debugPrint(error.description)
-                }
-            }, teamsCompletion: { result in
-                switch result{
-                    case .success(let model):
-                        if let index = self.leagues.firstIndex(where: {$0.code == model.competition?.code}){
-                            let position = self.leagues.distance(from: 0, to: index)
-                            self.leagues[position].numberOfTeams = model.teams?.count
-                        }
-                    case .failure(let error):
-                        debugPrint(error.description)
-                }
-            }, matchesCompletion: { result in
-                switch result{
-                    case .success(let model):
-                        if let index = self.leagues.firstIndex(where: {$0.code == model.competition?.code}){
-                            let position = self.leagues.distance(from: 0, to: index)
-                            self.leagues[position].numberOfMatches = model.matches?.count
-                        }
-                    case .failure(let error):
-                        debugPrint(error.description)
-                }
-            },completion: {
+                self.leagues = dataModel.competitions.compactMap({ competition in
+                    return .init(imageUrl: competition.emblem, title: competition.name, code: competition.code, numberOfTeams: competition.numberOfTeams, numberOfMatches: competition.numberOfGames, numberOfSeasons: competition.numberOfSeasons)
+                })
+                
                 self.outPut.onFinishFetchingLeaguesSubject.onNext(self.leagues)
-            }))
+                
+            }
         }.disposed(by: bag)
     }
-    
     private func handle(data:[Competition]) -> [LeaguesVieweDataModel]{
         var models: [LeaguesVieweDataModel] = []
 
@@ -133,3 +97,63 @@ class LeaguesViewModel:LeaguesVMProtocol{
         return models
     }
 }
+
+
+/*
+ 
+ //            usecase.fetch(completions: .init(
+ //                leaguesCompletion: { result in
+ //                isPullToRefresh ? nil : self.outPut.progressSubject.onNext(false)
+ //                switch result{
+ //                    case .success(let leagues):
+ //                        let models = self.handle(data: leagues.competitions)
+ //                        self.leagues = models
+ //                        self.outPut.onFinishFetchingLeaguesSubject.onNext(models)
+ //                    case .failure(let error):
+ //                        self.outPut.showErrorSubject.onNext(error.description)
+ //                        debugPrint(error)
+ //
+ //                }
+ //            }, seasonsCompletion: { result in
+ //                switch result{
+ //                    case .success(let model):
+ //                        if let index = self.leagues.firstIndex(where: {$0.code == model.code}){
+ //                            let position = self.leagues.distance(from: 0, to: index)
+ //                            self.leagues[position].numberOfSeasons = model.seasons?.count
+ //
+ //                            print("--------------------------------------------------\n")
+ //                            dump(self.leagues)
+ //                        }
+ //                    case .failure(let error):
+ //                        debugPrint(error.description)
+ //                }
+ //            }, teamsCompletion: { result in
+ //                switch result{
+ //                    case .success(let model):
+ //                        if let index = self.leagues.firstIndex(where: {$0.code == model.competition?.code}){
+ //                            let position = self.leagues.distance(from: 0, to: index)
+ //                            self.leagues[position].numberOfTeams = model.teams?.count
+ //
+ //                            print("--------------------------------------------------\n")
+ //                            dump(self.leagues)
+ //                        }
+ //                    case .failure(let error):
+ //                        debugPrint(error.description)
+ //                }
+ //            }, matchesCompletion: { result in
+ //                switch result{
+ //                    case .success(let model):
+ //                        if let index = self.leagues.firstIndex(where: {$0.code == model.competition?.code}){
+ //                            let position = self.leagues.distance(from: 0, to: index)
+ //                            self.leagues[position].numberOfMatches = model.matches?.count
+ //                            print("--------------------------------------------------\n")
+ //                            dump(self.leagues)
+ //                        }
+ //                    case .failure(let error):
+ //                        debugPrint(error.description)
+ //                }
+ //            },completion: { competitions in
+ //                self.leagues = competitions.compactMap{LeaguesVieweDataModel(imageUrl: $0.emblem, title: $0.name, code: $0.code,numberOfTeams: $0.numberOfTeams, numberOfMatches: $0.numberOfGames,numberOfSeasons: $0.numberOfSeasons)}
+ //            }
+ //        }.disposed(by: bag)
+ */

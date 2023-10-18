@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct LeaguesVieweDataModel{
+class LeaguesVieweDataModel{
     
     let imageUrl: String?
     let title: String?
@@ -15,4 +15,13 @@ struct LeaguesVieweDataModel{
     var numberOfTeams: Int?
     var numberOfMatches: Int?
     var numberOfSeasons: Int?
+    
+    init(imageUrl: String?, title: String?, code: String?, numberOfTeams: Int? = nil, numberOfMatches: Int? = nil, numberOfSeasons: Int? = nil) {
+        self.imageUrl = imageUrl
+        self.title = title
+        self.code = code
+        self.numberOfTeams = numberOfTeams
+        self.numberOfMatches = numberOfMatches
+        self.numberOfSeasons = numberOfSeasons
+    }
 }

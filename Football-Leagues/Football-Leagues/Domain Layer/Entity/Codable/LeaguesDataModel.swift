@@ -9,7 +9,7 @@ import Foundation
 
 struct LeagueDataModel: Codable {
     let count: Int?
-    let competitions: [Competition]
+    var competitions: [Competition]
 }
 
 struct Competition: Codable {
@@ -21,6 +21,9 @@ struct Competition: Codable {
     let numberOfAvailableSeasons: Int?
     let lastUpdated: String?
     
+    var numberOfTeams:Int?
+    var numberOfGames:Int?
+    var numberOfSeasons:Int?
     enum CoodingKeys:String,CodingKey{
         case id
         case are
