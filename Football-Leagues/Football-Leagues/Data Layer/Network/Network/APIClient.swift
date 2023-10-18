@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import RxSwift
+
 protocol APIClientProtocol{
-    func execute<T:Codable>(request:EndPoint, completion:@escaping (Swift.Result<T,Error>)->Void)
+    func execute<T:Codable>(request:EndPoint,type:T) -> Observable<Result<T, Error>>
 }
 
 class APIClient:NSObject, URLSessionDataDelegate, URLSessionTaskDelegate,APIClientProtocol{
@@ -22,34 +24,43 @@ class APIClient:NSObject, URLSessionDataDelegate, URLSessionTaskDelegate,APIClie
     convenience override init() {
         self.init(config: .default)
     }
-    
-    func execute<T: Codable>(request: EndPoint, completion: @escaping (Result<T, Error>) -> Void) {
-        let task = session.dataTask(with: request.request) { data, response, error in
-            
-            if let response = response as? HTTPURLResponse,
-               response.statusCode >= 200, response.statusCode < 300,
-               let data = data  {
-                guard let model = try? JSONDecoder().decode(T.self, from: data) else {
-                    completion(Result.failure(NetworkError.jsonParsingFailure(data: data)))
+    func execute<T:Codable>(request: EndPoint, type: T) -> Observable<Result<T, Error>> {
+        return Observable.create { observer in
+            let task = self.session.dataTask(with: request.request) { data, response, error in
+                
+                if let error = error{
+                    observer.onNext(.failure(error))
+                    observer.onCompleted()
                     return
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3){
-                    completion(.success(model))
+                
+                if let response = response as? HTTPURLResponse,
+                   response.statusCode >= 200, response.statusCode < 300,
+                   let data = data  {
+                    guard let model = try? JSONDecoder().decode(T.self, from: data) else {
+                        observer.onNext(.failure(NetworkError.jsonParsingFailure(data: data)))
+                        observer.onCompleted()
+                        return
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3){
+                        observer.onNext(.success(model))
+                        observer.onCompleted()
+                    }
+                } else {
+                    guard let data = data else {
+                        observer.onNext(.failure(NetworkError.invalidData))
+                        observer.onCompleted()
+                        return
+                    }
+                    observer.onNext(.failure(NetworkError.requestFailed(data: data)))
                 }
-            } else {
-                guard let data = data else {
-                    completion(.failure(NetworkError.invalidData))
-                    return
-                }
-                completion(.failure(NetworkError.requestFailed(data: data)))
+                
             }
+            task.resume()
             
+            return Disposables.create {
+                task.cancel()
+            }
         }
-        task.resume()
     }
-    func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
-        let progress = Float(totalBytesSent) / Float(totalBytesExpectedToSend)
-        print("Upload progress: \(progress)")
-    }
-    
 }
