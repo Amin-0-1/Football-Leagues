@@ -6,9 +6,10 @@
 //
 
 import Foundation
-var count = 0
+import RxSwift
+
 protocol APIClientProtocol{
-    func execute<T:Codable>(request:EndPoint, completion:@escaping (Swift.Result<T,NetworkError>)->Void)
+    func execute<T:Codable>(request:EndPoint) -> Single<Result<T, Error>>
 }
 
 class APIClient:NSObject, URLSessionDataDelegate,APIClientProtocol{
@@ -22,37 +23,40 @@ class APIClient:NSObject, URLSessionDataDelegate,APIClientProtocol{
     
     convenience override init() {
         self.init(config: .default)
+        
     }
-    
-    func execute<T:Codable>(request:EndPoint, completion:@escaping (Swift.Result<T,NetworkError>)->Void) {
-        let task = session.dataTask(with: request.request) { data, response, error in
-            count += 1
-            print(count,T.self)
-            if let response = response as? HTTPURLResponse,
-               response.statusCode >= 200, response.statusCode < 300,
-               let data = data  {
-                guard let model = try? JSONDecoder().decode(T.self, from: data) else {
-                    completion(Result.failure(NetworkError.jsonParsingFailure(data: data)))
+    func execute<T:Codable>(request:EndPoint) -> Single<Result<T, Error>> {
+        
+        return Single.create { single in
+            let task = self.session.dataTask(with: request.request){ data, response, error in
+                
+                if let error = error{
+                    single(.success(.failure(error)))
                     return
+                }
+                if let response = response as? HTTPURLResponse,
+                   response.statusCode >= 200, response.statusCode < 300,
+                   let data = data  {
+                    guard let model = try? JSONDecoder().decode(T.self, from: data) else {
+                        single(.success(.failure(NetworkError.jsonParsingFailure(data: data))))
+                        return
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3){
+                        single(.success(.success(model)))
+                    }
+                } else {
+                    guard let data = data else {
+                        single(.success(.failure(NetworkError.invalidData)))
+                        return
+                    }
+                    single(.success(.failure(NetworkError.requestFailed(data: data))))
                 }
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3){
-                    completion(.success(model))
-                }
-            } else {
-                guard let data = data else {
-                    completion(.failure(NetworkError.invalidData))
-                    return
-                }
-                guard let serialized = try? JSONSerialization.jsonObject(with: data) as? [String:Any] else {
-                    completion(.failure(NetworkError.requestFailed(data: data)))
-                    return
-                }
-                guard let message = serialized["message"] as? String else {return}
-                completion(.failure(NetworkError.serialized(message: message)))
             }
-            
+            task.resume()
+            return Disposables.create {task.cancel()}
         }
-        task.resume()
     }
 }
+
+
