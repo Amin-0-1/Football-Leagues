@@ -49,7 +49,16 @@ extension LeaguesEndPoints:EndPoint{
     }
     
     var encoding: ParameterEncoding {
-        return .URLEncoding
+        switch self {
+            case .getAllLeagues:
+                return .JSONEncoding
+            case .getSeasons:
+                return .URLEncoding
+            case .getTeams:
+                return .URLEncoding
+            case .getMatches:
+                return .URLEncoding
+        }
     }
     
     

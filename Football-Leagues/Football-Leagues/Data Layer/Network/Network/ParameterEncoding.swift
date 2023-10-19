@@ -25,7 +25,7 @@ enum ParameterEncoding {
     }
     
     static func urlEncode(urlRequest: inout URLRequest, with parameters: Parameters) throws {
-        guard let url = urlRequest.url else { throw NetworkError.missingURL }
+        guard let url = urlRequest.url else { throw NetworkError.invalidURL }
         if var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false), !parameters.isEmpty {
             urlComponents.queryItems = [URLQueryItem]()
             for (key, value) in parameters {
