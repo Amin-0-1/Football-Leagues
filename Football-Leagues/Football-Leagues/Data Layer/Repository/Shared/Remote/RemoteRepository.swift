@@ -8,18 +8,17 @@
 import Foundation
 import RxSwift
 
-struct RemoteRepository:RepositoryInterface{
+struct RemoteRepository:RemoteRepositoryInterface{
     
     
     private var apiClinet:APIClientProtocol!
     private var bag:DisposeBag!
-    init(apiClinet: APIClientProtocol = APIClient()) {
+    init(apiClinet: APIClientProtocol = APIClient.shared) {
         self.apiClinet = apiClinet
         bag = DisposeBag()
     }
     
-    func fetch<T>(endPoint: EndPoint?, type: T.Type) -> Single<Result<T, Error>>  where T: Decodable, T: Encodable{
-        guard let endPoint = endPoint else {return .just(.failure(NetworkError.requestFailed))}
+    func fetch<T>(endPoint: EndPoint, type: T.Type) -> Single<Result<T, Error>>  where T: Decodable, T: Encodable{
         return Single.create { single in
             apiClinet.execute(request: endPoint, type: type).subscribe(onSuccess: { event in
                 switch event{

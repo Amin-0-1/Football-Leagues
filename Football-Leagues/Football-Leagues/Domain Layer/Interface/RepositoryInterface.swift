@@ -7,7 +7,13 @@
 
 import Foundation
 import RxSwift
-protocol RepositoryInterface{
-    func fetch<T:Codable>(endPoint:EndPoint?,type:T.Type) -> Single<Result<T,Error>>
+
+
+protocol RemoteRepositoryInterface{
+    func fetch<T:Codable>(endPoint:EndPoint,type:T.Type) -> Single<Result<T,Error>>
 }
 
+protocol LocalRepositoryInterface{
+    func save(data:[Competition])
+}
+ 

@@ -36,6 +36,7 @@ class LeaguesUsecase : LeaguesUsecaseProtocol{
                 switch result{
                     case .success(let model):
                         self.leagueModel = model
+                        self.saveLeagues(leagues: model.competitions)
                     case .failure(let error):
                         print(error)
                 }
@@ -43,6 +44,9 @@ class LeaguesUsecase : LeaguesUsecaseProtocol{
             }).disposed(by: self.bag)
             return Disposables.create()
         }
+    }
+    private func saveLeagues(leagues:[Competition]){
+        leaguesRepo.saveLeagues(leagues: leagues)
     }
     
 //    func fetchTeams() -> Single<Result<LeagueDataModel, Error>> {
