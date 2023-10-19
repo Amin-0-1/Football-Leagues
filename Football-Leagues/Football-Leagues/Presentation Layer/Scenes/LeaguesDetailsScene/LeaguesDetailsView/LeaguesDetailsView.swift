@@ -9,7 +9,6 @@ import UIKit
 
 class LeaguesDetailsView: UIViewController {
 
-    var coordinator:Coordinating!
     
     override func viewDidLoad() {
         super.viewDidLoad()

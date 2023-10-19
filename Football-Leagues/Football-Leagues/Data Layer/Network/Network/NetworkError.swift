@@ -6,27 +6,37 @@
 //
 
 import Foundation
-public enum NetworkError: Error,CustomStringConvertible{
-    case parametersNil
+public enum NetworkError: Error{
+    
+    case noInternetConnection
+    case requestFailed
+    case timeout
     case encodingFailed
-    case missingURL
-    case requestFailed(data: Data)
-    case jsonConversionFailure
-    case invalidData
-    case responseUnsuccessful
-    case jsonParsingFailure(data: Data)
-    case serialized(message:String)
-    public var description: String {
+    case invalidResponse
+    case decodingFailed
+    case invalidURL
+    
+    
+    case serverError(statusCode: Int)
+    
+    public var localizedDescription: String {
         switch self {
-            case .parametersNil: return "Parameters were nil."
-            case .encodingFailed: return "Parameters encoding failed."
-            case .missingURL: return "URL is nil."
-            case .requestFailed: return "Request Failed"
-            case .invalidData: return "Invalid Data"
-            case .responseUnsuccessful: return "Response Unsuccessful"
-            case .jsonParsingFailure: return "JSON Parsing Failure"
-            case .jsonConversionFailure: return "JSON Conversion Failure"
-            case .serialized(let str): return str
+            case .requestFailed:
+                return "Network is down.";
+            case .invalidResponse:
+                return "The operation couldn’t be completed."
+            case .decodingFailed:
+                return "Decoding issue"
+            case .noInternetConnection:
+                return "The Internet connection appears to be offline."
+            case .timeout:
+                return "The request timed out."
+            case .serverError(statusCode: let statusCode):
+                return "Could not connect to the server, \(statusCode) has found."
+            case .encodingFailed:
+                return "Unable to encode request data"
+            case .invalidURL:
+                return "Invalid url for network"
         }
     }
     

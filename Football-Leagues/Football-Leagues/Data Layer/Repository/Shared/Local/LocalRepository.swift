@@ -6,10 +6,15 @@
 //
 
 import Foundation
+import RxSwift
 
 struct LocalRepository:RepositoryInterface{
     
-    func fetch<T:Decodable>(endPoint:EndPoint?,completion: @escaping (Result<T,NetworkError>)->Void) {
-        
+    func fetch<T:Codable>(endPoint: EndPoint?,type:T.Type) -> Single<Result<T, Error>> {
+        return Single.create { single in
+            single(.success(.failure(NetworkError.requestFailed)))
+            return Disposables.create()
+        }
     }
+
 }

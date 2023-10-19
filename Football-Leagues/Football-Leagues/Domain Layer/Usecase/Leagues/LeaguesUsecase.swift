@@ -6,181 +6,107 @@
 //
 
 import Foundation
+import RxSwift
 
 protocol LeaguesUsecaseProtocol{
-    func fetch(completion:@escaping (LeagueDataModel?)->Void)
+    func fetchLeagues() -> Single<Result<LeagueDataModel,Error>>
+//    func fetchTeams() -> Single<Result<LeagueDataModel,Error>>
+//    func fetchGames() -> Single<Result<LeagueDataModel,Error>>
+//    func fetchSeasons() -> Single<Result<LeagueDataModel,Error>>
+    
 }
 
-struct LeaguesUsecase : LeaguesUsecaseProtocol{
+class LeaguesUsecase : LeaguesUsecaseProtocol{
     
     private var leaguesRepo:LeaguesRepoInterface!
-    private let concurrentQueue = DispatchQueue(label: "com.example.concurrentQueue", qos: .background, attributes: .concurrent)
-    private var group:DispatchGroup!
-    init(leaguesRepo: LeaguesRepoInterface) {
+    
+    private var leagueModel:LeagueDataModel?
+    private var bag:DisposeBag!
+    
+    init(leaguesRepo: LeaguesRepoInterface = LeaguesReposiotory()) {
         self.leaguesRepo = leaguesRepo
-        group = DispatchGroup()
+        bag = DisposeBag()
     }
-    func fetch(completion:@escaping (LeagueDataModel?)->Void){
-        leaguesRepo.fetchLeagues(endPoint: LeaguesEndPoints.getAllLeagues) { result in
-            switch result {
-                case .success(let model):
-                    self.handle(model: model,completions:completion)
-                case .failure(let failure):
-                    let message = failure.description
-                    let error = CustomDomainError.error(message)
-//                    completions.leaguesCompletion(.failure(error))
-            }
-        }
-        
-    }
-    private func handle(model: LeagueDataModel,completions: @escaping (LeagueDataModel?)->Void){
-        Task{
-            var newModel = model
-            for index in model.competitions.indices {
-                guard let code = model.competitions[index].code else {return}
-                
-                let seasons = await fetchSeasons(code:code)
-                let teams = await fetchTeams(code: code)
-                let matches = await fetchMatches(code: code)
-                
-                newModel.competitions[index].numberOfSeasons = seasons?.seasons?.count
-                newModel.competitions[index].numberOfGames = matches?.matches?.count
-                newModel.competitions[index].numberOfTeams = teams?.teams?.count
-                
-                completions(newModel)
-            }
+    
+    
+    func fetchLeagues() -> Single<Result<LeagueDataModel, Error>> {
+        return Single.create { [weak self] single in
+            guard let self = self else {return Disposables.create()}
+            self.leaguesRepo.fetchLeagues(endPoint: LeaguesEndPoints.getAllLeagues).subscribe(onSuccess: { result in
+                switch result{
+                    case .success(let model):
+                        self.leagueModel = model
+                    case .failure(let error):
+                        print(error)
+                }
+                single(.success(result))
+            }).disposed(by: self.bag)
+            return Disposables.create()
         }
     }
     
-    private func fetchSeasons (code:String) async -> SeasonDataModel?{
-        do{
-            return try await withCheckedThrowingContinuation{ continuation in
-                leaguesRepo.fetchSeasons(endPoint: LeaguesEndPoints.getSeasons(code: code)) { result in
-                    DispatchQueue.main.async {
-                        switch result {
-                            case .success(let model):
-                                continuation.resume(returning: model)
-                            case .failure(let failure):
-                                let message = failure.description
-                                let error = CustomDomainError.error(message)
-                                continuation.resume(throwing: error)
-                        }
-                    }
-                }
-            }
-        }catch{
-            print(error)
-            return nil
-        }
-    }
-    private func fetchTeams(code:String) async -> TeamsDataModel?{
-        do{
-            return try await withCheckedThrowingContinuation { continuation in
-                leaguesRepo.fetchTeams(endPoint: LeaguesEndPoints.getTeams(code: code)) { result in
-                    DispatchQueue.main.async {
-                        switch result {
-                            case .success(let model):
-                                continuation.resume(returning: model)
-                            case .failure(let failure):
-                                let message = failure.description
-                                let error = CustomDomainError.error(message)
-                                continuation.resume(throwing: error)
-                        }
-                    }
-                }
-            }
-        }catch{
-            print(error)
-            return nil
-        }
-    }
-    private func fetchMatches(code:String) async -> MatchesDataModel?{
-        do{
-            return try await withCheckedThrowingContinuation(){ continuation in
-                leaguesRepo.fetchMatches(endPoint: LeaguesEndPoints.getMatches(code: code)) { result in
-                    DispatchQueue.main.async {
-                        switch result {
-                            case .success(let model):
-                                continuation.resume(returning: model)
-                            case .failure(let failure):
-                                let message = failure.description
-                                let error = CustomDomainError.error(message)
-                                continuation.resume(throwing: error)
-                        }
-                    }
-                }
-            }
-        }catch{
-            print(error)
-            return nil
-        }
-    }
-    
-}
-
-
-
-
+//    func fetchTeams() -> Single<Result<LeagueDataModel, Error>> {
+//        return Single.create {[weak self] single in
+//            guard let self = self,let competitions = self.leagueModel?.competitions else {return Disposables.create()}
 //
-//private func handle(data: [Competition],completions:LeaguesCompletions){
-//    data.forEach { competition in
-//        guard let code = competition.code else {return}
-//        concurrentQueue.async {
-//            //                group.enter()
-//            //                enter += 1
-//            leaguesRepo.fetchSeasons(endPoint: LeaguesEndPoints.getSeasons(code: code)) { result in
-//                DispatchQueue.main.async {
-//                    switch result {
-//                        case .success(let model):
-//                            completions.seasonsCompletion(.success(model))
-//                        case .failure(let failure):
-//                            let message = failure.description
-//                            let error = CustomDomainError.error(message)
-//                            completions.seasonsCompletion(.failure(error))
-//                    }
-//                    //                        group.leave()
-//                    //                        enter -= 1
+//            for index in competitions.indices{
+//                if let code = self.leagueModel?.competitions[index].code{
+//                    self.leaguesRepo.fetchTeams(endPoint: LeaguesEndPoints.getTeams(code: code)).subscribe(onSuccess: { event in
+//                        switch event{
+//                            case .success(let model):
+//                                self.leagueModel?.competitions[index].numberOfTeams = model.teams?.count
+//                                single(.success(.success(self.leagueModel!)))
+//                            case .failure(let error):
+//                                print(error.localizedDescription)
+//                        }
+//                    }).disposed(by: bag)
 //                }
 //            }
-//
-//            //                group.enter()
-//            //                enter += 1
-//            leaguesRepo.fetchTeams(endPoint: LeaguesEndPoints.getTeams(code: code)) { result in
-//                DispatchQueue.main.async {
-//                    switch result {
-//                        case .success(let model):
-//                            completions.teamsCompletion(.success(model))
-//                        case .failure(let failure):
-//                            let message = failure.description
-//                            let error = CustomDomainError.error(message)
-//                            completions.seasonsCompletion(.failure(error))
-//                    }
-//                    //                        group.leave()
-//                    //                        enter -= 1
-//                }
-//            }
-//
-//            //                enter += 1
-//            //                group.enter()
-//            leaguesRepo.fetchMatches(endPoint: LeaguesEndPoints.getMatches(code: code)) { result in
-//                DispatchQueue.main.async {
-//                    switch result {
-//                        case .success(let model):
-//                            completions.matchesCompletion(.success(model))
-//                        case .failure(let failure):
-//                            let message = failure.description
-//                            let error = CustomDomainError.error(message)
-//                            completions.seasonsCompletion(.failure(error))
-//                    }
-//                    //                        group.leave()
-//                    //                        enter -= 1
-//                }
-//            }
+//            return Disposables.create()
 //        }
 //    }
-//    //        group.notify(queue: .main){
-//    //            DispatchQueue.main.asyncAfter(deadline: .now() + 1){
-//    //                completions.completion()
-//    //            }
-//    //        }
+//
+//    func fetchGames() -> Single<Result<LeagueDataModel, Error>> {
+//        return Single.create {[weak self] single in
+//            guard let self = self,let competitions = self.leagueModel?.competitions else {return Disposables.create()}
+//
+//            for index in competitions.indices{
+//                if let code = self.leagueModel?.competitions[index].code{
+//                    self.leaguesRepo.fetchMatches(endPoint: LeaguesEndPoints.getMatches(code: code)).subscribe(onSuccess: { event in
+//                        switch event{
+//                            case .success(let model):
+//                                self.leagueModel?.competitions[index].numberOfGames = model.matches?.count
+//                                single(.success(.success(self.leagueModel!)))
+//                            case .failure(let error):
+//                                print(error.localizedDescription)
+//                        }
+//                    }).disposed(by: bag)
+//                }
+//            }
+//            return Disposables.create()
+//        }
 //    }
+//
+//    func fetchSeasons() -> Single<Result<LeagueDataModel, Error>> {
+//        return Single.create {[weak self] single in
+//            guard let self = self,let competitions = self.leagueModel?.competitions else {return Disposables.create()}
+//
+//            for index in competitions.indices{
+//                if let code = self.leagueModel?.competitions[index].code{
+//                    self.leaguesRepo.fetchSeasons(endPoint: LeaguesEndPoints.getSeasons(code: code)).subscribe(onSuccess: { event in
+//                        switch event{
+//                            case .success(let model):
+//                                self.leagueModel?.competitions[index].numberOfSeasons = model.seasons?.count
+//                                single(.success(.success(self.leagueModel!)))
+//                            case .failure(let error):
+//                                print(error.localizedDescription)
+//                        }
+//                    }).disposed(by: bag)
+//                }
+//            }
+//            return Disposables.create()
+//        }
+//    }
+
+}
+

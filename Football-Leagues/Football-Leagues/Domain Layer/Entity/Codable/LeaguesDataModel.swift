@@ -21,9 +21,6 @@ struct Competition: Codable {
     let numberOfAvailableSeasons: Int?
     let lastUpdated: String?
     
-    var numberOfTeams:Int?
-    var numberOfGames:Int?
-    var numberOfSeasons:Int?
     enum CoodingKeys:String,CodingKey{
         case id
         case are

@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct MatchesDataModel: Codable {
+struct GamesDataModel: Codable {
     let competition: Competition?
-    let matches: [Match]?
+    let matches: [Game]?
 }
-struct Match: Codable {
+struct Game: Codable {
     let area: Area?
     let competition: Competition?
     let season: Season?

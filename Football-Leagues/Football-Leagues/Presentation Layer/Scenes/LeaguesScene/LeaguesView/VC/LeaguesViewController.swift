@@ -24,7 +24,7 @@ struct LeaguesVMInput:LeaguesVMInputProtocol{
 class LeaguesViewController: UIViewController {
 
     var viewModel:LeaguesVMProtocol!
-    var coordinator:Coordinating!
+    var coordinator:LeaguesCoordinatorProtocol!
     
     private var refreshControl : UIRefreshControl!
     private var bag:DisposeBag!

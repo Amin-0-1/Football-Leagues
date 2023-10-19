@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 
 protocol APIClientProtocol{
-    func execute<T:Codable>(request:EndPoint) -> Single<Result<T, Error>>
+    func execute<T:Codable>(request:EndPoint,type:T.Type) -> Single<Result<T, NetworkError>>
 }
 
 class APIClient:NSObject, URLSessionDataDelegate,APIClientProtocol{
@@ -25,33 +25,48 @@ class APIClient:NSObject, URLSessionDataDelegate,APIClientProtocol{
         self.init(config: .default)
         
     }
-    func execute<T:Codable>(request:EndPoint) -> Single<Result<T, Error>> {
+    func execute<T:Codable>(request:EndPoint,type:T.Type) -> Single<Result<T, NetworkError>> {
         
         return Single.create { single in
             let task = self.session.dataTask(with: request.request){ data, response, error in
                 
-                if let error = error{
-                    single(.success(.failure(error)))
+                if let error = error {
+                    if let urlError = error as? URLError {
+                        switch urlError.code {
+                            case .notConnectedToInternet:
+                                single(.success(.failure(.noInternetConnection)))
+                            case .timedOut:
+                                single(.success(.failure(.timeout)))
+                            default:
+                                single(.success(.failure(.requestFailed)))
+
+                        }
+                    } else {
+                        single(.success(.failure(.requestFailed)))
+                    }
                     return
                 }
-                if let response = response as? HTTPURLResponse,
-                   response.statusCode >= 200, response.statusCode < 300,
-                   let data = data  {
-                    guard let model = try? JSONDecoder().decode(T.self, from: data) else {
-                        single(.success(.failure(NetworkError.jsonParsingFailure(data: data))))
-                        return
+                
+                guard let httpResponse = response as? HTTPURLResponse, (200..<300).contains(httpResponse.statusCode) else {
+                    if let httpResponse = response as? HTTPURLResponse {
+                        single(.success(.failure(.serverError(statusCode: httpResponse.statusCode))))
+                    } else {
+                        single(.success(.failure(.invalidResponse)))
                     }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3){
-                        single(.success(.success(model)))
-                    }
-                } else {
-                    guard let data = data else {
-                        single(.success(.failure(NetworkError.invalidData)))
-                        return
-                    }
-                    single(.success(.failure(NetworkError.requestFailed(data: data))))
+                    return
                 }
                 
+                guard let data = data else {
+                    single(.success(.failure(.invalidResponse)))
+                    return
+                }
+                
+                guard let model = try? JSONDecoder().decode(T.self, from: data)else {
+                    single(.success(.failure(.decodingFailed)))
+                    return
+                }
+                
+                single(.success(.success(model)))
             }
             task.resume()
             return Disposables.create {task.cancel()}

@@ -6,7 +6,8 @@
 //
 
 import Foundation
-
+import RxSwift
 protocol RepositoryInterface{
-    func fetch<T:Codable>(endPoint:EndPoint?,completion: @escaping (Result<T,NetworkError>)->Void)
+    func fetch<T:Codable>(endPoint:EndPoint?,type:T.Type) -> Single<Result<T,Error>>
 }
+
