@@ -6,46 +6,46 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 protocol LeaguesUsecaseProtocol{
-    func fetchLeagues() -> Single<Result<LeagueDataModel,CustomDomainError>>
+    func fetchLeagues() -> Future<LeagueDataModel,CustomDomainError>
 //    func fetchTeams() -> Single<Result<LeagueDataModel,Error>>
 //    func fetchGames() -> Single<Result<LeagueDataModel,Error>>
 //    func fetchSeasons() -> Single<Result<LeagueDataModel,Error>>
     
 }
 
-struct LeaguesUsecase : LeaguesUsecaseProtocol{
+class LeaguesUsecase : LeaguesUsecaseProtocol{
     
     private var leaguesRepo:LeaguesRepoInterface!
-    
-    private var bag:DisposeBag!
-    
+    private var cancellables:Set<AnyCancellable> = []
     init(leaguesRepo: LeaguesRepoInterface = LeaguesReposiotory()) {
         self.leaguesRepo = leaguesRepo
-        bag = DisposeBag()
     }
     
     
-    func fetchLeagues() -> Single<Result<LeagueDataModel, CustomDomainError>> {
-        return Single.create { single in
-//            guard let self = self else {return Disposables.create()}
-            self.leaguesRepo.fetchLeagues(endPoint: LeaguesEndPoints.getAllLeagues).subscribe(onSuccess: { result in
-                switch result{
-                    case .success(let model):
-                        save(leagues: model)
-                        single(.success(.success(model)))
+    func fetchLeagues() -> Future<LeagueDataModel, CustomDomainError> {
+        return Future<LeagueDataModel,CustomDomainError> { promise in
+            self.leaguesRepo.fetchLeagues(endPoint: LeaguesEndPoints.getAllLeagues).sink { completion in
+                switch completion{
+                    case .finished:
+                        break
                     case .failure(let error):
-                        single(.success(.failure(error)))
+                        promise(.failure(error))
                 }
-//                single(.success(result))
-            }).disposed(by: bag)
-            return Disposables.create()
+            } receiveValue: { model in
+                self.save(leagues: model)
+                promise(.success(model))
+            }.store(in: &self.cancellables)
         }
     }
+
     private func save(leagues:LeagueDataModel){
-        leaguesRepo.save(leagues: leagues)
+        leaguesRepo.save(leagues: leagues).sink { _ in } receiveValue: { isSaved in
+            print(isSaved)
+        }.store(in: &cancellables)
+
     }
     
 //    func fetchTeams() -> Single<Result<LeagueDataModel, Error>> {

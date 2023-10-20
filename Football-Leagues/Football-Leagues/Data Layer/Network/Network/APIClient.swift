@@ -6,10 +6,10 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 protocol APIClientProtocol{
-    func execute<T:Codable>(request:EndPoint,type:T.Type) -> Single<Result<T, NetworkError>>
+    func execute<T:Codable>(request:EndPoint,type:T.Type) -> Future<T, NetworkError>
 }
 
 class APIClient:NSObject, URLSessionDataDelegate,APIClientProtocol{
@@ -22,51 +22,51 @@ class APIClient:NSObject, URLSessionDataDelegate,APIClientProtocol{
         session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
     }
     
-    func execute<T:Codable>(request:EndPoint,type:T.Type) -> Single<Result<T, NetworkError>> {
+    func execute<T:Codable>(request:EndPoint,type:T.Type) -> Future<T, NetworkError>{
         
-        return Single.create { single in
+        return Future<T,NetworkError>{ promise in
             let task = self.session.dataTask(with: request.request){ data, response, error in
                 
                 if let error = error {
                     if let urlError = error as? URLError {
                         switch urlError.code {
                             case .notConnectedToInternet:
-                                single(.success(.failure(.noInternetConnection)))
+                                promise(.failure(.noInternetConnection))
                             case .timedOut:
-                                single(.success(.failure(.timeout)))
+                                promise(.failure(.timeout))
                             default:
-                                single(.success(.failure(.requestFailed)))
-
+                                promise(.failure(.requestFailed))
+                                
                         }
                     } else {
-                        single(.success(.failure(.requestFailed)))
+                        promise(.failure(.requestFailed))
                     }
                     return
                 }
                 
                 guard let httpResponse = response as? HTTPURLResponse, (200..<300).contains(httpResponse.statusCode) else {
                     if let httpResponse = response as? HTTPURLResponse {
-                        single(.success(.failure(.serverError(statusCode: httpResponse.statusCode))))
+                        promise(.failure(.serverError(statusCode: httpResponse.statusCode)))
                     } else {
-                        single(.success(.failure(.invalidResponse)))
+                        promise(.failure(.invalidResponse))
                     }
                     return
                 }
                 
                 guard let data = data else {
-                    single(.success(.failure(.invalidResponse)))
+                    promise(.failure(.invalidResponse))
                     return
                 }
                 
                 guard let model = try? JSONDecoder().decode(T.self, from: data)else {
-                    single(.success(.failure(.decodingFailed)))
+                    promise(.failure(.decodingFailed))
                     return
                 }
-                
-                single(.success(.success(model)))
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3){
+                    promise(.success(model))
+                }
             }
             task.resume()
-            return Disposables.create {task.cancel()}
         }
     }
 }

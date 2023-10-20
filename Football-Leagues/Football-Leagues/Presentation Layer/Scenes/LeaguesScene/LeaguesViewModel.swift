@@ -6,37 +6,42 @@
 //
 
 import Foundation
-import RxSwift
-import RxCocoa
+import Combine
 
 
 // MARK: - View model output protocol
-protocol LeaguesViewModelOutputProtocol{
-    var progress: Driver<Bool> {get}
-    var showError: Driver<String> {get}
-    var onFinishFetchingLeagues: Driver<[LeaguesVieweDataModel]> {get}
+protocol LeaguesViewModelOutputProtocol {
+    var progress: AnyPublisher<Bool, Never> { get }
+    var showError: AnyPublisher<String, Never> { get }
+    var onFinishFetchingLeagues: AnyPublisher<[LeaguesVieweDataModel], Never> { get }
 }
 
-struct LeaguesVMOutput:LeaguesViewModelOutputProtocol{
-    var progress: Driver<Bool>
-    var showError: Driver<String>
-    var onFinishFetchingLeagues: Driver<[LeaguesVieweDataModel]>
-     
-    fileprivate var progressSubject: PublishSubject<Bool>
-    fileprivate var showErrorSubject: PublishSubject<String>
-    fileprivate var onFinishFetchingLeaguesSubject: PublishSubject<[LeaguesVieweDataModel]>
+struct LeaguesVMOutput: LeaguesViewModelOutputProtocol {
+    let progress: AnyPublisher<Bool, Never>
+    let showError: AnyPublisher<String, Never>
+    let onFinishFetchingLeagues: AnyPublisher<[LeaguesVieweDataModel], Never>
     
-    init(){
-        
-        progressSubject = PublishSubject()
-        showErrorSubject = PublishSubject()
-        onFinishFetchingLeaguesSubject = PublishSubject()
-     
-        progress = progressSubject.asDriver(onErrorJustReturn: false)
-        showError = showErrorSubject.asDriver(onErrorJustReturn: "")
-        onFinishFetchingLeagues = onFinishFetchingLeaguesSubject.asDriver(onErrorJustReturn: [])
+    private let progressSubject = PassthroughSubject<Bool,Never>()
+    private let showErrorSubject = PassthroughSubject<String, Never>()
+    private let onFinishFetchingLeaguesSubject = PassthroughSubject<[LeaguesVieweDataModel], Never>()
+    
+    init() {
+        progress = progressSubject.eraseToAnyPublisher()
+        showError = showErrorSubject.eraseToAnyPublisher()
+        onFinishFetchingLeagues = onFinishFetchingLeaguesSubject.eraseToAnyPublisher()
     }
     
+    func setProgress(_ value: Bool) {
+        progressSubject.send(value)
+    }
+    
+    func setError(_ message: String) {
+        showErrorSubject.send(message)
+    }
+    
+    func setLeagues(_ leagues: [LeaguesVieweDataModel]) {
+        onFinishFetchingLeaguesSubject.send(leagues)
+    }
 }
 
 
@@ -49,42 +54,46 @@ protocol LeaguesVMProtocol{
 
 
 // MARK: - View-model
-struct LeaguesViewModel:LeaguesVMProtocol{
+class LeaguesViewModel:LeaguesVMProtocol{
     var input: LeaguesVMInput!
     var outPut: LeaguesVMOutput!
     
     var usecase:LeaguesUsecaseProtocol
     var leagues:[LeaguesVieweDataModel] = []
     
-    private var bag:DisposeBag!
+    private var cancellable:Set<AnyCancellable> = []
     
     init(usecase:LeaguesUsecaseProtocol = LeaguesUsecase()) {
         self.input = LeaguesVMInput()
         self.outPut = LeaguesVMOutput()
         self.usecase = usecase
-        bag = DisposeBag()
         bind()
     }
     
     private func bind(){
-        
-        input.onScreenAppeared.bind { isPullToRefresh in
-            isPullToRefresh ? nil : self.outPut.progressSubject.onNext(true)
+        input.onScreenAppeared.sink {[weak self] isPullToRefresh in
+            guard let self = self else {return}
+                
+            isPullToRefresh ? nil : self.outPut.setProgress(true)
             
-            usecase.fetchLeagues().subscribe(onSuccess: { result in
-                outPut.progressSubject.onNext(false)
-                switch result{
-                    case .success(let model):
-                        let newModel = model.competitions.compactMap{
-                            LeaguesVieweDataModel(imageUrl: $0.emblem, name: $0.name, code: $0.code, numberOfSeasons: $0.numberOfAvailableSeasons, area: $0.area?.code, type: $0.type)
-                        }
-                        outPut.onFinishFetchingLeaguesSubject.onNext(newModel)
+            usecase.fetchLeagues().sink { completion in
+                switch completion{
+                    case .finished: break
                     case .failure(let error):
-                        outPut.showErrorSubject.onNext(error.localizedDescription)
+                        self.outPut.setError(error.localizedDescription)
                 }
-            }).disposed(by: bag)
+            } receiveValue: { model in
+                
+                let newModel = model.competitions.compactMap{
+                    LeaguesVieweDataModel(imageUrl: $0.emblem, name: $0.name, code: $0.code, numberOfSeasons: $0.numberOfAvailableSeasons, area: $0.area?.code, type: $0.type)
+                }
+                self.input.modelCount = newModel.count
+                self.input.models = newModel
+                self.outPut.setProgress(false)
+                self.outPut.setLeagues(newModel)
+            }.store(in: &self.cancellable)
             
-        }.disposed(by: bag)
+        }.store(in: &cancellable)
     }
 }
 
