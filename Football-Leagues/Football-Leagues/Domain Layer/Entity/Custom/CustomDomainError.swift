@@ -13,8 +13,8 @@ enum CustomDomainError{
     case customError(String)
 }
 
-extension CustomDomainError:Error,CustomStringConvertible{
-    var description: String{
+extension CustomDomainError:Error{
+    var localizedDescription: String{
         switch self {
             case .serverError:
                 return "Server Error"

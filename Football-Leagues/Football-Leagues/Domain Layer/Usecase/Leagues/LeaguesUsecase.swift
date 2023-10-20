@@ -9,18 +9,17 @@ import Foundation
 import RxSwift
 
 protocol LeaguesUsecaseProtocol{
-    func fetchLeagues() -> Single<Result<LeagueDataModel,Error>>
+    func fetchLeagues() -> Single<Result<LeagueDataModel,CustomDomainError>>
 //    func fetchTeams() -> Single<Result<LeagueDataModel,Error>>
 //    func fetchGames() -> Single<Result<LeagueDataModel,Error>>
 //    func fetchSeasons() -> Single<Result<LeagueDataModel,Error>>
     
 }
 
-class LeaguesUsecase : LeaguesUsecaseProtocol{
+struct LeaguesUsecase : LeaguesUsecaseProtocol{
     
     private var leaguesRepo:LeaguesRepoInterface!
     
-    private var leagueModel:LeagueDataModel?
     private var bag:DisposeBag!
     
     init(leaguesRepo: LeaguesRepoInterface = LeaguesReposiotory()) {
@@ -29,24 +28,25 @@ class LeaguesUsecase : LeaguesUsecaseProtocol{
     }
     
     
-    func fetchLeagues() -> Single<Result<LeagueDataModel, Error>> {
-        return Single.create { [weak self] single in
-            guard let self = self else {return Disposables.create()}
+    func fetchLeagues() -> Single<Result<LeagueDataModel, CustomDomainError>> {
+        return Single.create { single in
+//            guard let self = self else {return Disposables.create()}
             self.leaguesRepo.fetchLeagues(endPoint: LeaguesEndPoints.getAllLeagues).subscribe(onSuccess: { result in
                 switch result{
                     case .success(let model):
-                        self.leagueModel = model
-                        self.saveLeagues(leagues: model.competitions)
+                        save(leagues: model)
+                        single(.success(.success(model)))
                     case .failure(let error):
+                        single(.success(.failure(error)))
                         print(error)
                 }
-                single(.success(result))
-            }).disposed(by: self.bag)
+//                single(.success(result))
+            }).disposed(by: bag)
             return Disposables.create()
         }
     }
-    private func saveLeagues(leagues:[Competition]){
-        leaguesRepo.saveLeagues(leagues: leagues)
+    private func save(leagues:LeagueDataModel){
+        leaguesRepo.save(leagues: leagues)
     }
     
 //    func fetchTeams() -> Single<Result<LeagueDataModel, Error>> {

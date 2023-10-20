@@ -12,7 +12,6 @@ import Combine
 
 class LocalRepository:LocalRepositoryInterface{
 
-    
     var localClient: CoreDataManagerProtocol
     var cancellables: Set<AnyCancellable> = []
     
@@ -20,15 +19,26 @@ class LocalRepository:LocalRepositoryInterface{
         self.localClient = localClient
     }
     
-    func fetch<T>(endPoint: EndPoint, type: T.Type) -> Single<Result<T, Error>> where T : Decodable, T : Encodable {
+    func fetch<T:Codable>(model: LocalFetchType, type: T.Type) -> Single<Result<T, Error>> {
         return Single.create { single in
-            single(.success(.failure(NetworkError.requestFailed)))
+            self.localClient.fetch(model: model, type: type).sink { completion in
+                switch completion{
+                    case .failure(let error):
+                        single(.success(.failure(error)))
+                    case .finished:
+                        break
+                }
+            } receiveValue: { value in
+                single(.success(.success(value)))
+            }.store(in: &self.cancellables)
+
             return Disposables.create()
         }
     }
-    
-    func save(data: [Competition]){
-        localClient.insert(competitions: data)
+
+    func save<T:Codable>(data: T) {
+        localClient.insert(data: data)
     }
+
 
 }

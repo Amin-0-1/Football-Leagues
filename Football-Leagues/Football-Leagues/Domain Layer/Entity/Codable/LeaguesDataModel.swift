@@ -17,9 +17,7 @@ struct Competition: Codable {
     let area: Area?
     let name, code, type: String?
     let emblem: String?
-    let currentSeason: CurrentSeason?
     let numberOfAvailableSeasons: Int?
-    let lastUpdated: String?
     
     enum CoodingKeys:String,CodingKey{
         case id
@@ -33,9 +31,7 @@ struct Competition: Codable {
 }
 
 struct Area: Codable {
-    let id: Int?
     let name, code: String?
-    let flag: String?
 }
 
 struct CurrentSeason: Codable {

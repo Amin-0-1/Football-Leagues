@@ -54,6 +54,7 @@
 		27BC78E42AE1434B00480A44 /* LeaguesCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BC78E32AE1434B00480A44 /* LeaguesCoordinator.swift */; };
 		27BC78E82AE156C600480A44 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BC78E72AE156C600480A44 /* CoreDataStack.swift */; };
 		27BC78EA2AE1602700480A44 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BC78E92AE1602700480A44 /* CoreDataManager.swift */; };
+		27BEEEBC2AE1E3BE008F90CD /* LocalFetchType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BEEEBB2AE1E3BE008F90CD /* LocalFetchType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -122,6 +123,7 @@
 		27BC78E32AE1434B00480A44 /* LeaguesCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaguesCoordinator.swift; sourceTree = "<group>"; };
 		27BC78E72AE156C600480A44 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		27BC78E92AE1602700480A44 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		27BEEEBB2AE1E3BE008F90CD /* LocalFetchType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFetchType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -489,6 +491,7 @@
 			isa = PBXGroup;
 			children = (
 				2740B27D2ADFABEB00379194 /* CustomDomainError.swift */,
+				27BEEEBB2AE1E3BE008F90CD /* LocalFetchType.swift */,
 			);
 			path = Custom;
 			sourceTree = "<group>";
@@ -679,6 +682,7 @@
 				2740B27A2ADF557A00379194 /* TeamsDataModel.swift in Sources */,
 				271EC4332ADE92510029B86C /* AppRepository.swift in Sources */,
 				2740B25C2ADEC2E500379194 /* LeagueCell.swift in Sources */,
+				27BEEEBC2AE1E3BE008F90CD /* LocalFetchType.swift in Sources */,
 				271EC4412ADE9F310029B86C /* Connectivity.swift in Sources */,
 				2740B27E2ADFABEB00379194 /* CustomDomainError.swift in Sources */,
 				271EC4352ADE94490029B86C /* LocalRepository.swift in Sources */,

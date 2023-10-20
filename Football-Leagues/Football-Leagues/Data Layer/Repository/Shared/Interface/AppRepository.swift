@@ -8,14 +8,15 @@
 import Foundation
 import RxSwift
 
-// MARK: - single interface for a complex subsystems
-
 protocol AppRepositoryInterface{
-    func fetch<T:Codable>(endPoint:EndPoint,type:T.Type) -> Single<Result<T,Error>>
-    func save(competitions:[Competition])
+    func fetch<T:Codable>(endPoint: EndPoint,localFetchType:LocalFetchType,type: T.Type) -> Single<Result<T, Error>>
+    func save<T:Codable>(data: T)
 }
+
+// MARK: - single interface for a complex subsystems
 struct AppRepository:AppRepositoryInterface{
-    
+
+   
     private var local:LocalRepositoryInterface!
     private var remote:RemoteRepositoryInterface!
     private var bag:DisposeBag!
@@ -25,26 +26,38 @@ struct AppRepository:AppRepositoryInterface{
         bag = DisposeBag()
     }
     
-    func fetch<T>(endPoint: EndPoint, type: T.Type) -> Single<Result<T, Error>> where T : Decodable, T : Encodable {
+    func fetch<T:Codable>(endPoint: EndPoint,localFetchType:LocalFetchType,type: T.Type) -> Single<Result<T, Error>> {
         return Single.create { single in
-            isConnected { connected in
-                if connected{
-                    remote.fetch(endPoint: endPoint, type: type).subscribe(onSuccess: { event in
-                        single(.success(event))
-                    }).disposed(by: bag)
-                }else{
-//                    local.fetch(endPoint:endPoint,type: type).subscribe(onSuccess: { event in
-//                        single(.success(event))
-//                    }).disposed(by: bag)
+            local.fetch(model: localFetchType, type: type).subscribe(onSuccess: { event in
+                switch event{
+                    case .success(let model):
+                        single(.success(.success(model)))
+                    case .failure(let error):
+                        single(.success(.failure(error)))
+                        debugPrint(error.localizedDescription)
                 }
-            }
+                
+                remote.fetch(endPoint: endPoint, type: type).subscribe(onSuccess: { event in
+                    switch event{
+                        case .success(let model):
+                            single(.success(.success(model)))
+                            save(data: model)
+                        case .failure(let error):
+                            single(.success(.failure(error)))
+                            debugPrint(error)
+                    }
+                }).disposed(by: bag)
+                
+            }).disposed(by: bag)
+
             return Disposables.create()
         }
         
     }
     
-    func save(competitions:[Competition]){
-        local.save(data: competitions)
+    func save<T:Codable>(data: T) {
+        local.save(data: data)
     }
+    
 }
 

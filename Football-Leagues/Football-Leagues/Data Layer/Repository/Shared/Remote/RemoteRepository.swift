@@ -19,6 +19,7 @@ struct RemoteRepository:RemoteRepositoryInterface{
     }
     
     func fetch<T>(endPoint: EndPoint, type: T.Type) -> Single<Result<T, Error>>  where T: Decodable, T: Encodable{
+
         return Single.create { single in
             apiClinet.execute(request: endPoint, type: type).subscribe(onSuccess: { event in
                 switch event{
