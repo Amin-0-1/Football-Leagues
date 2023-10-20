@@ -14,17 +14,14 @@ protocol APIClientProtocol{
 
 class APIClient:NSObject, URLSessionDataDelegate,APIClientProtocol{
     
+    static let shared = APIClient(config: .default)
     private var session: URLSession!
     
-    init(config: URLSessionConfiguration) {
+    private init(config: URLSessionConfiguration) {
         super.init()
         session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
     }
     
-    convenience override init() {
-        self.init(config: .default)
-        
-    }
     func execute<T:Codable>(request:EndPoint,type:T.Type) -> Single<Result<T, NetworkError>> {
         
         return Single.create { single in

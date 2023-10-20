@@ -15,8 +15,6 @@ public enum NetworkError: Error{
     case invalidResponse
     case decodingFailed
     case invalidURL
-    
-    
     case serverError(statusCode: Int)
     
     public var localizedDescription: String {
@@ -26,7 +24,7 @@ public enum NetworkError: Error{
             case .invalidResponse:
                 return "The operation couldn’t be completed."
             case .decodingFailed:
-                return "Decoding issue"
+                return "failed to decode data"
             case .noInternetConnection:
                 return "The Internet connection appears to be offline."
             case .timeout:
