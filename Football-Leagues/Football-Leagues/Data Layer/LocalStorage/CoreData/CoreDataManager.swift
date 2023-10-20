@@ -55,7 +55,6 @@ class CoreDataManager:CoreDataManagerProtocol{
                             promise(.failure(Errors.decodingFailed))
                         }
                     }catch{
-                        debugPrint(error)
                         promise(.failure(Errors.uncompleted))
                     }
             }

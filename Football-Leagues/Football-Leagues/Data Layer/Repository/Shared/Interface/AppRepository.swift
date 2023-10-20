@@ -33,8 +33,12 @@ struct AppRepository:AppRepositoryInterface{
                     case .success(let model):
                         single(.success(.success(model)))
                     case .failure(let error):
-                        single(.success(.failure(error)))
-                        debugPrint(error.localizedDescription)
+                        Connection { isConnected in
+                            if !isConnected{
+                                single(.success(.failure(error)))
+                                single(.success(.failure(error)))
+                            }
+                        }
                 }
                 
                 remote.fetch(endPoint: endPoint, type: type).subscribe(onSuccess: { event in
@@ -44,7 +48,6 @@ struct AppRepository:AppRepositoryInterface{
                             save(data: model)
                         case .failure(let error):
                             single(.success(.failure(error)))
-                            debugPrint(error)
                     }
                 }).disposed(by: bag)
                 

@@ -38,7 +38,6 @@ struct LeaguesUsecase : LeaguesUsecaseProtocol{
                         single(.success(.success(model)))
                     case .failure(let error):
                         single(.success(.failure(error)))
-                        print(error)
                 }
 //                single(.success(result))
             }).disposed(by: bag)

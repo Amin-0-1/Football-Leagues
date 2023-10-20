@@ -80,7 +80,6 @@ struct LeaguesViewModel:LeaguesVMProtocol{
                         }
                         outPut.onFinishFetchingLeaguesSubject.onNext(newModel)
                     case .failure(let error):
-                        debugPrint(error.localizedDescription)
                         outPut.showErrorSubject.onNext(error.localizedDescription)
                 }
             }).disposed(by: bag)
