@@ -7,7 +7,7 @@
 
 import Foundation
 
-func isConnected(completion: @escaping (Bool) -> Void) {
+func Connection(completion: @escaping (Bool) -> Void) {
     guard let url = URL(string: "https://www.google.com") else {
         completion(false)
         return
