@@ -6,15 +6,15 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 typealias RepositoryInterface = RemoteRepositoryInterface & LocalRepositoryInterface
 protocol RemoteRepositoryInterface{
-    func fetch<T:Codable>(endPoint:EndPoint,type:T.Type) -> Single<Result<T,Error>>
+    func fetch<T:Codable>(endPoint: EndPoint, type: T.Type) -> Future<T, Error>
 }
 
 protocol LocalRepositoryInterface{
-    func fetch<T:Codable>(model:LocalFetchType,type:T.Type) -> Single<Result<T,Error>>
-    func save<T:Codable>(data:T)
+    func fetch<T:Codable>(model:LocalFetchType,type:T.Type) -> Future<T,Error>
+    func save<T:Codable>(data:T)->Future<Bool,Error>
 }
  

@@ -7,7 +7,6 @@
 
 import Foundation
 import CoreData
-import RxSwift
 import Combine
 
 class LocalRepository:LocalRepositoryInterface{
@@ -18,27 +17,35 @@ class LocalRepository:LocalRepositoryInterface{
     init(localClient: CoreDataManagerProtocol = CoreDataManager.shared) {
         self.localClient = localClient
     }
+    func fetch<T:Codable>(model: LocalFetchType, type: T.Type) -> Future<T, Error>  {
+        return self.localClient.fetch(model: model, type: type)
+        
+//        return Future<T,Error>{ promise in
+//
+//        }.eraseToAnyPublisher()
+    }
     
-    func fetch<T:Codable>(model: LocalFetchType, type: T.Type) -> Single<Result<T, Error>> {
-        return Single.create { single in
-            self.localClient.fetch(model: model, type: type).sink { completion in
-                switch completion{
-                    case .failure(let error):
-                        single(.success(.failure(error)))
-                    case .finished:
-                        break
-                }
-            } receiveValue: { value in
-                single(.success(.success(value)))
-            }.store(in: &self.cancellables)
 
-            return Disposables.create()
-        }
+//    func fetch<T:Codable>(model: LocalFetchType, type: T.Type) -> Single<Result<T, Error>> {
+//        return Single.create { single in
+//            self.localClient.fetch(model: model, type: type).sink { completion in
+//                switch completion{
+//                    case .failure(let error):
+//                        single(.success(.failure(error)))
+//                    case .finished:
+//                        break
+//                }
+//            } receiveValue: { value in
+//                single(.success(.success(value)))
+//            }.store(in: &self.cancellables)
+//
+//            return Disposables.create()
+//        }
+//    }
+
+
+    func save<T:Codable>(data: T) -> Future<Bool, Error> {
+        return localClient.insert(data: data)
     }
-
-    func save<T:Codable>(data: T) {
-        localClient.insert(data: data)
-    }
-
 
 }

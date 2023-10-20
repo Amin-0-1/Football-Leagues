@@ -6,60 +6,64 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 protocol AppRepositoryInterface{
-    func fetch<T:Codable>(endPoint: EndPoint,localFetchType:LocalFetchType,type: T.Type) -> Single<Result<T, Error>>
-    func save<T:Codable>(data: T)
+    func fetch<T:Codable>(endPoint: EndPoint,localFetchType:LocalFetchType,type: T.Type) -> Future<T,Error>
+    func save<T:Codable>(data: T) -> Future<Bool, Error>
 }
 
 // MARK: - single interface for a complex subsystems
-struct AppRepository:AppRepositoryInterface{
+class AppRepository:AppRepositoryInterface{
 
    
     private var local:LocalRepositoryInterface!
     private var remote:RemoteRepositoryInterface!
-    private var bag:DisposeBag!
+    private var cancellables:Set<AnyCancellable> = []
     init(local: LocalRepositoryInterface = LocalRepository(), remote: RemoteRepositoryInterface = RemoteRepository()) {
         self.local = local
         self.remote = remote
-        bag = DisposeBag()
     }
     
-    func fetch<T:Codable>(endPoint: EndPoint,localFetchType:LocalFetchType,type: T.Type) -> Single<Result<T, Error>> {
-        return Single.create { single in
-            local.fetch(model: localFetchType, type: type).subscribe(onSuccess: { event in
-                switch event{
-                    case .success(let model):
-                        single(.success(.success(model)))
+    func fetch<T:Codable>(endPoint: EndPoint,localFetchType:LocalFetchType,type: T.Type) -> Future<T,Error>{
+        return Future<T,Error> { [weak self] promise in
+            guard let self = self else {return}
+            // MARK: - local fetch
+                        
+            self.local.fetch(model: localFetchType, type: type).sink { completion in
+                switch completion{
+                    case .finished:
+                        print("finished")
                     case .failure(let error):
                         Connection { isConnected in
                             if !isConnected{
-                                single(.success(.failure(error)))
-                                single(.success(.failure(error)))
+                                promise(.failure(error))
+                            }else{
+                                // MARK: - remote fetch
+                                self.remote.fetch(endPoint: endPoint, type: type).sink { completion in
+                                    switch completion{
+                                        case .finished: break
+                                        case .failure(let error):
+                                            promise(.failure(error))
+                                    }
+                                } receiveValue: { model in
+                                    self.save(data: model)
+                                    promise(.success(model))
+                                }.store(in: &self.cancellables)
+                                // end of remote fetch
                             }
                         }
                 }
-                
-                remote.fetch(endPoint: endPoint, type: type).subscribe(onSuccess: { event in
-                    switch event{
-                        case .success(let model):
-                            single(.success(.success(model)))
-                            save(data: model)
-                        case .failure(let error):
-                            single(.success(.failure(error)))
-                    }
-                }).disposed(by: bag)
-                
-            }).disposed(by: bag)
+            } receiveValue: { value in
+                promise(.success(value))
+            }.store(in: &self.cancellables)
 
-            return Disposables.create()
         }
         
     }
     
-    func save<T:Codable>(data: T) {
-        local.save(data: data)
+    func save<T:Codable>(data: T) -> Future<Bool, Error>  {
+        return local.save(data: data)
     }
     
 }

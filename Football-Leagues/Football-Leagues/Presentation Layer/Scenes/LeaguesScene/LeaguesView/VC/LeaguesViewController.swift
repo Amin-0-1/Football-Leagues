@@ -6,18 +6,25 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
+import Combine
 
 
 protocol LeaguesVMInputProtocol{
-    var onScreenAppeared: PublishSubject<Bool>{get}
+    var onScreenAppeared: PassthroughSubject<Bool,Never> {get}
+    var models:[LeaguesVieweDataModel] {get}
+    var modelCount: Int {get}
 }
 struct LeaguesVMInput:LeaguesVMInputProtocol{
-    var onScreenAppeared: PublishSubject<Bool>
-    
+    var onScreenAppeared: PassthroughSubject<Bool,Never>
+    var models: [LeaguesVieweDataModel]
+    var modelCount: Int
     init() {
-        self.onScreenAppeared = PublishSubject<Bool>()
+        self.onScreenAppeared = PassthroughSubject<Bool,Never>()
+        models = []
+        modelCount = 0
+    }
+    func getModel(atIndex index:Int)-> LeaguesVieweDataModel{
+        return models[index]
     }
 }
 
@@ -27,53 +34,57 @@ class LeaguesViewController: UIViewController {
     var coordinator:LeaguesCoordinatorProtocol!
     
     private var refreshControl : UIRefreshControl!
-    private var bag:DisposeBag!
+    private var cancellable:Set<AnyCancellable> = []
     @IBOutlet private weak var uiTableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
         bind()
-        viewModel.input.onScreenAppeared.onNext(false)
+        viewModel.input.onScreenAppeared.send(false)
     }
     private func configureView(){
         title = "Football Leagues"
-        
         refreshControl = UIRefreshControl()
         refreshControl.tintColor = .systemGreen
+        refreshControl.addTarget(self, action: #selector(refreshControlValueChanged), for: .valueChanged)
         uiTableView.addSubview(refreshControl)
         uiTableView.register(UINib(nibName: LeagueCell.nibName, bundle: nil), forCellReuseIdentifier: LeagueCell.reuseIdentifier)
-        bag = DisposeBag()
     }
     private func bind(){
         
-        // MARK: - View Binding
-        refreshControl.rx.controlEvent(.valueChanged).bind{ [weak self] _ in
-            guard let self = self else {return}
-            viewModel.input.onScreenAppeared.onNext(true)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1){
-                self.refreshControl.endRefreshing()
-            }
-            
-        }.disposed(by: bag)
-        
-        
         // MARK: - View Model Binding
-        viewModel.outPut.progress.asObservable().bind { [weak self] value in
+        viewModel.outPut.progress.sink {[weak self] value in
             guard let self = self else {return}
             value ? self.showProgress() : self.hideProgress()
-        }.disposed(by: bag)
+        }.store(in: &cancellable)
         
-        
-        viewModel.outPut.showError.drive { [weak self] message in
+        viewModel.outPut.showError.sink { [weak self] message in
             guard let self = self else {return}
             self.showError(message: message)
-        }.disposed(by: bag)
+        }.store(in: &cancellable)
         
-        viewModel.outPut.onFinishFetchingLeagues.asObservable().bind(to: uiTableView.rx.items){ tableView,row,element in
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: LeagueCell.reuseIdentifier) as? LeagueCell else {fatalError()}
-            cell.configure(withModel: element)
-            return cell
-        }.disposed(by: bag)
-        
+        viewModel.outPut.onFinishFetchingLeagues.sink {[weak self] model in
+            guard let self = self else {return}
+            self.uiTableView.reloadData()
+        }.store(in: &cancellable)
+    }
+    @objc func refreshControlValueChanged(){
+        self.viewModel.input.onScreenAppeared.send(true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1){
+            self.refreshControl.endRefreshing()
+        }
+    }
+}
+
+extension LeaguesViewController:UITableViewDataSource{
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel.input.modelCount
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: LeagueCell.reuseIdentifier) as? LeagueCell else {fatalError()}
+        cell.configure(withModel: viewModel.input.getModel(atIndex: indexPath.row))
+        return cell
     }
 }

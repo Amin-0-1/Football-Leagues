@@ -6,46 +6,56 @@
 //
 
 import Foundation
-import RxSwift
-import RxCocoa
+import Combine
 
 protocol LeaguesRepoInterface{
-    func fetchLeagues(endPoint:EndPoint)-> Single<Result<LeagueDataModel,CustomDomainError>>
-//    func fetchTeams(endPoint:EndPoint) -> Single<Result<TeamsDataModel,Error>>
-//    func fetchSeasons(endPoint:EndPoint) -> Single<Result<SeasonDataModel,Error>>
-//    func fetchMatches(endPoint:EndPoint) -> Single<Result<GamesDataModel,Error>>
-    
-    func save<T:Codable>(leagues:T)
+    func fetchLeagues(endPoint: EndPoint) -> Future<LeagueDataModel, CustomDomainError>
+    func save<T:Codable>(leagues:T)->Future<Bool,Error>
 }
-struct LeaguesReposiotory:LeaguesRepoInterface{
+class LeaguesReposiotory:LeaguesRepoInterface{
     
     private let appRepo:AppRepositoryInterface!
-    private var bag:DisposeBag
+    private var cancellables:Set<AnyCancellable> = []
     init(appRepo: AppRepositoryInterface = AppRepository()) {
         self.appRepo = appRepo
-        bag = DisposeBag()
     }
     
-    func fetchLeagues(endPoint: EndPoint) -> Single<Result<LeagueDataModel, CustomDomainError>> {
-        return Single.create { single in
-            self.appRepo.fetch(endPoint: endPoint, localFetchType: .Leagues, type: LeagueDataModel.self).subscribe(onSuccess: { event in
-                switch event{
-                    case .success(let model):
-                        single(.success(.success(model)))
+    func fetchLeagues(endPoint: EndPoint) -> Future<LeagueDataModel, CustomDomainError> {
+        return Future<LeagueDataModel,CustomDomainError> { promise in
+            self.appRepo.fetch(endPoint: endPoint, localFetchType: .Leagues, type: LeagueDataModel.self).sink { completion in
+                switch completion{
+                    case .finished: break
                     case .failure(let error):
                         if let networkError = error as? NetworkError{
                             let customError = CustomDomainError.customError(networkError.localizedDescription)
-                            single(.success(.failure(customError)))
+                            promise(.failure(customError))
                         }else if let coreDataError = error as? CoreDataManager.Errors{
                             let customError = CustomDomainError.customError(coreDataError.localizedDescription)
-                            single(.success(.failure(customError)))
+                            promise(.failure(customError))
                         }
                 }
-            }).disposed(by: self.bag)
-            
-            return Disposables.create()
+            } receiveValue: { value in
+                promise(.success(value))
+            }.store(in: &self.cancellables)
         }
     }
+    
+    func save<T:Codable>(leagues: T) -> Future<Bool, Error> {
+        return appRepo.save(data: leagues)
+    }
+}
+
+
+
+
+
+
+
+//Protocol{
+    //    func fetchTeams(endPoint:EndPoint) -> Single<Result<TeamsDataModel,Error>>
+    //    func fetchSeasons(endPoint:EndPoint) -> Single<Result<SeasonDataModel,Error>>
+    //    func fetchMatches(endPoint:EndPoint) -> Single<Result<GamesDataModel,Error>>
+//}
 //    func fetchTeams(endPoint: EndPoint) -> Single<Result<TeamsDataModel, Error>> {
 //        return Single.create { single in
 //            self.appRepo.fetch(endPoint: endPoint, type: TeamsDataModel.self).subscribe(onSuccess: { event in
@@ -93,11 +103,3 @@ struct LeaguesReposiotory:LeaguesRepoInterface{
 //            return Disposables.create()
 //        }
 //    }
-    
-    func save<T:Codable>(leagues: T){
-        appRepo.save(data: leagues)
-    }
-    func fetchLeagues() {
-        
-    }
-}
