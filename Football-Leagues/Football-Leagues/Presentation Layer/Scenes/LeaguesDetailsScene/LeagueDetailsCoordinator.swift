@@ -8,7 +8,7 @@
 import UIKit
 
 protocol LeagueDetailsCoordinatorProtocol{
-    
+    func navigateToWebView(withLink : URL)
 }
 
 struct LeagueDetailsCoordinator:LeagueDetailsCoordinatorProtocol{
@@ -24,5 +24,10 @@ struct LeagueDetailsCoordinator:LeagueDetailsCoordinatorProtocol{
         let viewModel = LeagueDetailsViewModel(params: .init(coordinator: self,code: data))
         vc.viewModel = viewModel
         self.navigationController.pushViewController(vc, animated: true)
+    }
+    func navigateToWebView(withLink url: URL) {
+        let coordinator = WebViewCoordinator(navigationController: navigationController,data:url)
+        coordinator.start()
+        
     }
 }

@@ -10,10 +10,13 @@ import Combine
 
 protocol LeagueDetailVMInputProtocol{
     var onScreenAppeared:PassthroughSubject<Bool,Never> {get}
+    var onTapplingLink: PassthroughSubject<String?, Never> {get}
 }
 struct LeagueDetailsVMInput:LeagueDetailVMInputProtocol{
     var onScreenAppeared: PassthroughSubject<Bool, Never>
+    var onTapplingLink: PassthroughSubject<String?, Never>
     init(){
         onScreenAppeared = PassthroughSubject<Bool, Never>()
+        onTapplingLink =  PassthroughSubject<String?, Never>()
     }
 }

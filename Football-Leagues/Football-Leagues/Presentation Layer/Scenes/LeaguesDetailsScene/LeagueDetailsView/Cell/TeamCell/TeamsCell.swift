@@ -21,11 +21,15 @@ class TeamsCell: UITableViewCell {
     @IBOutlet private weak var uiStadiumStack: UIStackView!
     @IBOutlet private weak var uiStadium: UILabel!
     
+    @IBOutlet weak var uiLinkButton: UIButton!
+    private var model:LeagueDetailsViewDataModel!
+    private var viewModel:leagueDetailsVMProtocol!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
         [uiTitleStack,uiAddressStack,uiStadiumStack,uiFoundationStack]
             .forEach{$0?.isHidden = true}
+        uiLinkButton.isHidden = true
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -36,10 +40,13 @@ class TeamsCell: UITableViewCell {
     
     
     @IBAction func linkPressed(_ sender: UIButton) {
-        
+        viewModel.input.onTapplingLink.send(model.link)
     }
     
-    func configure(withModel model:LeagueDetailsViewDataModel){
+    func configure(withModel model:LeagueDetailsViewDataModel,viewModel:leagueDetailsVMProtocol){
+        self.model = model
+        self.viewModel = viewModel
+        
         uiShortTitle.text = model.shortName
         uiFallName.text = model.name
         uiFoundation.text = model.foundation
@@ -50,25 +57,21 @@ class TeamsCell: UITableViewCell {
             uiImage.sd_setImage(with: url,placeholderImage: defaultImage)
         }
         if let _ = uiAddress{
-            animate {
-                self.uiAddressStack.isHidden = false
-            } completion: {}
+            self.uiAddressStack.isHidden = false
         }
         if let _ = uiFoundation{
-            animate {
-                self.uiFoundationStack.isHidden = false
-            } completion: {}
+            self.uiFoundationStack.isHidden = false
         }
         if let _ = uiStadium{
-            animate {
-                self.uiStadiumStack.isHidden = false
-            } completion: {}
+            self.uiStadiumStack.isHidden = false
         }
         if let _ = uiFallName{
-            animate {
-                self.uiTitleStack.isHidden = false
-            } completion: {}
+            self.uiTitleStack.isHidden = false
         }
+        if let _ = model.link {
+            self.uiLinkButton.isHidden = false
+        }
+        
         zip(self.uiColorsView,model.colors).forEach { view,colorName in
             view.backgroundColor = UIColor.getColor(name: colorName)
         }

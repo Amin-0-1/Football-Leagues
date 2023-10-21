@@ -35,6 +35,7 @@ class LeagueDetailsViewModel:leagueDetailsVMProtocol{
 
     private func bind(){
         bindOnScreenAppeared()
+        bindOnTapLink()
     }
     
     private func bindOnScreenAppeared(){
@@ -56,7 +57,15 @@ class LeagueDetailsViewModel:leagueDetailsVMProtocol{
 
         }.store(in: &cancellables)
     }
-    
+    private func bindOnTapLink(){
+        input.onTapplingLink.sink { [weak self] link in
+            guard let self = self else {return}
+            guard let link = link ,let url = URL(string: link) else {
+                fatalError()
+            }
+            self.coordinator.navigateToWebView(withLink: url)
+        }.store(in: &cancellables)
+    }
     private func handleData(withModel model:TeamsDataModel){
         var header:LeagueViewDataModel? = nil
         
