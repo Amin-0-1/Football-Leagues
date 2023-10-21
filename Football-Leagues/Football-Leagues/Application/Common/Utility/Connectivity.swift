@@ -14,17 +14,19 @@ func Connection(completion: @escaping (Bool) -> Void) {
     }
     
     let task = URLSession.shared.dataTask(with: url) { (_, response, error) in
-        if let error = error {
-            print("Error: \(error)")
-            completion(false)
-            return
-        }
-        
-        if let httpResponse = response as? HTTPURLResponse,
-           (200...299).contains(httpResponse.statusCode) {
-            completion(true)
-        } else {
-            completion(false)
+        DispatchQueue.main.async {
+            if let error = error {
+                print("Error: \(error)")
+                completion(false)
+                return
+            }
+            
+            if let httpResponse = response as? HTTPURLResponse,
+               (200...299).contains(httpResponse.statusCode) {
+                completion(true)
+            } else {
+                completion(false)
+            }
         }
     }
     

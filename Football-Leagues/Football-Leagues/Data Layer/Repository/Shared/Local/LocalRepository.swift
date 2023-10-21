@@ -11,41 +11,21 @@ import Combine
 
 class LocalRepository:LocalRepositoryInterface{
 
+    
+
     var localClient: CoreDataManagerProtocol
     var cancellables: Set<AnyCancellable> = []
     
     init(localClient: CoreDataManagerProtocol = CoreDataManager.shared) {
         self.localClient = localClient
     }
-    func fetch<T:Codable>(model: LocalFetchType, type: T.Type) -> Future<T, Error>  {
-        return self.localClient.fetch(model: model, type: type)
+    func fetch<T:Codable>(model: LocalEntityType) -> Future<T, Error>  {
+        return self.localClient.fetch(localEntityType: model)
         
-//        return Future<T,Error>{ promise in
-//
-//        }.eraseToAnyPublisher()
     }
     
-
-//    func fetch<T:Codable>(model: LocalFetchType, type: T.Type) -> Single<Result<T, Error>> {
-//        return Single.create { single in
-//            self.localClient.fetch(model: model, type: type).sink { completion in
-//                switch completion{
-//                    case .failure(let error):
-//                        single(.success(.failure(error)))
-//                    case .finished:
-//                        break
-//                }
-//            } receiveValue: { value in
-//                single(.success(.success(value)))
-//            }.store(in: &self.cancellables)
-//
-//            return Disposables.create()
-//        }
-//    }
-
-
-    func save<T:Codable>(data: T) -> Future<Bool, Error> {
-        return localClient.insert(data: data)
+    func save<T:Codable>(data: T, localEntityType: LocalEntityType) -> Future<Bool, Error> {
+        return localClient.insert(data: data,localEntityType: localEntityType)
     }
 
 }

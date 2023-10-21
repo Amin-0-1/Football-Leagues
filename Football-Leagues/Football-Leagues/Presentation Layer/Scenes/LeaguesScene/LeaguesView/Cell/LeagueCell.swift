@@ -10,15 +10,15 @@ import SDWebImage
 
 class LeagueCell: UITableViewCell {
 
-    @IBOutlet weak var uiLogo: UIImageView!
-    @IBOutlet weak var uiTitle: UILabel!
-    @IBOutlet weak var uiTypeLabel: UILabel!
-    @IBOutlet weak var uiTypeStack: UIStackView!
-    @IBOutlet weak var uiAreaLabel: UILabel!
-    @IBOutlet weak var uiAreaStack: UIStackView!
-    @IBOutlet weak var uiNumberOfSeasons: UILabel!
-    @IBOutlet weak var uiSeasonStack: UIStackView!
-    @IBOutlet weak var uiExtraDetailsStack: UIStackView!
+    @IBOutlet private weak var uiLogo: UIImageView!
+    @IBOutlet private weak var uiTitle: UILabel!
+    @IBOutlet private weak var uiTypeLabel: UILabel!
+    @IBOutlet private weak var uiTypeStack: UIStackView!
+    @IBOutlet private weak var uiAreaLabel: UILabel!
+    @IBOutlet private weak var uiAreaStack: UIStackView!
+    @IBOutlet private weak var uiNumberOfSeasons: UILabel!
+    @IBOutlet private weak var uiSeasonStack: UIStackView!
+    @IBOutlet private weak var uiExtraDetailsStack: UIStackView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -46,7 +46,7 @@ class LeagueCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func configure(withModel model: LeaguesVieweDataModel){
+    func configure(withModel model: LeagueViewDataModel){
         if let urlString = model.imageUrl,let url = URL(string: urlString){
             let placeholder = #imageLiteral(resourceName: "logo")
             uiLogo.sd_setImage(with: url, placeholderImage: placeholder)

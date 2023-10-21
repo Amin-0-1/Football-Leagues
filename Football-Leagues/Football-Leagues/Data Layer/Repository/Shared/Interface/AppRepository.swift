@@ -9,8 +9,8 @@ import Foundation
 import Combine
 
 protocol AppRepositoryInterface{
-    func fetch<T:Codable>(endPoint: EndPoint,localFetchType:LocalFetchType,type: T.Type) -> Future<T,Error>
-    func save<T:Codable>(data: T) -> Future<Bool, Error>
+    func fetch<T:Codable>(endPoint: EndPoint,localEntityType:LocalEntityType) -> Future<T,Error>
+    func save<T:Codable>(data: T,localEntityType:LocalEntityType) -> Future<Bool, Error>
 }
 
 // MARK: - single interface for a complex subsystems
@@ -25,46 +25,69 @@ class AppRepository:AppRepositoryInterface{
         self.remote = remote
     }
     
-    func fetch<T:Codable>(endPoint: EndPoint,localFetchType:LocalFetchType,type: T.Type) -> Future<T,Error>{
+    func fetch<T:Codable>(endPoint: EndPoint,localEntityType:LocalEntityType) -> Future<T,Error>{
         return Future<T,Error> { [weak self] promise in
             guard let self = self else {return}
             // MARK: - local fetch
-                        
-            self.local.fetch(model: localFetchType, type: type).sink { completion in
+            
+            self.local.fetch(model: localEntityType).sink { completion in
                 switch completion{
-                    case .finished:
-                        print("finished")
                     case .failure(let error):
                         Connection { isConnected in
                             if !isConnected{
                                 promise(.failure(error))
                             }else{
-                                // MARK: - remote fetch
-                                self.remote.fetch(endPoint: endPoint, type: type).sink { completion in
-                                    switch completion{
-                                        case .finished: break
-                                        case .failure(let error):
-                                            promise(.failure(error))
+                                self.fetchRemoteData(endPoint: endPoint,type: T.self) { result in
+                                    switch result {
+                                        case .success(let model):
+                                            promise(.success(model))
+                                        case .failure(let failure):
+                                            promise(.failure(failure))
                                     }
-                                } receiveValue: { model in
-                                    self.save(data: model)
-                                    promise(.success(model))
-                                }.store(in: &self.cancellables)
-                                // end of remote fetch
+                                }
+                            }
+                        }
+                    case .finished:
+                        Connection { isConnected in
+                            if !isConnected{
+                                promise(.failure(NetworkError.noInternetConnection))
+                            }else{
+                                self.fetchRemoteData(endPoint: endPoint, type: T.self) { result in
+                                    switch result {
+                                        case .success(let model):
+                                            promise(.success(model))
+                                        case .failure(let failure):
+                                            promise(.failure(failure))
+                                    }
+                                }
                             }
                         }
                 }
             } receiveValue: { value in
+                // MARK: - local data fetched successfully
                 promise(.success(value))
             }.store(in: &self.cancellables)
 
         }
         
     }
-    
-    func save<T:Codable>(data: T) -> Future<Bool, Error>  {
-        return local.save(data: data)
+    func save<T:Codable>(data: T,localEntityType:LocalEntityType) -> Future<Bool, Error>  {
+        return local.save(data: data,localEntityType: localEntityType)
     }
     
+    private func fetchRemoteData<T:Codable>(endPoint: EndPoint,type:T.Type,completion:@escaping (Result<T,Error>)->Void){
+        self.remote.fetch(endPoint: endPoint).sink { completionState in
+            switch completionState{
+                case .finished: break
+                case .failure(let error):
+                    completion(.failure(error))
+            }
+        } receiveValue: { model in
+            completion(.success(model))
+        
+        }.store(in: &self.cancellables)
+
+
+    }
 }
 

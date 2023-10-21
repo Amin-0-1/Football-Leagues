@@ -7,17 +7,19 @@
 
 import UIKit
 protocol LeaguesCoordinatorProtocol:Coordinator{
-    
+    func navigateToDetails(withData:String)
 }
-struct LeaguesCoordinator:LeaguesCoordinatorProtocol{
-    
+struct LeaguesCoordinator:LeaguesCoordinatorProtocol{    
     var navigationController: UINavigationController
     
     func start() {
         let vc = LeaguesViewController()
-        let viewModel = LeaguesViewModel()
+        let viewModel = LeaguesViewModel(coordinator: self)
         vc.viewModel = viewModel
-        vc.coordinator = self
         self.navigationController.setViewControllers([vc], animated: false)
+    }
+    func navigateToDetails(withData data: String) {
+        let coordinator = LeagueDetailsCoordinator(navigationController: navigationController,data: data)
+        coordinator.start()
     }
 }

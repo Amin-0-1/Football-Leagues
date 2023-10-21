@@ -16,10 +16,10 @@ class RemoteRepository:RemoteRepositoryInterface{
         self.apiClinet = apiClinet
     }
     
-    func fetch<T:Codable>(endPoint: EndPoint, type: T.Type) -> Future<T, Error> {
+    func fetch<T:Codable>(endPoint: EndPoint) -> Future<T, Error> {
         return Future<T,Error>{[weak self] promise in
             guard let self = self else {return}
-            self.apiClinet.execute(request: endPoint, type: type).sink { completion in
+            self.apiClinet.execute(request: endPoint).sink { completion in
                 switch completion{
                     case .finished: break
                     case .failure(let error):
@@ -32,18 +32,5 @@ class RemoteRepository:RemoteRepositoryInterface{
 
         }
         
-//        return Single.create { single in
-//            apiClinet.execute(request: endPoint, type: type).subscribe(onSuccess: { event in
-//                switch event{
-//                    case .success(let model):
-//                        single(.success(.success(model)))
-//                    case .failure(let error):
-//                        let error = NSError(domain: error.localizedDescription, code: 0)
-//                        single(.success(.failure(error)))
-//                }
-//            }).disposed(by: bag)
-//
-//            return Disposables.create()
-//        }
     }
 }

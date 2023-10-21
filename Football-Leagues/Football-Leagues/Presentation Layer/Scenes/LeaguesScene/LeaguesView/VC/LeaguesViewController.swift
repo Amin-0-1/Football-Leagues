@@ -9,61 +9,50 @@ import UIKit
 import Combine
 
 
-protocol LeaguesVMInputProtocol{
-    var onScreenAppeared: PassthroughSubject<Bool,Never> {get}
-    var models:[LeaguesVieweDataModel] {get}
-    var modelCount: Int {get}
-}
-struct LeaguesVMInput:LeaguesVMInputProtocol{
-    var onScreenAppeared: PassthroughSubject<Bool,Never>
-    var models: [LeaguesVieweDataModel]
-    var modelCount: Int
-    init() {
-        self.onScreenAppeared = PassthroughSubject<Bool,Never>()
-        models = []
-        modelCount = 0
-    }
-    func getModel(atIndex index:Int)-> LeaguesVieweDataModel{
-        return models[index]
-    }
-}
-
 class LeaguesViewController: UIViewController {
 
-    var viewModel:LeaguesVMProtocol!
-    var coordinator:LeaguesCoordinatorProtocol!
-    
-    private var refreshControl : UIRefreshControl!
-    private var cancellable:Set<AnyCancellable> = []
     @IBOutlet private weak var uiTableView: UITableView!
+    private lazy var refreshControl : UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.tintColor = .systemGreen
+        refreshControl.addTarget(self, action: #selector(refreshControlValueChanged), for: .valueChanged)
+        return refreshControl
+    }()
+    
+    var viewModel:LeaguesViewModel!
+    private var cancellable:Set<AnyCancellable> = []
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
         bind()
         viewModel.input.onScreenAppeared.send(false)
     }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+            self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
     private func configureView(){
         title = "Football Leagues"
-        refreshControl = UIRefreshControl()
-        refreshControl.tintColor = .systemGreen
-        refreshControl.addTarget(self, action: #selector(refreshControlValueChanged), for: .valueChanged)
+        navigationController?.setNavigationBarHidden(true, animated: false)
+  
         uiTableView.addSubview(refreshControl)
         uiTableView.register(UINib(nibName: LeagueCell.nibName, bundle: nil), forCellReuseIdentifier: LeagueCell.reuseIdentifier)
     }
     private func bind(){
         
         // MARK: - View Model Binding
-        viewModel.outPut.progress.sink {[weak self] value in
+
+        viewModel.output.progress.sink {[weak self] value in
             guard let self = self else {return}
             value ? self.showProgress() : self.hideProgress()
         }.store(in: &cancellable)
         
-        viewModel.outPut.showError.sink { [weak self] message in
+        viewModel.output.showError.sink { [weak self] message in
             guard let self = self else {return}
             self.showError(message: message)
         }.store(in: &cancellable)
         
-        viewModel.outPut.onFinishFetchingLeagues.sink {[weak self] model in
+        viewModel.output.leagues.sink {[weak self] model in
             guard let self = self else {return}
             self.uiTableView.reloadData()
         }.store(in: &cancellable)
@@ -79,12 +68,18 @@ class LeaguesViewController: UIViewController {
 extension LeaguesViewController:UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.input.modelCount
+        return viewModel.output.publishableLeagues.value.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: LeagueCell.reuseIdentifier) as? LeagueCell else {fatalError()}
-        cell.configure(withModel: viewModel.input.getModel(atIndex: indexPath.row))
+        let model = viewModel.output.publishableLeagues.value.models[indexPath.row]
+        cell.configure(withModel: model)
         return cell
+    }
+}
+extension LeaguesViewController: UITableViewDelegate{
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        viewModel.input.onTappedCell.send(indexPath.row)
     }
 }

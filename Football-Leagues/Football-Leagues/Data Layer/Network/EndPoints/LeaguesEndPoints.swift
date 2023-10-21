@@ -25,6 +25,16 @@ enum LeaguesEndPoints:CustomStringConvertible{
                 return "/v4/competitions/\(code)/matches"
         }
     }
+    var code:String?{
+        switch self {
+            case .getAllLeagues:
+                return nil
+            case .getSeasons(let code),
+                    .getTeams(let code),
+                    .getMatches(let code):
+                    return code
+        }
+    }
 }
 
 extension LeaguesEndPoints:EndPoint{
@@ -60,8 +70,6 @@ extension LeaguesEndPoints:EndPoint{
                 return .URLEncoding
         }
     }
-    
-    
 }
 
 

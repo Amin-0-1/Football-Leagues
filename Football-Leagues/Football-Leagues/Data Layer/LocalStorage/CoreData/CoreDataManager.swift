@@ -11,26 +11,48 @@ import Combine
 
 
 protocol CoreDataManagerProtocol{
-    func insert<T:Codable>(data:T)->Future<Bool,Error>
-    func fetch<T:Codable>(model:LocalFetchType,type:T.Type)-> Future<T,Error>
+    func insert<T:Codable>(data:T,localEntityType:LocalEntityType)->Future<Bool,Error>
+    func fetch<T:Codable>(localEntityType:LocalEntityType)-> Future<T,Error>
 }
 class CoreDataManager:CoreDataManagerProtocol{
+    
     private let coreData = CoreDataStack.getInstance(withModel: AppConfiguration.shared.dataModel)
     
     public static let shared = CoreDataManager()
     private init(){}
     
-    func insert<T:Codable>(data: T)-> Future<Bool,Error> {
-        return Future<Bool,Error>{ promise in
-            let encoded = try? JSONEncoder().encode(data)
+    
+    func insert<T:Codable>(data: T, localEntityType: LocalEntityType)-> Future<Bool,Error> {
+    
+        return Future<Bool, Error> { promise in
+
             self.coreData.performBackgroundTask { context in
-                self.truncate(entity: .leagues, context: context)
-                let obj = LeagueEntity(context: context)
-                obj.data = encoded
-                do{
+                self.truncate(entity: localEntityType, context: context)
+                switch localEntityType {
+                    case .leagues:
+                        let obj = LeagueEntity(context: context)
+                        if let type = data as? LeagueDataModel{
+                            guard let encoded = try? JSONEncoder().encode(type) else {
+                                promise(.failure(Errors.decodingFailed))
+                                return
+                            }
+                            obj.data = encoded
+                        }
+                    case .teams(let code):
+                        let obj = LeagueDetailsEntity(context: context)
+                        if let type = data as? TeamsDataModel{
+                            guard let encoded = try? JSONEncoder().encode(type) else {
+                                promise(.failure(Errors.decodingFailed))
+                                return
+                            }
+                            obj.data = encoded
+                            obj.code = code
+                        }
+                }
+                do {
                     try context.save()
                     promise(.success(true))
-                }catch{
+                } catch {
                     promise(.failure(error))
                     debugPrint(error)
                 }
@@ -38,11 +60,11 @@ class CoreDataManager:CoreDataManagerProtocol{
         }
     }
 
-    func fetch<T:Codable>(model:LocalFetchType,type:T.Type)-> Future<T,Error>{
+    func fetch<T:Codable>(localEntityType:LocalEntityType)-> Future<T,Error>{
 
         return Future<T, Error>{ promise in
-            switch model {
-                case .Leagues:
+            switch localEntityType {
+                case .leagues:
                     let request : NSFetchRequest<LeagueEntity> = LeagueEntity.fetchRequest()
                     do{
                         let all = try self.coreData.mainContext.fetch(request)
@@ -51,7 +73,28 @@ class CoreDataManager:CoreDataManagerProtocol{
                             return
                         }
                         if let data = first.data{
-                            let decoded = try JSONDecoder().decode(type, from: data)
+                            let decoded = try JSONDecoder().decode(T.self, from: data)
+                            promise(.success(decoded))
+                        }else{
+                            promise(.failure(Errors.decodingFailed))
+                        }
+                    }catch{
+                        promise(.failure(Errors.uncompleted))
+                    }
+                case .teams(let code):
+                    let request : NSFetchRequest<LeagueDetailsEntity> = LeagueDetailsEntity.fetchRequest()
+                    let attribute = "code"
+                    let predicate = NSPredicate(format: "%K == %@",attribute,code)
+                    request.predicate = predicate
+                    do{
+                        let all = try self.coreData.mainContext.fetch(request)
+                        guard let first = all.first else {
+                            promise(.failure(Errors.empty))
+                            return
+                        }
+                        if let data = first.data{
+                            let decoded = try JSONDecoder().decode(T.self, from: data)
+                            
                             promise(.success(decoded))
                         }else{
                             promise(.failure(Errors.decodingFailed))
@@ -61,11 +104,10 @@ class CoreDataManager:CoreDataManagerProtocol{
                     }
             }
             
-            
         }
     }
     
-    private func truncate(entity:Entities,context:NSManagedObjectContext){
+    private func truncate(entity:LocalEntityType,context:NSManagedObjectContext){
         switch entity {
             case .leagues:
                 let fetch: NSFetchRequest<LeagueEntity> = LeagueEntity.fetchRequest()
@@ -78,16 +120,26 @@ class CoreDataManager:CoreDataManagerProtocol{
                 }catch{
                     debugPrint(error)
                 }
-                
+            case .teams(let code):
+                let fetch: NSFetchRequest<LeagueDetailsEntity> = LeagueDetailsEntity.fetchRequest()
+                let attribute = "code"
+                let predicate = NSPredicate(format: "%K == %@",attribute,code)
+                fetch.predicate = predicate
+                do{
+                    let allRecord = try context.fetch(fetch)
+                    allRecord.forEach { record in
+                        context.delete(record)
+                    }
+                    try context.save()
+                }catch{
+                    debugPrint(error)
+                }
         }
-        
     }
 }
 
 extension CoreDataManager{
-    enum Entities:String{
-        case leagues = "LeagueEntity"
-    }
+
     enum Errors: Error{
         case empty
         case uncompleted

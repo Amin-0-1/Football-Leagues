@@ -15,9 +15,6 @@ protocol Coordinator {
 struct AppCoordinator:Coordinator{
     var navigationController: UINavigationController
 
-    init(navigationController: UINavigationController) {
-        self.navigationController = navigationController
-    }
     func start() {
         let leagueCoordinator = LeaguesCoordinator(navigationController: navigationController)
         leagueCoordinator.start()

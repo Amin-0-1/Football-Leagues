@@ -10,21 +10,27 @@ import UIKit
 extension UIViewController{
     var indicator:UIActivityIndicatorView{
         let indicator = ActivityIndicator.shared.color(color: .systemGreen).build()
-        view.addSubview(indicator)
-        indicator.center = view.center
+        DispatchQueue.main.async {
+            self.view.addSubview(indicator)
+            indicator.center = self.view.center
+        }
         return indicator
     }
     
     func showProgress(){
-        indicator.startAnimating()
-        indicator.isHidden = false
-        view.isUserInteractionEnabled = false
+        DispatchQueue.main.async {
+            self.indicator.startAnimating()
+            self.indicator.isHidden = false
+            self.view.isUserInteractionEnabled = false
+        }
     }
     
     func hideProgress(){
-        indicator.stopAnimating()
-        indicator.isHidden = true
-        view.isUserInteractionEnabled = true
+        DispatchQueue.main.async {
+            self.indicator.stopAnimating()
+            self.indicator.isHidden = true
+            self.view.isUserInteractionEnabled = true
+        }
     }
     
     func showError(message:String){
