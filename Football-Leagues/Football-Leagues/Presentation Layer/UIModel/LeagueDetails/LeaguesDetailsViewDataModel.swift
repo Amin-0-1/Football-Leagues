@@ -16,7 +16,7 @@ struct LeagueDetailsViewDataModel{
     let image:String?
     let name:String?
     let shortName:String?
-    let colors:String?
+    let colors:[String]
     let link:String?
     let stadium:String?
     let address:String?

@@ -9,8 +9,8 @@ import Foundation
 import Combine
 
 protocol LeagueDetailsRepositoryProtocol{
-    func fetchTeams(endPoint:EndPoint)->Future<TeamsDataModel,CustomDomainError>
-    func save<T:Codable>(leagues:T)->Future<Bool,Error>
+    func fetchTeams(endPoint:EndPoint,localEntityType:LocalEntityType)->Future<TeamsDataModel,CustomDomainError>
+    func save(model:TeamsDataModel,localEntityType:LocalEntityType)->Future<Bool,Error>
 }
 class LeagueDetailsRepository:LeagueDetailsRepositoryProtocol{
     private var appRepo:AppRepositoryInterface
@@ -19,14 +19,11 @@ class LeagueDetailsRepository:LeagueDetailsRepositoryProtocol{
         self.appRepo = appRepo
     }
     
-    func fetchTeams(endPoint:EndPoint)->Future<TeamsDataModel,CustomDomainError> {
+    func fetchTeams(endPoint:EndPoint,localEntityType:LocalEntityType)->Future<TeamsDataModel,CustomDomainError> {
         
         return Future<TeamsDataModel,CustomDomainError>{[weak self] promise in
-            guard let self = self else {
-                promise(.failure(CustomDomainError.serverError))
-                return
-            }
-            appRepo.fetch(endPoint: endPoint, localFetchType: .teams, type: TeamsDataModel.self).sink { completion in
+            guard let self = self else {return}
+            appRepo.fetch(endPoint: endPoint, localEntityType: localEntityType).sink { completion in
                 switch completion{
                     case .finished:
                         break
@@ -43,10 +40,8 @@ class LeagueDetailsRepository:LeagueDetailsRepositoryProtocol{
                 promise(.success(model))
             }.store(in: &self.cancellables)
         }
-
     }
-    func save<T:Codable>(leagues: T) -> Future<Bool, Error> {
-        return appRepo.save(data: leagues)
+    func save(model: TeamsDataModel, localEntityType: LocalEntityType) -> Future<Bool, Error> {
+        return appRepo.save(data: model, localEntityType: localEntityType)
     }
-    
 }

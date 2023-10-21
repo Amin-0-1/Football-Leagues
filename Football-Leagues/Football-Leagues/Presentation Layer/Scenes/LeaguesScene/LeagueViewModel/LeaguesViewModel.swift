@@ -49,8 +49,9 @@ class LeaguesViewModel:leaguesViewModelProtocol{
             }
             
             usecase.fetchLeagues().sink { completion in
+                self.output.publishableProgress.send(false)
                 switch completion{
-                    case .finished: self.output.publishableProgress.send(false)
+                    case .finished: break
                     case .failure(let error):
                         self.output.publishedShowError.send(error.localizedDescription)
                 }

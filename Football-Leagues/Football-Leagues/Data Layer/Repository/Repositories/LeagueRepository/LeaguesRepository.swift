@@ -10,7 +10,7 @@ import Combine
 
 protocol LeaguesRepoInterface{
     func fetchLeagues(endPoint: EndPoint) -> Future<LeagueDataModel, CustomDomainError>
-    func save<T:Codable>(leagues:T)->Future<Bool,Error>
+    func save<T:Codable>(leagues: T,localEntityType:LocalEntityType) -> Future<Bool, Error>
 }
 class LeaguesReposiotory:LeaguesRepoInterface{
     
@@ -22,7 +22,7 @@ class LeaguesReposiotory:LeaguesRepoInterface{
     
     func fetchLeagues(endPoint: EndPoint) -> Future<LeagueDataModel, CustomDomainError> {
         return Future<LeagueDataModel,CustomDomainError> { promise in
-            self.appRepo.fetch(endPoint: endPoint, localFetchType: .leagues, type: LeagueDataModel.self).sink { completion in
+            self.appRepo.fetch(endPoint: endPoint, localEntityType: .leagues).sink { completion in
                 switch completion{
                     case .finished: break
                     case .failure(let error):
@@ -40,8 +40,8 @@ class LeaguesReposiotory:LeaguesRepoInterface{
         }
     }
     
-    func save<T:Codable>(leagues: T) -> Future<Bool, Error> {
-        return appRepo.save(data: leagues)
+    func save<T:Codable>(leagues: T,localEntityType:LocalEntityType) -> Future<Bool, Error> {
+        return appRepo.save(data: leagues,localEntityType: localEntityType)
     }
 }
 

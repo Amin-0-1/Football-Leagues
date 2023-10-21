@@ -27,7 +27,7 @@ class LeagueDetailsUsecase:LeagueDetailsUsecaseProtocol{
                 return
             }
             
-            leageDetailsRepo.fetchTeams(endPoint: LeaguesEndPoints.getTeams(code: code)).sink { completion in
+            leageDetailsRepo.fetchTeams(endPoint: LeaguesEndPoints.getTeams(code: code), localEntityType: .teams(code: code)).sink { completion in
                 switch completion{
                     case .finished:
                         break
@@ -35,10 +35,22 @@ class LeagueDetailsUsecase:LeagueDetailsUsecaseProtocol{
                         print(error.localizedDescription)
                         promise(.failure(error))
                 }
-            } receiveValue: { model in
+            } receiveValue: { [weak self] model in
+                self?.save(model: model, localEntityType: .teams(code: code))
                 promise(.success(model))
             }.store(in: &self.cancellables)
         }
     }
     
+    private func save(model:TeamsDataModel,localEntityType:LocalEntityType){
+        leageDetailsRepo.save(model: model, localEntityType: localEntityType).sink { completion in
+            switch completion{
+                case .finished: break
+                case .failure(let error):
+                    debugPrint(error)
+            }
+        } receiveValue: { isSaved in
+            debugPrint(isSaved)
+        }.store(in: &cancellables)
+    }
 }

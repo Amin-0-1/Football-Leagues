@@ -10,6 +10,8 @@ import Combine
 
 @testable import Football_Leagues
 class FakeLeaguesRepository:LeaguesRepoInterface{
+    
+    
    
     var shouldFailed:Bool
     init(shouldFailed: Bool) {
@@ -32,12 +34,13 @@ class FakeLeaguesRepository:LeaguesRepoInterface{
             }
         }
     }
-    func save<T>(leagues: T) -> Future<Bool, Error> where T : Decodable, T : Encodable {
-        isSaveVisited = true
-        return Future<Bool,Error>{ primse in
-            primse(.success(true))
+    
+    func save<T>(leagues: T, localEntityType: Football_Leagues.LocalEntityType) -> Future<Bool, Error>  {
+        return Future<Bool,Error>{ promise in
+            promise(.failure(NSError(domain: self.error, code: 0)))
         }
     }
+
 }
 
 

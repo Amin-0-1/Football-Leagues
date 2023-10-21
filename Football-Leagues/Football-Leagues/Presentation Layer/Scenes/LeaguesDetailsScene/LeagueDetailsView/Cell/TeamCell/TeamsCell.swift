@@ -69,6 +69,12 @@ class TeamsCell: UITableViewCell {
                 self.uiTitleStack.isHidden = false
             } completion: {}
         }
-        
+        zip(self.uiColorsView,model.colors).forEach { view,colorName in
+            view.backgroundColor = UIColor.getColor(name: colorName)
+        }
+        uiColorsView.forEach{$0.layer.borderWidth = 1}
+        uiColorsView[0].layer.borderColor = UIColor.customColor(.greenColor).cgColor
+        uiColorsView[1].layer.borderColor = UIColor.customColor(.greenColor).cgColor
     }
 }
+

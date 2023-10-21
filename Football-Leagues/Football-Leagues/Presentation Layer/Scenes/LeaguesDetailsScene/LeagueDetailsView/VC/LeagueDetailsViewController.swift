@@ -46,7 +46,7 @@ class LeagueDetailsViewController: UIViewController {
             self.uiTableView.reloadData()
 
         }.store(in: &cancellables)
-        
+
         viewModel.input.onScreenAppeared.send(false)
     }
     

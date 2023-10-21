@@ -21,8 +21,8 @@ struct Competition: Codable {
     
 }
 
-struct CurrentSeason: Codable {
-    let id: Int?
-    let startDate, endDate: String?
-    let currentMatchday: Int?
-}
+//struct CurrentSeason: Codable {
+//    let id: Int?
+//    let startDate, endDate: String?
+//    let currentMatchday: Int?
+//}

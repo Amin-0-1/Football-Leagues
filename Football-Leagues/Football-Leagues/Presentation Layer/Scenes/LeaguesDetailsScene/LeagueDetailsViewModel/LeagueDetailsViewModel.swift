@@ -64,9 +64,18 @@ class LeagueDetailsViewModel:leagueDetailsVMProtocol{
             header = LeagueViewDataModel(imageUrl: league.emblem, name: league.name, code: league.code, numberOfSeasons: league.numberOfAvailableSeasons, area: league.area?.code, type: league.type)
         }
         let newModel = LeaguesDetailsViewDataModel(header: header, countOfTeams: model.count,
-                                                   models: model.teams?.compactMap{LeagueDetailsViewDataModel(image: $0.crest, name: $0.shortName, shortName: $0.tla, colors: $0.clubColors, link: $0.website, stadium: $0.venue, address: $0.address, foundation: $0.founded?.description)} ?? [])
+                                                   models: model.teams?.compactMap{LeagueDetailsViewDataModel(image: $0.crest, name: $0.shortName, shortName: $0.tla, colors: splitColors($0.clubColors), link: $0.website, stadium: $0.venue, address: $0.address, foundation: $0.founded?.description)} ?? [])
 
         output.publishableTeams.send(newModel)
     }
+    
+    private func splitColors(_ input: String?) -> [String] {
+        guard let input = input else {return []}
+        return input
+            .split(separator: "/")
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+            .filter { !$0.isEmpty }
+    }
+
 }
 
