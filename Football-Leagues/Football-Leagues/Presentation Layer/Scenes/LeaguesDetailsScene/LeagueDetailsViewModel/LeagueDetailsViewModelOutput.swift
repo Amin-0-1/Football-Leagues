@@ -9,12 +9,13 @@ import Foundation
 import Combine
 
 protocol LeagueDetailsVMOutputProtocol{
-    
+    var publishableTeams : CurrentValueSubject<LeaguesDetailsViewDataModel,Never> {get}
     var publishableProgress: PassthroughSubject<Bool,Never> {get}
     var publishableError: PassthroughSubject<String,Never> {get}
 }
 
 struct LeagueDetailsVMOutput:LeagueDetailsVMOutputProtocol{
+    var publishableTeams : CurrentValueSubject<LeaguesDetailsViewDataModel,Never>
     var publishableProgress: PassthroughSubject<Bool, Never>
     var publishableError: PassthroughSubject<String, Never>
     
@@ -23,7 +24,7 @@ struct LeagueDetailsVMOutput:LeagueDetailsVMOutputProtocol{
     init(){
         publishableProgress = PassthroughSubject<Bool,Never>()
         publishableError = PassthroughSubject<String,Never>()
-        
+        publishableTeams = CurrentValueSubject<LeaguesDetailsViewDataModel,Never>(.init(models: []))
         progress = publishableProgress.eraseToAnyPublisher()
         error = publishableError.eraseToAnyPublisher()
     }

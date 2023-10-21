@@ -8,5 +8,6 @@
 import Foundation
 
 enum LocalFetchType{
-    case Leagues
+    case leagues
+    case teams
 }

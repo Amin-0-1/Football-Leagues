@@ -47,7 +47,8 @@ class AppRepository:AppRepositoryInterface{
                                             promise(.failure(error))
                                     }
                                 } receiveValue: { model in
-                                    self.save(data: model)
+
+                                    _ = self.save(data: model)
                                     promise(.success(model))
                                 }.store(in: &self.cancellables)
                                 // end of remote fetch
@@ -61,7 +62,6 @@ class AppRepository:AppRepositoryInterface{
         }
         
     }
-    
     func save<T:Codable>(data: T) -> Future<Bool, Error>  {
         return local.save(data: data)
     }

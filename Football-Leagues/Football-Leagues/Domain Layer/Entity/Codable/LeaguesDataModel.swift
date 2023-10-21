@@ -19,19 +19,6 @@ struct Competition: Codable {
     let emblem: String?
     let numberOfAvailableSeasons: Int?
     
-    enum CoodingKeys:String,CodingKey{
-        case id
-        case are
-        case name,code,type
-        case emblem
-        case currentSeason
-        case numberOfAvailableSeasons
-        case lastUpdated
-    }
-}
-
-struct Area: Codable {
-    let name, code: String?
 }
 
 struct CurrentSeason: Codable {

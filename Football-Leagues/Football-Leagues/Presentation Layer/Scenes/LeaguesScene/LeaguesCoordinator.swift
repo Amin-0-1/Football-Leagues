@@ -7,7 +7,7 @@
 
 import UIKit
 protocol LeaguesCoordinatorProtocol:Coordinator{
-    func navigateToDetails(withData:LeaguesVieweDataModel)
+    func navigateToDetails(withData:String)
 }
 struct LeaguesCoordinator:LeaguesCoordinatorProtocol{    
     var navigationController: UINavigationController
@@ -18,8 +18,8 @@ struct LeaguesCoordinator:LeaguesCoordinatorProtocol{
         vc.viewModel = viewModel
         self.navigationController.setViewControllers([vc], animated: false)
     }
-    func navigateToDetails(withData: LeaguesVieweDataModel) {
-        let coordinator = LeagueDetailsCoordinator(navigationController: navigationController)
+    func navigateToDetails(withData data: String) {
+        let coordinator = LeagueDetailsCoordinator(navigationController: navigationController,data: data)
         coordinator.start()
     }
 }

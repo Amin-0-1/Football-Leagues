@@ -21,7 +21,7 @@ class LeaguesViewModel:leaguesViewModelProtocol{
     
     var usecase:LeaguesUsecaseProtocol
     var coordinator:LeaguesCoordinatorProtocol!
-    var leagues:[LeaguesVieweDataModel] = []
+    var leagues:[LeaguesViewDataModel] = []
     
     private var cancellable:Set<AnyCancellable> = []
     
@@ -50,14 +50,14 @@ class LeaguesViewModel:leaguesViewModelProtocol{
             
             usecase.fetchLeagues().sink { completion in
                 switch completion{
-                    case .finished: break
+                    case .finished: self.output.publishableProgress.send(false)
                     case .failure(let error):
                         self.output.publishedShowError.send(error.localizedDescription)
                 }
             } receiveValue: { model in
-                let newModel = model.competitions.compactMap{
-                    LeaguesVieweDataModel(imageUrl: $0.emblem, name: $0.name, code: $0.code, numberOfSeasons: $0.numberOfAvailableSeasons, area: $0.area?.code, type: $0.type)
-                }
+                let newModel = LeaguesViewDataModel(
+                                    count:model.count,
+                                    models:model.competitions.compactMap{LeagueViewDataModel(imageUrl: $0.emblem, name: $0.name, code: $0.code, numberOfSeasons: $0.numberOfAvailableSeasons, area: $0.area?.code, type: $0.type)})
                 self.output.publishableProgress.send(false)
                 self.output.publishableLeagues.send(newModel)
             }.store(in: &self.cancellable)
@@ -69,8 +69,8 @@ class LeaguesViewModel:leaguesViewModelProtocol{
     private func bindOnTappedCell(){
         input.onTappedCell.sink { [weak self] index in
             guard let self = self else {return}
-            let model = output.publishableLeagues.value[index]
-            coordinator?.navigateToDetails(withData: model)
+            guard let data = output.publishableLeagues.value.models[index].code else {return}
+            coordinator?.navigateToDetails(withData: data)
         }.store(in: &cancellable)
     }
 }

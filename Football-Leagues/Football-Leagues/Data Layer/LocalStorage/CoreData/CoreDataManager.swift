@@ -42,7 +42,7 @@ class CoreDataManager:CoreDataManagerProtocol{
 
         return Future<T, Error>{ promise in
             switch model {
-                case .Leagues:
+                case .leagues:
                     let request : NSFetchRequest<LeagueEntity> = LeagueEntity.fetchRequest()
                     do{
                         let all = try self.coreData.mainContext.fetch(request)
@@ -59,6 +59,9 @@ class CoreDataManager:CoreDataManagerProtocol{
                     }catch{
                         promise(.failure(Errors.uncompleted))
                     }
+                case .teams:
+                    promise(.failure(Errors.uncompleted))
+                    #warning("needs an implementaion")
             }
             
             

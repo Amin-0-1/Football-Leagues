@@ -22,7 +22,7 @@ class LeaguesReposiotory:LeaguesRepoInterface{
     
     func fetchLeagues(endPoint: EndPoint) -> Future<LeagueDataModel, CustomDomainError> {
         return Future<LeagueDataModel,CustomDomainError> { promise in
-            self.appRepo.fetch(endPoint: endPoint, localFetchType: .Leagues, type: LeagueDataModel.self).sink { completion in
+            self.appRepo.fetch(endPoint: endPoint, localFetchType: .leagues, type: LeagueDataModel.self).sink { completion in
                 switch completion{
                     case .finished: break
                     case .failure(let error):

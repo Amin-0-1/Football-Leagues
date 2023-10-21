@@ -46,7 +46,7 @@ class LeagueCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func configure(withModel model: LeaguesVieweDataModel){
+    func configure(withModel model: LeagueViewDataModel){
         if let urlString = model.imageUrl,let url = URL(string: urlString){
             let placeholder = #imageLiteral(resourceName: "logo")
             uiLogo.sd_setImage(with: url, placeholderImage: placeholder)
