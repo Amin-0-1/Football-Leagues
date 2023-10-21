@@ -72,7 +72,7 @@ extension LeagueDetailsViewController:UITableViewDataSource,UITableViewDelegate{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TeamsCell.reuseIdentifier) as? TeamsCell else {fatalError()}
         let model = viewModel.output.publishableTeams.value.models[indexPath.row]
-        cell.configure(withModel:model)
+        cell.configure(withModel:model,viewModel:self.viewModel)
         return cell
     }
 }

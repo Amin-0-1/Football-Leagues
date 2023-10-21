@@ -7,12 +7,12 @@
 
 import UIKit
 
-protocol Coordinator {
+protocol AnyCoordinator {
     var navigationController: UINavigationController { get set }
     func start()
 }
 
-struct AppCoordinator:Coordinator{
+struct AppCoordinator:AnyCoordinator{
     var navigationController: UINavigationController
 
     func start() {

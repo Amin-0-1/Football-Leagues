@@ -63,6 +63,9 @@
                                                                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                                                         <integer key="value" value="10"/>
                                                                                     </userDefinedRuntimeAttribute>
+                                                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                                                        <integer key="value" value="1"/>
+                                                                                    </userDefinedRuntimeAttribute>
                                                                                 </userDefinedRuntimeAttributes>
                                                                             </view>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f3f-pU-8GA">
@@ -75,6 +78,9 @@
                                                                                 <userDefinedRuntimeAttributes>
                                                                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                                                         <integer key="value" value="10"/>
+                                                                                    </userDefinedRuntimeAttribute>
+                                                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                                                        <integer key="value" value="1"/>
                                                                                     </userDefinedRuntimeAttribute>
                                                                                 </userDefinedRuntimeAttributes>
                                                                             </view>
@@ -319,6 +325,7 @@
                 <outlet property="uiFoundation" destination="4G6-2j-Wai" id="6aV-dd-9Jc"/>
                 <outlet property="uiFoundationStack" destination="o0V-SX-TL6" id="eFo-8v-sRz"/>
                 <outlet property="uiImage" destination="XIf-cz-60U" id="39Q-gD-tAG"/>
+                <outlet property="uiLinkButton" destination="kJp-6n-pMl" id="wOD-yh-IYo"/>
                 <outlet property="uiShortTitle" destination="gIA-yR-Lw5" id="Efc-Vy-q8n"/>
                 <outlet property="uiStadium" destination="m7U-T0-T9V" id="Q0Q-4N-FCN"/>
                 <outlet property="uiStadiumStack" destination="8qA-Rw-9Mg" id="EfP-Gw-SnO"/>

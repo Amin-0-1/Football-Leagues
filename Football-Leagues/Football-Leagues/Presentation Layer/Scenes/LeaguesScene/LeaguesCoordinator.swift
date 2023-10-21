@@ -6,7 +6,7 @@
 //
 
 import UIKit
-protocol LeaguesCoordinatorProtocol:Coordinator{
+protocol LeaguesCoordinatorProtocol:AnyCoordinator{
     func navigateToDetails(withData:String)
 }
 struct LeaguesCoordinator:LeaguesCoordinatorProtocol{    
