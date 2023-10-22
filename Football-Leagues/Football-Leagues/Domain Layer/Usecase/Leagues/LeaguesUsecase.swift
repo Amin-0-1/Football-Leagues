@@ -10,10 +10,6 @@ import Combine
 
 protocol LeaguesUsecaseProtocol{
     func fetchLeagues() -> Future<LeagueDataModel,CustomDomainError>
-//    func fetchTeams() -> Single<Result<LeagueDataModel,Error>>
-//    func fetchGames() -> Single<Result<LeagueDataModel,Error>>
-//    func fetchSeasons() -> Single<Result<LeagueDataModel,Error>>
-    
 }
 
 class LeaguesUsecase : LeaguesUsecaseProtocol{
@@ -35,39 +31,19 @@ class LeaguesUsecase : LeaguesUsecaseProtocol{
                         promise(.failure(error))
                 }
             } receiveValue: { model in
-                self.save(leagues: model)
+                self.save(leagues: model,localEntityType: .leagues)
                 promise(.success(model))
             }.store(in: &self.cancellables)
         }
     }
 
-    private func save(leagues:LeagueDataModel){
-        leaguesRepo.save(leagues: leagues).sink { _ in } receiveValue: { isSaved in
+    private func save(leagues:LeagueDataModel,localEntityType:LocalEntityType){
+        leaguesRepo.save(leagues: leagues,localEntityType: .leagues).sink { _ in } receiveValue: { isSaved in
             print(isSaved)
         }.store(in: &cancellables)
 
     }
     
-//    func fetchTeams() -> Single<Result<LeagueDataModel, Error>> {
-//        return Single.create {[weak self] single in
-//            guard let self = self,let competitions = self.leagueModel?.competitions else {return Disposables.create()}
-//
-//            for index in competitions.indices{
-//                if let code = self.leagueModel?.competitions[index].code{
-//                    self.leaguesRepo.fetchTeams(endPoint: LeaguesEndPoints.getTeams(code: code)).subscribe(onSuccess: { event in
-//                        switch event{
-//                            case .success(let model):
-//                                self.leagueModel?.competitions[index].numberOfTeams = model.teams?.count
-//                                single(.success(.success(self.leagueModel!)))
-//                            case .failure(let error):
-//                                print(error.localizedDescription)
-//                        }
-//                    }).disposed(by: bag)
-//                }
-//            }
-//            return Disposables.create()
-//        }
-//    }
 //
 //    func fetchGames() -> Single<Result<LeagueDataModel, Error>> {
 //        return Single.create {[weak self] single in
@@ -89,27 +65,5 @@ class LeaguesUsecase : LeaguesUsecaseProtocol{
 //            return Disposables.create()
 //        }
 //    }
-//
-//    func fetchSeasons() -> Single<Result<LeagueDataModel, Error>> {
-//        return Single.create {[weak self] single in
-//            guard let self = self,let competitions = self.leagueModel?.competitions else {return Disposables.create()}
-//
-//            for index in competitions.indices{
-//                if let code = self.leagueModel?.competitions[index].code{
-//                    self.leaguesRepo.fetchSeasons(endPoint: LeaguesEndPoints.getSeasons(code: code)).subscribe(onSuccess: { event in
-//                        switch event{
-//                            case .success(let model):
-//                                self.leagueModel?.competitions[index].numberOfSeasons = model.seasons?.count
-//                                single(.success(.success(self.leagueModel!)))
-//                            case .failure(let error):
-//                                print(error.localizedDescription)
-//                        }
-//                    }).disposed(by: bag)
-//                }
-//            }
-//            return Disposables.create()
-//        }
-//    }
-
 }
 

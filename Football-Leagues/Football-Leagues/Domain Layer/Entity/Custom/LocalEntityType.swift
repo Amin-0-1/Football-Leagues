@@ -7,6 +7,8 @@
 
 import Foundation
 
-enum LocalFetchType{
-    case Leagues
+enum LocalEntityType{
+    case leagues
+    case teams(code:String)
+    case games(id:Int)
 }

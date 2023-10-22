@@ -7,17 +7,14 @@
 
 import UIKit
 
-protocol Coordinator {
+protocol AnyCoordinator {
     var navigationController: UINavigationController { get set }
     func start()
 }
 
-struct AppCoordinator:Coordinator{
+struct AppCoordinator:AnyCoordinator{
     var navigationController: UINavigationController
 
-    init(navigationController: UINavigationController) {
-        self.navigationController = navigationController
-    }
     func start() {
         let leagueCoordinator = LeaguesCoordinator(navigationController: navigationController)
         leagueCoordinator.start()

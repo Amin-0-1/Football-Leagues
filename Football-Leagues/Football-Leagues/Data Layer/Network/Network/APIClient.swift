@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 protocol APIClientProtocol{
-    func execute<T:Codable>(request:EndPoint,type:T.Type) -> Future<T, NetworkError>
+    func execute<T:Codable>(request:EndPoint) -> Future<T, NetworkError>
 }
 
 class APIClient:NSObject, URLSessionDataDelegate,APIClientProtocol{
@@ -22,7 +22,7 @@ class APIClient:NSObject, URLSessionDataDelegate,APIClientProtocol{
         session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
     }
     
-    func execute<T:Codable>(request:EndPoint,type:T.Type) -> Future<T, NetworkError>{
+    func execute<T:Codable>(request:EndPoint) -> Future<T, NetworkError>{
         
         return Future<T,NetworkError>{ promise in
             let task = self.session.dataTask(with: request.request){ data, response, error in
