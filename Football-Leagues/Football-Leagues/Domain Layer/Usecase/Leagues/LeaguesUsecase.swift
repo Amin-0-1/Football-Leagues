@@ -44,26 +44,5 @@ class LeaguesUsecase : LeaguesUsecaseProtocol{
 
     }
     
-//
-//    func fetchGames() -> Single<Result<LeagueDataModel, Error>> {
-//        return Single.create {[weak self] single in
-//            guard let self = self,let competitions = self.leagueModel?.competitions else {return Disposables.create()}
-//
-//            for index in competitions.indices{
-//                if let code = self.leagueModel?.competitions[index].code{
-//                    self.leaguesRepo.fetchMatches(endPoint: LeaguesEndPoints.getMatches(code: code)).subscribe(onSuccess: { event in
-//                        switch event{
-//                            case .success(let model):
-//                                self.leagueModel?.competitions[index].numberOfGames = model.matches?.count
-//                                single(.success(.success(self.leagueModel!)))
-//                            case .failure(let error):
-//                                print(error.localizedDescription)
-//                        }
-//                    }).disposed(by: bag)
-//                }
-//            }
-//            return Disposables.create()
-//        }
-//    }
 }
 
