@@ -36,6 +36,7 @@ class LeagueDetailsViewModel:leagueDetailsVMProtocol{
     private func bind(){
         bindOnScreenAppeared()
         bindOnTapLink()
+        bindOnTapCell()
     }
     
     private func bindOnScreenAppeared(){
@@ -58,12 +59,20 @@ class LeagueDetailsViewModel:leagueDetailsVMProtocol{
         }.store(in: &cancellables)
     }
     private func bindOnTapLink(){
-        input.onTapplingLink.sink { [weak self] link in
+        input.onTappingLink.sink { [weak self] link in
             guard let self = self else {return}
             guard let link = link ,let url = URL(string: link) else {
-                fatalError()
+                output.publishableError.send("Cannot open this page right now, please try again later!")
+                return
             }
             self.coordinator.navigateToWebView(withLink: url)
+        }.store(in: &cancellables)
+    }
+    private func bindOnTapCell(){
+        input.onTappingCell.sink { [weak self] index in
+            guard let self = self else {return}
+            let id = self.output.publishableTeams.value.models[index].id
+            self.coordinator.navigateToTeam(id: id)
         }.store(in: &cancellables)
     }
     private func handleData(withModel model:TeamsDataModel){
@@ -73,7 +82,7 @@ class LeagueDetailsViewModel:leagueDetailsVMProtocol{
             header = LeagueViewDataModel(imageUrl: league.emblem, name: league.name, code: league.code, numberOfSeasons: league.numberOfAvailableSeasons, area: league.area?.code, type: league.type)
         }
         let newModel = LeaguesDetailsViewDataModel(header: header, countOfTeams: model.count,
-                                                   models: model.teams?.compactMap{LeagueDetailsViewDataModel(image: $0.crest, name: $0.shortName, shortName: $0.tla, colors: splitColors($0.clubColors), link: $0.website, stadium: $0.venue, address: $0.address, foundation: $0.founded?.description)} ?? [])
+                                                   models: model.teams?.compactMap{LeagueDetailsViewDataModel(id:$0.id,image: $0.crest, name: $0.shortName, shortName: $0.tla, colors: splitColors($0.clubColors), link: $0.website, stadium: $0.venue, address: $0.address, foundation: $0.founded?.description)} ?? [])
 
         output.publishableTeams.send(newModel)
     }

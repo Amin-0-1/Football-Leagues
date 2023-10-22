@@ -40,7 +40,7 @@ class TeamsCell: UITableViewCell {
     
     
     @IBAction func linkPressed(_ sender: UIButton) {
-        viewModel.input.onTapplingLink.send(model.link)
+        viewModel.input.onTappingLink.send(model.link)
     }
     
     func configure(withModel model:LeagueDetailsViewDataModel,viewModel:leagueDetailsVMProtocol){

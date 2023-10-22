@@ -42,6 +42,7 @@ class LeagueDetailsViewController: UIViewController {
         viewModel.output.publishableTeams.sink { [weak self] model in
             guard let self = self else {return}
             guard !model.models.isEmpty else {return}
+            self.title = model.header?.name
             self.configureHeaderView(withData: model)
             self.uiTableView.reloadData()
 
@@ -65,7 +66,7 @@ class LeagueDetailsViewController: UIViewController {
 
 }
 
-extension LeagueDetailsViewController:UITableViewDataSource,UITableViewDelegate{
+extension LeagueDetailsViewController:UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.output.publishableTeams.value.countOfTeams ?? 0
     }
@@ -74,5 +75,12 @@ extension LeagueDetailsViewController:UITableViewDataSource,UITableViewDelegate{
         let model = viewModel.output.publishableTeams.value.models[indexPath.row]
         cell.configure(withModel:model,viewModel:self.viewModel)
         return cell
+    }
+}
+
+extension LeagueDetailsViewController: UITableViewDelegate{
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        viewModel.input.onTappingCell.send(indexPath.row)
+        return indexPath
     }
 }
