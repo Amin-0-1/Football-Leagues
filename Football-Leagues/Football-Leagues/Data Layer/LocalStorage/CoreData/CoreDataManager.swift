@@ -48,6 +48,8 @@ class CoreDataManager:CoreDataManagerProtocol{
                             obj.data = encoded
                             obj.code = code
                         }
+                    case .games(let id):
+                        break
                 }
                 do {
                     try context.save()
@@ -102,6 +104,24 @@ class CoreDataManager:CoreDataManagerProtocol{
                     }catch{
                         promise(.failure(Errors.uncompleted))
                     }
+                case .games(let id):
+                    let request : NSFetchRequest<LeagueEntity> = LeagueEntity.fetchRequest()
+                    do{
+                        let all = try self.coreData.mainContext.fetch(request)
+                        guard let first = all.first else {
+                            promise(.failure(Errors.empty))
+                            return
+                        }
+                        if let data = first.data{
+                            let decoded = try JSONDecoder().decode(T.self, from: data)
+                            promise(.success(decoded))
+                        }else{
+                            promise(.failure(Errors.decodingFailed))
+                        }
+                    }catch{
+                        promise(.failure(Errors.uncompleted))
+                    }
+                    break
             }
             
         }
@@ -134,6 +154,7 @@ class CoreDataManager:CoreDataManagerProtocol{
                 }catch{
                     debugPrint(error)
                 }
+            case .games(let id): break
         }
     }
 }

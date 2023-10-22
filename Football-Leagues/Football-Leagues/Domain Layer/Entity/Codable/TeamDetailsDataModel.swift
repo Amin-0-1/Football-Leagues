@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SingleTeamDataModel: Codable {
+struct TeamDetailsDataModel: Codable {
     let area: Area?
     let id: Int?
     let name, shortName, tla: String?

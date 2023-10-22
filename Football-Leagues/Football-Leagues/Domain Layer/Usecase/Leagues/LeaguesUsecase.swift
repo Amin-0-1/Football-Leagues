@@ -10,10 +10,6 @@ import Combine
 
 protocol LeaguesUsecaseProtocol{
     func fetchLeagues() -> Future<LeagueDataModel,CustomDomainError>
-//    func fetchTeams() -> Single<Result<LeagueDataModel,Error>>
-//    func fetchGames() -> Single<Result<LeagueDataModel,Error>>
-//    func fetchSeasons() -> Single<Result<LeagueDataModel,Error>>
-    
 }
 
 class LeaguesUsecase : LeaguesUsecaseProtocol{

@@ -9,7 +9,7 @@ import UIKit
 
 protocol LeagueDetailsCoordinatorProtocol{
     func navigateToWebView(withLink : URL)
-    func navigateToTeam(id:Int?)
+    func navigateTo(team:LeagueDetailsViewDataModel)
 }
 
 struct LeagueDetailsCoordinator:LeagueDetailsCoordinatorProtocol{
@@ -30,8 +30,8 @@ struct LeagueDetailsCoordinator:LeagueDetailsCoordinatorProtocol{
         let coordinator = WebViewCoordinator(navigationController: navigationController,data:url)
         coordinator.start()
     }
-    func navigateToTeam(id:Int?) {
-        let coordinator = SingleTeamCoordinator(navigationController: self.navigationController)
+    func navigateTo(team:LeagueDetailsViewDataModel){
+        let coordinator = GamesCoordinator(navigationController: self.navigationController,team: team)
         coordinator.start()
     }
 }

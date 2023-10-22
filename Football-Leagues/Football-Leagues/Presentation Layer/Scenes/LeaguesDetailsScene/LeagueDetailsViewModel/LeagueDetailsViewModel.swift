@@ -71,8 +71,8 @@ class LeagueDetailsViewModel:leagueDetailsVMProtocol{
     private func bindOnTapCell(){
         input.onTappingCell.sink { [weak self] index in
             guard let self = self else {return}
-            let id = self.output.publishableTeams.value.models[index].id
-            self.coordinator.navigateToTeam(id: id)
+            let team = self.output.publishableTeams.value.models[index]
+            self.coordinator.navigateTo(team: team)
         }.store(in: &cancellables)
     }
     private func handleData(withModel model:TeamsDataModel){

@@ -1,43 +1,60 @@
-////
-////  MatchesDataModel.swift
-////  Football-Leagues
-////
-////  Created by Amin on 18/10/2023.
-////
 //
-//import Foundation
+//  MatchesDataModel.swift
+//  Football-Leagues
 //
-//struct GamesDataModel: Codable {
-//    let competition: Competition?
-//    let matches: [Game]?
-//}
-//struct Game: Codable {
-//    let area: Area?
-//    let competition: Competition?
-//    let season: Season?
-//    let id: Int?
-//    let utcDate: String?
-//    let status: String?
-//    let matchday: Int?
-//    let stage: String?
-//    let lastUpdated: String?
-//    let homeTeam, awayTeam: Team?
-//    let score: Score?
-//}
-//struct Score: Codable {
-//    let winner: WinnerState?
-//    let duration: String?
-//    let fullTime, halfTime: MatchState?
-//}
+//  Created by Amin on 18/10/2023.
 //
-//enum WinnerState: String, Codable {
+
+import Foundation
+
+struct GamesDataModel: Codable {
+    let resultSet: ResultSet?
+    let matches: [MatchModel]?
+}
+
+struct MatchModel: Codable {
+    let area: Area?
+    let competition: Competition?
+    let id: Int?
+    let utcDate: Double?
+    let status: GameStatus?
+    let matchday: Int?
+    let group: String?
+    let lastUpdated: Date?
+    let homeTeam, awayTeam: Team?
+    let score: Score?
+    let referees: [Referee]?
+}
+
+struct Referee: Codable {
+    let id: Int?
+    let name: String?
+    let nationality: String?
+}
+struct Score: Codable {
+    let winner: String?
+    let duration: String?
+    let fullTime, halfTime: TimeModel?
+}
+struct TimeModel: Codable {
+    let home, away: Int?
+}
+
+//enum Winner: String, Codable {
 //    case awayTeam = "AWAY_TEAM"
 //    case draw = "DRAW"
 //    case homeTeam = "HOME_TEAM"
 //}
-//
-//struct MatchState:Codable{
-//    let home:Int?
-//    let away:Int?
-//}
-//
+
+
+enum GameStatus: String, Codable {
+    case finished = "FINISHED"
+    case scheduled = "SCHEDULED"
+    case timed = "TIMED"
+}
+
+struct ResultSet: Codable {
+    let count: Int?
+    let competitions, first, last: String?
+    let played, wins, draws, losses: Int?
+}

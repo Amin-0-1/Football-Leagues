@@ -7,14 +7,17 @@
 
 import UIKit
 
-protocol SingleTeamCoordinatorProtocol:AnyCoordinator{
+protocol GamesCoordinatorProtocol:AnyCoordinator{
     
 }
-struct SingleTeamCoordinator:SingleTeamCoordinatorProtocol{
+struct GamesCoordinator:GamesCoordinatorProtocol{
     var navigationController: UINavigationController
-    
+    var team:LeagueDetailsViewDataModel
     func start() {
-        let vc = SingleTeamVC()
+        let vc = GamesViewController()
+        let params = TeamViewModelParam(coordinator: self, team: team)
+        let viewModel = GamesViewModel(param: params)
+        vc.viewModl = viewModel
         navigationController.pushViewController(vc, animated: true)
     }
 }

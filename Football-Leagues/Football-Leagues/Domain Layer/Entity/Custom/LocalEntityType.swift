@@ -10,4 +10,5 @@ import Foundation
 enum LocalEntityType{
     case leagues
     case teams(code:String)
+    case games(id:Int)
 }

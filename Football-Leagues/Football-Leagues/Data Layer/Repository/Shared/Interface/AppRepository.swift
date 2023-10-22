@@ -66,6 +66,7 @@ class AppRepository:AppRepositoryInterface{
             } receiveValue: { value in
                 // MARK: - local data fetched successfully
                 promise(.success(value))
+//                promise(.success(value))
             }.store(in: &self.cancellables)
 
         }

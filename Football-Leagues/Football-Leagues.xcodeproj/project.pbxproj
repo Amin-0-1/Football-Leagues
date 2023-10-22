@@ -15,8 +15,6 @@
 		271EC3C22ADDBB460029B86C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 271EC3C12ADDBB460029B86C /* Assets.xcassets */; };
 		271EC3C52ADDBB460029B86C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 271EC3C32ADDBB460029B86C /* LaunchScreen.storyboard */; };
 		271EC3F32ADDBFAD0029B86C /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271EC3F22ADDBFAD0029B86C /* AppCoordinator.swift */; };
-		271EC40A2ADDE6BF0029B86C /* LeagueDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271EC4082ADDE6BF0029B86C /* LeagueDetailsViewController.swift */; };
-		271EC40B2ADDE6BF0029B86C /* LeagueDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 271EC4092ADDE6BF0029B86C /* LeagueDetailsViewController.xib */; };
 		271EC4162ADDF9A30029B86C /* LeaguesUsecase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271EC4152ADDF9A30029B86C /* LeaguesUsecase.swift */; };
 		271EC4182ADDFE3C0029B86C /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271EC4172ADDFE3C0029B86C /* APIClient.swift */; };
 		271EC41A2ADDFED00029B86C /* EndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271EC4192ADDFED00029B86C /* EndPoint.swift */; };
@@ -58,7 +56,15 @@
 		275453C52AE350450005B310 /* LeaguesViewModelParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275453C42AE350450005B310 /* LeaguesViewModelParams.swift */; };
 		275453CB2AE35C550005B310 /* TeamsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275453C92AE35C550005B310 /* TeamsCell.swift */; };
 		275453CC2AE35C550005B310 /* TeamsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 275453CA2AE35C550005B310 /* TeamsCell.xib */; };
+		2769859C2AE56BD600E06597 /* GamesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2769859B2AE56BD600E06597 /* GamesRepository.swift */; };
+		276985A02AE5744A00E06597 /* GamesViewDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2769859F2AE5744A00E06597 /* GamesViewDataModel.swift */; };
 		276E652F2AE38068000319CE /* LeaguesDetailsViewDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276E652E2AE38068000319CE /* LeaguesDetailsViewDataModel.swift */; };
+		27B330422AE5406700178E61 /* GamesHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B330412AE5406700178E61 /* GamesHeaderCell.swift */; };
+		27B330442AE5407800178E61 /* GamesHeaderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27B330432AE5407800178E61 /* GamesHeaderCell.xib */; };
+		27B330472AE541D800178E61 /* LeagueDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27B330452AE541D800178E61 /* LeagueDetailsViewController.xib */; };
+		27B330482AE541D800178E61 /* LeagueDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B330462AE541D800178E61 /* LeagueDetailsViewController.swift */; };
+		27B3304A2AE5484400178E61 /* TeamViewModelParam.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B330492AE5484400178E61 /* TeamViewModelParam.swift */; };
+		27B3304C2AE54DED00178E61 /* TeamDetailsDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B3304B2AE54DED00178E61 /* TeamDetailsDataModel.swift */; };
 		27B4B94E2AE461100099C1D0 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4B94D2AE461100099C1D0 /* UIColor.swift */; };
 		27B4B9512AE466100099C1D0 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4B9502AE466100099C1D0 /* WebViewController.swift */; };
 		27B4B9532AE466870099C1D0 /* WebViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4B9522AE466870099C1D0 /* WebViewCoordinator.swift */; };
@@ -70,13 +76,15 @@
 		27BCAB7C2AE25A1600A8A10F /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 27BCAB7B2AE25A1600A8A10F /* SDWebImage */; };
 		27BCAB7E2AE25A2900A8A10F /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 27BCAB7D2AE25A2900A8A10F /* SDWebImage */; };
 		27BEEEBC2AE1E3BE008F90CD /* LocalEntityType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BEEEBB2AE1E3BE008F90CD /* LocalEntityType.swift */; };
-		27F436D12AE487C800C52601 /* SingleTeamVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F436CF2AE487C800C52601 /* SingleTeamVC.swift */; };
-		27F436D22AE487C800C52601 /* SingleTeamVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27F436D02AE487C800C52601 /* SingleTeamVC.xib */; };
+		27F436D12AE487C800C52601 /* GamesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F436CF2AE487C800C52601 /* GamesViewController.swift */; };
+		27F436D22AE487C800C52601 /* GamesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27F436D02AE487C800C52601 /* GamesViewController.xib */; };
 		27F436D42AE4885800C52601 /* TeamsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F436D32AE4885800C52601 /* TeamsCoordinator.swift */; };
-		27F436D62AE492C300C52601 /* SingleTeamDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F436D52AE492C300C52601 /* SingleTeamDataModel.swift */; };
-		27F436D92AE49A1100C52601 /* SingleTeamViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F436D82AE49A1100C52601 /* SingleTeamViewModel.swift */; };
-		27F436DC2AE4B0FC00C52601 /* SingleTeamUsecase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F436DB2AE4B0FC00C52601 /* SingleTeamUsecase.swift */; };
-		27F436DF2AE4B15000C52601 /* SingleTeamRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F436DE2AE4B15000C52601 /* SingleTeamRepository.swift */; };
+		27F436D92AE49A1100C52601 /* GamesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F436D82AE49A1100C52601 /* GamesViewModel.swift */; };
+		27F436DC2AE4B0FC00C52601 /* GamesUsecase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F436DB2AE4B0FC00C52601 /* GamesUsecase.swift */; };
+		27F436E42AE4C36E00C52601 /* TeamHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27F436E32AE4C36E00C52601 /* TeamHeaderView.xib */; };
+		27F436E62AE4C43800C52601 /* TeamHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F436E52AE4C43800C52601 /* TeamHeaderView.swift */; };
+		27F436EA2AE4CB0F00C52601 /* GameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F436E82AE4CB0F00C52601 /* GameCell.swift */; };
+		27F436EB2AE4CB0F00C52601 /* GameCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27F436E92AE4CB0F00C52601 /* GameCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,8 +108,6 @@
 		271EC3C42ADDBB460029B86C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		271EC3C62ADDBB460029B86C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		271EC3F22ADDBFAD0029B86C /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
-		271EC4082ADDE6BF0029B86C /* LeagueDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeagueDetailsViewController.swift; sourceTree = "<group>"; };
-		271EC4092ADDE6BF0029B86C /* LeagueDetailsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LeagueDetailsViewController.xib; sourceTree = "<group>"; };
 		271EC4152ADDF9A30029B86C /* LeaguesUsecase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaguesUsecase.swift; sourceTree = "<group>"; };
 		271EC4172ADDFE3C0029B86C /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		271EC4192ADDFED00029B86C /* EndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPoint.swift; sourceTree = "<group>"; };
@@ -143,9 +149,17 @@
 		275453C42AE350450005B310 /* LeaguesViewModelParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaguesViewModelParams.swift; sourceTree = "<group>"; };
 		275453C92AE35C550005B310 /* TeamsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamsCell.swift; sourceTree = "<group>"; };
 		275453CA2AE35C550005B310 /* TeamsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TeamsCell.xib; sourceTree = "<group>"; };
+		2769859B2AE56BD600E06597 /* GamesRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GamesRepository.swift; sourceTree = "<group>"; };
+		2769859F2AE5744A00E06597 /* GamesViewDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesViewDataModel.swift; sourceTree = "<group>"; };
 		276E652E2AE38068000319CE /* LeaguesDetailsViewDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaguesDetailsViewDataModel.swift; sourceTree = "<group>"; };
 		27AD42332AE20EE600F62C8C /* Legues_usecase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Legues_usecase.swift; sourceTree = "<group>"; };
 		27AD42412AE2142700F62C8C /* FakeLeaguesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeLeaguesRepository.swift; sourceTree = "<group>"; };
+		27B330412AE5406700178E61 /* GamesHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesHeaderCell.swift; sourceTree = "<group>"; };
+		27B330432AE5407800178E61 /* GamesHeaderCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GamesHeaderCell.xib; sourceTree = "<group>"; };
+		27B330452AE541D800178E61 /* LeagueDetailsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LeagueDetailsViewController.xib; sourceTree = "<group>"; };
+		27B330462AE541D800178E61 /* LeagueDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeagueDetailsViewController.swift; sourceTree = "<group>"; };
+		27B330492AE5484400178E61 /* TeamViewModelParam.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamViewModelParam.swift; sourceTree = "<group>"; };
+		27B3304B2AE54DED00178E61 /* TeamDetailsDataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailsDataModel.swift; sourceTree = "<group>"; };
 		27B4B94D2AE461100099C1D0 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		27B4B9502AE466100099C1D0 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		27B4B9522AE466870099C1D0 /* WebViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewCoordinator.swift; sourceTree = "<group>"; };
@@ -155,13 +169,15 @@
 		27BC78E92AE1602700480A44 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		27BCAB712AE259BB00A8A10F /* Football-LeaguesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Football-LeaguesTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27BEEEBB2AE1E3BE008F90CD /* LocalEntityType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalEntityType.swift; sourceTree = "<group>"; };
-		27F436CF2AE487C800C52601 /* SingleTeamVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleTeamVC.swift; sourceTree = "<group>"; };
-		27F436D02AE487C800C52601 /* SingleTeamVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SingleTeamVC.xib; sourceTree = "<group>"; };
+		27F436CF2AE487C800C52601 /* GamesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesViewController.swift; sourceTree = "<group>"; };
+		27F436D02AE487C800C52601 /* GamesViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GamesViewController.xib; sourceTree = "<group>"; };
 		27F436D32AE4885800C52601 /* TeamsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamsCoordinator.swift; sourceTree = "<group>"; };
-		27F436D52AE492C300C52601 /* SingleTeamDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleTeamDataModel.swift; sourceTree = "<group>"; };
-		27F436D82AE49A1100C52601 /* SingleTeamViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleTeamViewModel.swift; sourceTree = "<group>"; };
-		27F436DB2AE4B0FC00C52601 /* SingleTeamUsecase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleTeamUsecase.swift; sourceTree = "<group>"; };
-		27F436DE2AE4B15000C52601 /* SingleTeamRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleTeamRepository.swift; sourceTree = "<group>"; };
+		27F436D82AE49A1100C52601 /* GamesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesViewModel.swift; sourceTree = "<group>"; };
+		27F436DB2AE4B0FC00C52601 /* GamesUsecase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesUsecase.swift; sourceTree = "<group>"; };
+		27F436E32AE4C36E00C52601 /* TeamHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TeamHeaderView.xib; sourceTree = "<group>"; };
+		27F436E52AE4C43800C52601 /* TeamHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamHeaderView.swift; sourceTree = "<group>"; };
+		27F436E82AE4CB0F00C52601 /* GameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCell.swift; sourceTree = "<group>"; };
+		27F436E92AE4CB0F00C52601 /* GameCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GameCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -365,6 +381,7 @@
 			children = (
 				271EC4392ADE9AB70029B86C /* Shared */,
 				271EC43A2ADE9AC10029B86C /* Repositories */,
+				2769859D2AE56BDB00E06597 /* GamesRepository */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -418,8 +435,8 @@
 			children = (
 				271EC4302ADE8E0E0029B86C /* LeaguesDataModel.swift */,
 				2740B2792ADF557A00379194 /* TeamsDataModel.swift */,
+				27B3304B2AE54DED00178E61 /* TeamDetailsDataModel.swift */,
 				2740B27B2ADF569D00379194 /* GamesDataModel.swift */,
-				27F436D52AE492C300C52601 /* SingleTeamDataModel.swift */,
 			);
 			path = Codable;
 			sourceTree = "<group>";
@@ -447,7 +464,6 @@
 			children = (
 				27AD42402AE213C500F62C8C /* LeagueRepository */,
 				275453AD2AE30AE30005B310 /* LeagueDetailsRepository */,
-				27F436DD2AE4B13900C52601 /* SingleTeamRepository */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -583,8 +599,8 @@
 		275453B62AE3451C0005B310 /* VC */ = {
 			isa = PBXGroup;
 			children = (
-				271EC4082ADDE6BF0029B86C /* LeagueDetailsViewController.swift */,
-				271EC4092ADDE6BF0029B86C /* LeagueDetailsViewController.xib */,
+				27B330462AE541D800178E61 /* LeagueDetailsViewController.swift */,
+				27B330452AE541D800178E61 /* LeagueDetailsViewController.xib */,
 			);
 			path = VC;
 			sourceTree = "<group>";
@@ -620,6 +636,7 @@
 			children = (
 				275453C42AE350450005B310 /* LeaguesViewModelParams.swift */,
 				276E652E2AE38068000319CE /* LeaguesDetailsViewDataModel.swift */,
+				27B330492AE5484400178E61 /* TeamViewModelParam.swift */,
 			);
 			path = LeagueDetails;
 			sourceTree = "<group>";
@@ -631,6 +648,22 @@
 				275453CA2AE35C550005B310 /* TeamsCell.xib */,
 			);
 			path = TeamCell;
+			sourceTree = "<group>";
+		};
+		2769859D2AE56BDB00E06597 /* GamesRepository */ = {
+			isa = PBXGroup;
+			children = (
+				2769859B2AE56BD600E06597 /* GamesRepository.swift */,
+			);
+			path = GamesRepository;
+			sourceTree = "<group>";
+		};
+		2769859E2AE5742800E06597 /* Games */ = {
+			isa = PBXGroup;
+			children = (
+				2769859F2AE5744A00E06597 /* GamesViewDataModel.swift */,
+			);
+			path = Games;
 			sourceTree = "<group>";
 		};
 		27AD423B2AE2104400F62C8C /* Frameworks */ = {
@@ -648,6 +681,15 @@
 			path = LeagueRepository;
 			sourceTree = "<group>";
 		};
+		27B3303B2AE53DF500178E61 /* GamesHeaderCell */ = {
+			isa = PBXGroup;
+			children = (
+				27B330412AE5406700178E61 /* GamesHeaderCell.swift */,
+				27B330432AE5407800178E61 /* GamesHeaderCell.xib */,
+			);
+			path = GamesHeaderCell;
+			sourceTree = "<group>";
+		};
 		27B4B94F2AE465E30099C1D0 /* WebKitScene */ = {
 			isa = PBXGroup;
 			children = (
@@ -662,6 +704,7 @@
 			children = (
 				275453C62AE3504D0005B310 /* Leagues */,
 				275453C72AE350520005B310 /* LeagueDetails */,
+				2769859E2AE5742800E06597 /* Games */,
 			);
 			path = UIModel;
 			sourceTree = "<group>";
@@ -694,52 +737,73 @@
 		27F436CC2AE4875100C52601 /* SingleTeamScene */ = {
 			isa = PBXGroup;
 			children = (
-				27F436CD2AE4876C00C52601 /* SingleTeamView */,
-				27F436D72AE498B500C52601 /* SingleTeamViewModel */,
+				27F436CD2AE4876C00C52601 /* GamesView */,
+				27F436D72AE498B500C52601 /* GamesViewModel */,
 				27F436D32AE4885800C52601 /* TeamsCoordinator.swift */,
 			);
 			path = SingleTeamScene;
 			sourceTree = "<group>";
 		};
-		27F436CD2AE4876C00C52601 /* SingleTeamView */ = {
+		27F436CD2AE4876C00C52601 /* GamesView */ = {
 			isa = PBXGroup;
 			children = (
+				27F436E22AE4C34600C52601 /* Cell */,
 				27F436CE2AE487A200C52601 /* VC */,
 			);
-			path = SingleTeamView;
+			path = GamesView;
 			sourceTree = "<group>";
 		};
 		27F436CE2AE487A200C52601 /* VC */ = {
 			isa = PBXGroup;
 			children = (
-				27F436CF2AE487C800C52601 /* SingleTeamVC.swift */,
-				27F436D02AE487C800C52601 /* SingleTeamVC.xib */,
+				27F436CF2AE487C800C52601 /* GamesViewController.swift */,
+				27F436D02AE487C800C52601 /* GamesViewController.xib */,
 			);
 			path = VC;
 			sourceTree = "<group>";
 		};
-		27F436D72AE498B500C52601 /* SingleTeamViewModel */ = {
+		27F436D72AE498B500C52601 /* GamesViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				27F436D82AE49A1100C52601 /* SingleTeamViewModel.swift */,
+				27F436D82AE49A1100C52601 /* GamesViewModel.swift */,
 			);
-			path = SingleTeamViewModel;
+			path = GamesViewModel;
 			sourceTree = "<group>";
 		};
 		27F436DA2AE4B0E200C52601 /* SingleTeam */ = {
 			isa = PBXGroup;
 			children = (
-				27F436DB2AE4B0FC00C52601 /* SingleTeamUsecase.swift */,
+				27F436DB2AE4B0FC00C52601 /* GamesUsecase.swift */,
 			);
 			path = SingleTeam;
 			sourceTree = "<group>";
 		};
-		27F436DD2AE4B13900C52601 /* SingleTeamRepository */ = {
+		27F436E12AE4C2EA00C52601 /* HeaderView */ = {
 			isa = PBXGroup;
 			children = (
-				27F436DE2AE4B15000C52601 /* SingleTeamRepository.swift */,
+				27F436E32AE4C36E00C52601 /* TeamHeaderView.xib */,
+				27F436E52AE4C43800C52601 /* TeamHeaderView.swift */,
 			);
-			path = SingleTeamRepository;
+			path = HeaderView;
+			sourceTree = "<group>";
+		};
+		27F436E22AE4C34600C52601 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				27F436E12AE4C2EA00C52601 /* HeaderView */,
+				27F436E72AE4CADA00C52601 /* GameCell */,
+				27B3303B2AE53DF500178E61 /* GamesHeaderCell */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		27F436E72AE4CADA00C52601 /* GameCell */ = {
+			isa = PBXGroup;
+			children = (
+				27F436E82AE4CB0F00C52601 /* GameCell.swift */,
+				27F436E92AE4CB0F00C52601 /* GameCell.xib */,
+			);
+			path = GameCell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -833,13 +897,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				275453CC2AE35C550005B310 /* TeamsCell.xib in Resources */,
+				27F436EB2AE4CB0F00C52601 /* GameCell.xib in Resources */,
 				275453C32AE349BE0005B310 /* LeagueHeaderView.xib in Resources */,
 				271EC3C52ADDBB460029B86C /* LaunchScreen.storyboard in Resources */,
+				27F436E42AE4C36E00C52601 /* TeamHeaderView.xib in Resources */,
 				271EC3C22ADDBB460029B86C /* Assets.xcassets in Resources */,
-				271EC40B2ADDE6BF0029B86C /* LeagueDetailsViewController.xib in Resources */,
 				270339842ADEB5F2009655E3 /* LeaguesViewController.xib in Resources */,
+				27B330472AE541D800178E61 /* LeagueDetailsViewController.xib in Resources */,
 				2740B25D2ADEC2E500379194 /* LeagueCell.xib in Resources */,
-				27F436D22AE487C800C52601 /* SingleTeamVC.xib in Resources */,
+				27B330442AE5407800178E61 /* GamesHeaderCell.xib in Resources */,
+				27F436D22AE487C800C52601 /* GamesViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -857,7 +924,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27F436DF2AE4B15000C52601 /* SingleTeamRepository.swift in Sources */,
 				27BC78E82AE156C600480A44 /* CoreDataStack.swift in Sources */,
 				271EC3F32ADDBFAD0029B86C /* AppCoordinator.swift in Sources */,
 				2740B27C2ADF569D00379194 /* GamesDataModel.swift in Sources */,
@@ -866,10 +932,10 @@
 				271EC43C2ADE9B1A0029B86C /* LeaguesRepository.swift in Sources */,
 				27BC78EA2AE1602700480A44 /* CoreDataManager.swift in Sources */,
 				275453A92AE308E60005B310 /* LeagueDetailsViewModelInput.swift in Sources */,
-				271EC40A2ADDE6BF0029B86C /* LeagueDetailsViewController.swift in Sources */,
 				275453C52AE350450005B310 /* LeaguesViewModelParams.swift in Sources */,
+				27B3304C2AE54DED00178E61 /* TeamDetailsDataModel.swift in Sources */,
 				271EC4242ADE02210029B86C /* LeaguesEndPoints.swift in Sources */,
-				27F436D12AE487C800C52601 /* SingleTeamVC.swift in Sources */,
+				27F436D12AE487C800C52601 /* GamesViewController.swift in Sources */,
 				275453A72AE308D20005B310 /* LeagueDetailsViewModelOutput.swift in Sources */,
 				271EC4182ADDFE3C0029B86C /* APIClient.swift in Sources */,
 				271EC4312ADE8E0E0029B86C /* LeaguesDataModel.swift in Sources */,
@@ -878,20 +944,23 @@
 				27F436D42AE4885800C52601 /* TeamsCoordinator.swift in Sources */,
 				27B4B9532AE466870099C1D0 /* WebViewCoordinator.swift in Sources */,
 				2740B2692ADEF8DF00379194 /* LeaguesViewDataModel.swift in Sources */,
-				27F436DC2AE4B0FC00C52601 /* SingleTeamUsecase.swift in Sources */,
+				27F436DC2AE4B0FC00C52601 /* GamesUsecase.swift in Sources */,
+				2769859C2AE56BD600E06597 /* GamesRepository.swift in Sources */,
 				2740B2602ADEC34800379194 /* NibLoadable.swift in Sources */,
 				271EC3C02ADDBB450029B86C /* Football_Leagues.xcdatamodeld in Sources */,
+				276985A02AE5744A00E06597 /* GamesViewDataModel.swift in Sources */,
 				27B4B94E2AE461100099C1D0 /* UIColor.swift in Sources */,
 				275453AC2AE30A760005B310 /* LeagueDetailsUsecase.swift in Sources */,
+				27B330482AE541D800178E61 /* LeagueDetailsViewController.swift in Sources */,
 				275453CB2AE35C550005B310 /* TeamsCell.swift in Sources */,
 				2740B2622ADEC37400379194 /* ReusableView.swift in Sources */,
+				27F436E62AE4C43800C52601 /* TeamHeaderView.swift in Sources */,
 				275453B52AE33EEA0005B310 /* LeagueviewModelOutput.swift in Sources */,
 				2740B27A2ADF557A00379194 /* TeamsDataModel.swift in Sources */,
 				271EC4332ADE92510029B86C /* AppRepository.swift in Sources */,
 				2740B25C2ADEC2E500379194 /* LeagueCell.swift in Sources */,
 				275453B32AE33EEA0005B310 /* LeaguesViewModel.swift in Sources */,
-				27F436D62AE492C300C52601 /* SingleTeamDataModel.swift in Sources */,
-				27F436D92AE49A1100C52601 /* SingleTeamViewModel.swift in Sources */,
+				27F436D92AE49A1100C52601 /* GamesViewModel.swift in Sources */,
 				27BEEEBC2AE1E3BE008F90CD /* LocalEntityType.swift in Sources */,
 				271EC4412ADE9F310029B86C /* Connectivity.swift in Sources */,
 				2740B27E2ADFABEB00379194 /* CustomDomainError.swift in Sources */,
@@ -901,6 +970,8 @@
 				271EC4352ADE94490029B86C /* LocalRepository.swift in Sources */,
 				275453C12AE349860005B310 /* LeagueHeaderView.swift in Sources */,
 				2740B2662ADEF0C800379194 /* ActivityIndicator.swift in Sources */,
+				27F436EA2AE4CB0F00C52601 /* GameCell.swift in Sources */,
+				27B330422AE5406700178E61 /* GamesHeaderCell.swift in Sources */,
 				271EC41E2ADDFFAD0029B86C /* ParameterEncoding.swift in Sources */,
 				271EC4262ADE04D00029B86C /* AppConfiguration.swift in Sources */,
 				271EC41C2ADDFF630029B86C /* HTTPMethods.swift in Sources */,
@@ -908,6 +979,7 @@
 				27BC78E42AE1434B00480A44 /* LeaguesCoordinator.swift in Sources */,
 				271EC42D2ADE8AF50029B86C /* RepositoryInterface.swift in Sources */,
 				27BC78E12AE13DEF00480A44 /* UIView+Animate.swift in Sources */,
+				27B3304A2AE5484400178E61 /* TeamViewModelParam.swift in Sources */,
 				270339832ADEB5F2009655E3 /* LeaguesViewController.swift in Sources */,
 				27B4B9512AE466100099C1D0 /* WebViewController.swift in Sources */,
 				271EC3B62ADDBB450029B86C /* AppDelegate.swift in Sources */,
