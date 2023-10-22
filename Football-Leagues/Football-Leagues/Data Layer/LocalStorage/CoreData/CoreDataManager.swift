@@ -49,6 +49,15 @@ class CoreDataManager:CoreDataManagerProtocol{
                             obj.code = code
                         }
                     case .games(let id):
+                        let obj = GamesEntity(context: context)
+                        if let type = data as? GamesDataModel{
+                            guard let encoded = try? JSONEncoder().encode(type) else {
+                                promise(.failure(Errors.decodingFailed))
+                                return
+                            }
+                            obj.data = encoded
+                            obj.id = Int16(id)
+                        }
                         break
                 }
                 do {
@@ -61,100 +70,107 @@ class CoreDataManager:CoreDataManagerProtocol{
             }
         }
     }
+    
+    private func generateRequest(from localEntity:LocalEntityType) -> NSFetchRequest<NSFetchRequestResult>{
+        let request: NSFetchRequest<NSFetchRequestResult>!
+        switch localEntity {
+            case .leagues:
+                request = LeagueEntity.fetchRequest()
+            case .teams(let code):
+                request = LeagueDetailsEntity.fetchRequest()
+                let attribute = "code"
+                let predicate = NSPredicate(format: "%K == %@",attribute,code)
+                request.predicate = predicate
+                
+            case .games(let id):
+                request = GamesEntity.fetchRequest()
+                let attribute = "id"
+                let predicate = NSPredicate(format: "%K == %ld",attribute,id)
+                request.predicate = predicate
+                
+        }
+        return request
+    }
 
     func fetch<T:Codable>(localEntityType:LocalEntityType)-> Future<T,Error>{
-
+        let request = generateRequest(from: localEntityType)
+        var allData: [NSFetchRequestResult] = []
         return Future<T, Error>{ promise in
-            switch localEntityType {
-                case .leagues:
-                    let request : NSFetchRequest<LeagueEntity> = LeagueEntity.fetchRequest()
-                    do{
-                        let all = try self.coreData.mainContext.fetch(request)
-                        guard let first = all.first else {
-                            promise(.failure(Errors.empty))
+            do{
+                allData = try self.coreData.mainContext.fetch(request)
+                guard let first = allData.first else{
+                    promise(.failure(Errors.empty))
+                    return
+                }
+                
+                switch localEntityType {
+                    case .leagues:
+                        guard let leagueEntity = first as? LeagueEntity else{
+                            promise(.failure(Errors.uncompleted))
                             return
                         }
-                        if let data = first.data{
-                            let decoded = try JSONDecoder().decode(T.self, from: data)
-                            promise(.success(decoded))
-                        }else{
+                        guard let data = leagueEntity.data else {promise(.failure(Errors.decodingFailed));return}
+                        guard let decode = try? JSONDecoder().decode(T.self, from: data) else{
                             promise(.failure(Errors.decodingFailed))
-                        }
-                    }catch{
-                        promise(.failure(Errors.uncompleted))
-                    }
-                case .teams(let code):
-                    let request : NSFetchRequest<LeagueDetailsEntity> = LeagueDetailsEntity.fetchRequest()
-                    let attribute = "code"
-                    let predicate = NSPredicate(format: "%K == %@",attribute,code)
-                    request.predicate = predicate
-                    do{
-                        let all = try self.coreData.mainContext.fetch(request)
-                        guard let first = all.first else {
-                            promise(.failure(Errors.empty))
                             return
                         }
-                        if let data = first.data{
-                            let decoded = try JSONDecoder().decode(T.self, from: data)
-                            
-                            promise(.success(decoded))
-                        }else{
-                            promise(.failure(Errors.decodingFailed))
-                        }
-                    }catch{
-                        promise(.failure(Errors.uncompleted))
-                    }
-                case .games(let id):
-                    let request : NSFetchRequest<LeagueEntity> = LeagueEntity.fetchRequest()
-                    do{
-                        let all = try self.coreData.mainContext.fetch(request)
-                        guard let first = all.first else {
-                            promise(.failure(Errors.empty))
+                        promise(.success(decode))
+                    case .teams:
+                        guard let detailsEntity = first as? LeagueDetailsEntity else{
+                            promise(.failure(Errors.uncompleted))
                             return
                         }
-                        if let data = first.data{
-                            let decoded = try JSONDecoder().decode(T.self, from: data)
-                            promise(.success(decoded))
-                        }else{
+                        guard let data = detailsEntity.data else {promise(.failure(Errors.decodingFailed));return}
+                        guard let decode = try? JSONDecoder().decode(T.self, from: data) else{
                             promise(.failure(Errors.decodingFailed))
+                            return
                         }
-                    }catch{
-                        promise(.failure(Errors.uncompleted))
-                    }
-                    break
+                        promise(.success(decode))
+                    case .games:
+                        guard let gamesEntity = first as? GamesEntity else{
+                            promise(.failure(Errors.uncompleted))
+                            return
+                        }
+                        guard let data = gamesEntity.data else {promise(.failure(Errors.decodingFailed));return}
+                        guard let decode = try? JSONDecoder().decode(T.self, from: data) else{
+                            promise(.failure(Errors.decodingFailed))
+                            return
+                        }
+                        promise(.success(decode))
+                }
+                
+            }catch{
+                promise(.failure(error))
+                debugPrint(error.localizedDescription)
             }
-            
         }
     }
     
     private func truncate(entity:LocalEntityType,context:NSManagedObjectContext){
+        var request: NSFetchRequest<NSFetchRequestResult>
         switch entity {
             case .leagues:
-                let fetch: NSFetchRequest<LeagueEntity> = LeagueEntity.fetchRequest()
-                do{
-                    let allRecord = try context.fetch(fetch)
-                    allRecord.forEach { record in
-                        context.delete(record)
-                    }
-                    try context.save()
-                }catch{
-                    debugPrint(error)
-                }
+                request = LeagueEntity.fetchRequest()
             case .teams(let code):
+                request = LeagueEntity.fetchRequest()
                 let fetch: NSFetchRequest<LeagueDetailsEntity> = LeagueDetailsEntity.fetchRequest()
                 let attribute = "code"
                 let predicate = NSPredicate(format: "%K == %@",attribute,code)
                 fetch.predicate = predicate
-                do{
-                    let allRecord = try context.fetch(fetch)
-                    allRecord.forEach { record in
-                        context.delete(record)
-                    }
-                    try context.save()
-                }catch{
-                    debugPrint(error)
-                }
-            case .games(let id): break
+            case .games(let id):
+                request = GamesEntity.fetchRequest()
+                let attribute = "id"
+                let predicate = NSPredicate(format: "%K == %ld",attribute,id)
+                request.predicate = predicate
+        }
+        do{
+            let allRecord = try context.fetch(request)
+            allRecord.forEach { record in
+                context.delete(record as! NSManagedObject)
+            }
+            try context.save()
+        }catch{
+            debugPrint(error)
         }
     }
 }
@@ -165,7 +181,7 @@ extension CoreDataManager{
         case empty
         case uncompleted
         case decodingFailed
-        
+        case custom(String)
         var localizedDescription:String{
             switch self{
                 case .empty:
@@ -174,8 +190,76 @@ extension CoreDataManager{
                     return "uncompleted process"
                 case .decodingFailed:
                     return "failed to decode data locally"
-                    
+                case .custom(let string):
+                    return string
             }
         }
     }
 }
+
+
+
+
+
+
+//            switch localEntityType {
+//                case .leagues:
+//                    let request : NSFetchRequest<LeagueEntity> = LeagueEntity.fetchRequest()
+//                    do{
+//                        let all = try self.coreData.mainContext.fetch(request)
+//                        guard let first = all.first else {
+//                            promise(.failure(Errors.empty))
+//                            return
+//                        }
+//                        if let data = first.data{
+//                            let decoded = try JSONDecoder().decode(T.self, from: data)
+//                            promise(.success(decoded))
+//                        }else{
+//                            promise(.failure(Errors.decodingFailed))
+//                        }
+//                    }catch{
+//                        promise(.failure(Errors.uncompleted))
+//                    }
+//                case .teams(let code):
+//                    let request : NSFetchRequest<LeagueDetailsEntity> = LeagueDetailsEntity.fetchRequest()
+//                    let attribute = "code"
+//                    let predicate = NSPredicate(format: "%K == %@",attribute,code)
+//                    request.predicate = predicate
+//                    do{
+//                        let all = try self.coreData.mainContext.fetch(request)
+//                        guard let first = all.first else {
+//                            promise(.failure(Errors.empty))
+//                            return
+//                        }
+//                        if let data = first.data{
+//                            let decoded = try JSONDecoder().decode(T.self, from: data)
+//
+//                            promise(.success(decoded))
+//                        }else{
+//                            promise(.failure(Errors.decodingFailed))
+//                        }
+//                    }catch{
+//                        promise(.failure(Errors.uncompleted))
+//                    }
+//                case .games(let id):
+//                    let request : NSFetchRequest<GamesEntity> = GamesEntity.fetchRequest()
+//                    let attribute = "id"
+//                    let predicate = NSPredicate(format: "%K == %ld",attribute,id)
+//                    request.predicate = predicate
+//                    do{
+//                        let all = try self.coreData.mainContext.fetch(request)
+//                        guard let first = all.first else {
+//                            promise(.failure(Errors.empty))
+//                            return
+//                        }
+//                        if let data = first.data{
+//                            let decoded = try JSONDecoder().decode(T.self, from: data)
+//                            promise(.success(decoded))
+//                        }else{
+//                            promise(.failure(Errors.decodingFailed))
+//                        }
+//                    }catch{
+//                        promise(.failure(Errors.uncompleted))
+//                    }
+//                    break
+//            }

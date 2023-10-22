@@ -70,4 +70,8 @@ class TeamHeaderView: UIView {
         uiColorsView[0].layer.borderColor = UIColor.customColor(.greenColor).cgColor
         uiColorsView[1].layer.borderColor = UIColor.customColor(.greenColor).cgColor
     }
+    @IBAction func uiLinkPressed(_ sender: UIButton) {
+        
+    }
+    
 }

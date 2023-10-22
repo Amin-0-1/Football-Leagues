@@ -16,13 +16,14 @@ protocol gamesViewModelProtocol{
     var gamesDetails: AnyPublisher<[GamesViewDataModel],Never> {get}
     var onScreenAppeared:PassthroughSubject<Bool,Never> {get}
     var gamesCount:Int {get}
+    func getModel(index:Int)->GamesViewDataModel
 }
 class GamesViewModel:gamesViewModelProtocol{
     
     // MARK: - a view model publish with these
     private var publishError: PassthroughSubject<String,Never> = .init()
     private var publishProgress: PassthroughSubject<Bool,Never> = .init()
-    private var publishLeagueDetails : PassthroughSubject<LeagueDetailsViewDataModel,Never> = .init()
+    private var publishDetails : PassthroughSubject<LeagueDetailsViewDataModel,Never> = .init()
     private var publishGames: CurrentValueSubject<[GamesViewDataModel],Never> = .init([])
     
     @Published var gamesCount: Int
@@ -46,7 +47,7 @@ class GamesViewModel:gamesViewModelProtocol{
         self.usecase = param.usecase 
         self.showError = publishError.eraseToAnyPublisher()
         self.progress = publishProgress.eraseToAnyPublisher()
-        self.leagueDetails = publishLeagueDetails.eraseToAnyPublisher()
+        self.leagueDetails = publishDetails.eraseToAnyPublisher()
         self.gamesDetails = publishGames.eraseToAnyPublisher()
         gamesCount = 0
         bind()
@@ -54,12 +55,13 @@ class GamesViewModel:gamesViewModelProtocol{
     private func bind(){
         onScreenAppeared.sink { [weak self] isPullToRefresh in
             guard let self = self else {return}
-            self.publishLeagueDetails.send(self.headerModel)
+            self.publishDetails.send(self.headerModel)
             if !isPullToRefresh{
                 publishProgress.send(true)
             }
             guard let id = self.headerModel.id else {return}
             usecase.fetchGames(withTeamID: id).sink { completion in
+                self.publishProgress.send(false)
                 switch completion{
                     case .finished:
                         break
@@ -80,7 +82,12 @@ class GamesViewModel:gamesViewModelProtocol{
             let status = GameViewStatus(rawValue: matchModel.status?.rawValue ?? "")
             let home = GameViewTeam(shortName: matchModel.homeTeam?.shortName, tla: matchModel.homeTeam?.tla, crest: matchModel.homeTeam?.crest, clubColors: matchModel.homeTeam?.clubColors)
             let away = GameViewTeam(shortName: matchModel.awayTeam?.shortName, tla: matchModel.awayTeam?.tla, crest: matchModel.awayTeam?.crest, clubColors: matchModel.awayTeam?.clubColors)
-            return GamesViewDataModel(utcDate: matchModel.utcDate, status: status, homeTeam: home, awayTeam: away)
+            let winner = GameViewWinner(rawValue: matchModel.score?.winner?.rawValue ?? "")
+            let score = GameViewScore(home: matchModel.score?.fullTime?.home, away: matchModel.score?.fullTime?.away)
+            return GamesViewDataModel(date: matchModel.utcDate.convertUTCStringToDate(), status: status, homeTeam: home, awayTeam: away,winner: winner,score: score)
         }
+    }
+    func getModel(index: Int) -> GamesViewDataModel {
+        return publishGames.value[index]
     }
 }

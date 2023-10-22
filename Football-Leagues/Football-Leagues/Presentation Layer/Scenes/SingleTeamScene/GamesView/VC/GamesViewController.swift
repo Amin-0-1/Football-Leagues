@@ -29,6 +29,14 @@ class GamesViewController: UIViewController {
         bind()
     }
     private func bind(){
+        viewModl.showError.sink { [weak self] error in
+            guard let self = self else {return}
+            self.showError(message: error)
+        }.store(in: &cancellables)
+        viewModl.progress.sink { [weak self] value in
+            guard let self = self else {return}
+            value ? self.showProgress() : self.hideProgress()
+        }.store(in: &cancellables)
         viewModl.leagueDetails.sink {[weak self] model in
             guard let self = self else {return}
             let header = TeamHeaderView(frame: .init(x: 0, y: 0, width: view.frame.width, height: 250))
@@ -49,7 +57,8 @@ extension GamesViewController:UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: GameCell.reuseIdentifier) as? GameCell else {fatalError()}
-        
+        cell.configure(model: viewModl.getModel(index: indexPath.row))
+        cell.layoutIfNeeded()
         return cell
     }
 }

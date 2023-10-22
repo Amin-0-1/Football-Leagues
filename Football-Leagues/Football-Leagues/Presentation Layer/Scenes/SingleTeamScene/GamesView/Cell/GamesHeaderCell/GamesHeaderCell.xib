@@ -16,10 +16,10 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3dc-0D-fBB">
-                    <rect key="frame" x="162.66666666666666" y="52.666666666666664" width="75" height="30.666666666666664"/>
+                    <rect key="frame" x="150.66666666666666" y="52.333333333333336" width="99" height="31.333333333333336"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Teams" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wH8-aR-myp">
-                            <rect key="frame" x="12.333333333333343" y="5.3333333333333357" width="50" height="20.333333333333332"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Matches" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wH8-aR-myp">
+                            <rect key="frame" x="16.333333333333343" y="5.3333333333333286" width="66" height="21"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" name="AccentColor"/>
                             <nil key="highlightedColor"/>

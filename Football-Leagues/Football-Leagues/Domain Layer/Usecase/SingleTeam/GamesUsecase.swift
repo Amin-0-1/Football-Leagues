@@ -27,6 +27,7 @@ class GamesUsecase:GamesUsecaseProtocol{
                 switch completion{
                     case .finished: break
                     case .failure(let error):
+                        promise(.failure(error))
                         print(error)
                 }
             } receiveValue: { model in

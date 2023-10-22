@@ -16,11 +16,10 @@ struct MatchModel: Codable {
     let area: Area?
     let competition: Competition?
     let id: Int?
-    let utcDate: Double?
+    let utcDate: String?
     let status: GameStatus?
     let matchday: Int?
     let group: String?
-    let lastUpdated: Date?
     let homeTeam, awayTeam: Team?
     let score: Score?
     let referees: [Referee]?
@@ -32,7 +31,7 @@ struct Referee: Codable {
     let nationality: String?
 }
 struct Score: Codable {
-    let winner: String?
+    let winner: Winner?
     let duration: String?
     let fullTime, halfTime: TimeModel?
 }
@@ -40,11 +39,11 @@ struct TimeModel: Codable {
     let home, away: Int?
 }
 
-//enum Winner: String, Codable {
-//    case awayTeam = "AWAY_TEAM"
-//    case draw = "DRAW"
-//    case homeTeam = "HOME_TEAM"
-//}
+enum Winner: String, Codable {
+    case awayTeam = "AWAY_TEAM"
+    case draw = "DRAW"
+    case homeTeam = "HOME_TEAM"
+}
 
 
 enum GameStatus: String, Codable {

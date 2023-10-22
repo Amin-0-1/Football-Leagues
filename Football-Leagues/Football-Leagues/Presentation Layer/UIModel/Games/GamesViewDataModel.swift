@@ -8,10 +8,21 @@
 import Foundation
 
 struct GamesViewDataModel{
-    let utcDate: Double?
+    let date: String?
     let status: GameViewStatus?
     let homeTeam,awayTeam: GameViewTeam?
+    let winner:GameViewWinner?
+    let score:GameViewScore?
     
+}
+struct GameViewTeam: Codable {
+    let shortName, tla: String?
+    let crest: String?
+    let clubColors:String?
+}
+struct GameViewScore{
+    let home:Int?
+    let away:Int?
 }
 
 enum GameViewStatus: String, Codable {
@@ -19,9 +30,8 @@ enum GameViewStatus: String, Codable {
     case scheduled = "SCHEDULED"
     case timed = "TIMED"
 }
-
-struct GameViewTeam: Codable {
-    let shortName, tla: String?
-    let crest: String?
-    let clubColors:String?
+enum GameViewWinner:String{
+    case away = "AWAY_TEAM"
+    case draw = "DRAW"
+    case home = "HOME_TEAM"
 }
