@@ -8,19 +8,23 @@
 import UIKit
 import WebKit
 
-class WebViewController: UIViewController {
+class WebViewController: UIViewController, WKUIDelegate {
     var webView:WKWebView!
     
     var url:URL!
     var coordinator:WebViewCoordinator!
     override func loadView() {
         super.loadView()
-        webView = WKWebView()
+    
+        webView = WKWebView(frame: view.bounds)
         webView.navigationDelegate = self
-        view = webView
+        webView.uiDelegate = self
+        webView.allowsBackForwardNavigationGestures = true
+        webView.allowsLinkPreview = true
+        view.addSubview(webView)
         
     }
-    override func viewDidLoad() {
+    override func viewDidLoad(){
         super.viewDidLoad()
         if UIApplication.shared.canOpenURL(self.url){
             showProgress()
@@ -31,12 +35,12 @@ class WebViewController: UIViewController {
         }
     }
 }
+
 extension WebViewController:WKNavigationDelegate{
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         hideProgress()
     }
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         hideProgress()
-        fatalError()
     }
 }

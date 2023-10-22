@@ -37,11 +37,6 @@
                                                             <constraint firstAttribute="height" priority="999" constant="80" id="4uW-35-QS7"/>
                                                             <constraint firstAttribute="width" priority="999" constant="80" id="WBJ-9C-LcI"/>
                                                         </constraints>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                                <integer key="value" value="40"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
                                                     </imageView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="yjw-R8-LMW">
                                                         <rect key="frame" x="0.0" y="88" width="80" height="20"/>

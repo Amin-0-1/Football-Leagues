@@ -13,6 +13,7 @@ struct LeaguesDetailsViewDataModel{
     var models: [LeagueDetailsViewDataModel]
 }
 struct LeagueDetailsViewDataModel{
+    let id:Int?
     let image:String?
     let name:String?
     let shortName:String?

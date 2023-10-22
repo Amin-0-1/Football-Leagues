@@ -84,7 +84,6 @@ class AppRepository:AppRepositoryInterface{
             }
         } receiveValue: { model in
             completion(.success(model))
-        
         }.store(in: &self.cancellables)
 
 

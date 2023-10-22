@@ -1,18 +1,20 @@
 //
-//  TeamsCell.swift
+//  TeamHeaderView.swift
 //  Football-Leagues
 //
-//  Created by Amin on 21/10/2023.
+//  Created by Amin on 22/10/2023.
 //
 
 import UIKit
 
-class TeamsCell: UITableViewCell {
+class TeamHeaderView: UIView {
 
+    
+    @IBOutlet weak var contentView: UIView!
+    
     @IBOutlet private weak var uiImage: UIImageView!
     @IBOutlet private var uiColorsView: [UIView]!
     @IBOutlet private weak var uiShortTitle: UILabel!
-    @IBOutlet private weak var uiTitleStack: UIStackView!
     @IBOutlet private weak var uiFallName: UILabel!
     @IBOutlet private weak var uiFoundationStack: UIStackView!
     @IBOutlet private weak var uiFoundation: UILabel!
@@ -21,30 +23,23 @@ class TeamsCell: UITableViewCell {
     @IBOutlet private weak var uiStadiumStack: UIStackView!
     @IBOutlet private weak var uiStadium: UILabel!
     @IBOutlet weak var uiLinkButton: UIButton!
-    private var model:LeagueDetailsViewDataModel!
-    private var viewModel:leagueDetailsVMProtocol!
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-        [uiTitleStack,uiAddressStack,uiStadiumStack,uiFoundationStack]
-            .forEach{$0?.isHidden = true}
-        uiLinkButton.isHidden = true
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
     }
     
-    
-    @IBAction func linkPressed(_ sender: UIButton) {
-        viewModel.input.onTappingLink.send(model.link)
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        commonInit()
     }
-    
-    func configure(withModel model:LeagueDetailsViewDataModel,viewModel:leagueDetailsVMProtocol){
-        self.model = model
-        self.viewModel = viewModel
+    private func commonInit() {
+        Bundle.main.loadNibNamed(String(describing: type(of: self)), owner: self, options: nil)
+        addSubview(contentView)
+        contentView.frame = bounds
+        contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    }
+    func configure(model:LeagueDetailsViewDataModel){
         
         uiShortTitle.text = model.shortName
         uiFallName.text = model.name
@@ -64,9 +59,6 @@ class TeamsCell: UITableViewCell {
         if let _ = uiStadium{
             self.uiStadiumStack.isHidden = false
         }
-        if let _ = uiFallName{
-            self.uiTitleStack.isHidden = false
-        }
         if let _ = model.link {
             self.uiLinkButton.isHidden = false
         }
@@ -78,5 +70,8 @@ class TeamsCell: UITableViewCell {
         uiColorsView[0].layer.borderColor = UIColor.customColor(.greenColor).cgColor
         uiColorsView[1].layer.borderColor = UIColor.customColor(.greenColor).cgColor
     }
+    @IBAction func uiLinkPressed(_ sender: UIButton) {
+        
+    }
+    
 }
-
