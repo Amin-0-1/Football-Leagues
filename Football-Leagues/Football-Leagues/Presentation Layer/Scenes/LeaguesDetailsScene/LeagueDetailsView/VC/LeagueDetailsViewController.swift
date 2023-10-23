@@ -28,6 +28,7 @@ class LeagueDetailsViewController: UIViewController {
     }
     private func configureView(){
         uiTableView.register(UINib(nibName: TeamsCell.nibName, bundle: nil), forCellReuseIdentifier: TeamsCell.reuseIdentifier)
+        uiTableView.register(UINib(nibName: TeamsHeaderCell.nibName, bundle: nil), forHeaderFooterViewReuseIdentifier: TeamsHeaderCell.reuseIdentifier)
         self.uiTableView.addSubview(refreshControl)
     }
     private func bind(){
@@ -75,6 +76,16 @@ extension LeagueDetailsViewController:UITableViewDataSource{
         let model = viewModel.output.publishableTeams.value.models[indexPath.row]
         cell.configure(withModel:model,viewModel:self.viewModel)
         return cell
+    }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard viewModel.output.publishableTeams.value.countOfTeams ?? 0  > 0 else {return nil}
+        guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TeamsHeaderCell.reuseIdentifier) as? TeamsHeaderCell else {fatalError()}
+        headerView.backgroundConfiguration = .clear()
+        return headerView
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
     }
 }
 

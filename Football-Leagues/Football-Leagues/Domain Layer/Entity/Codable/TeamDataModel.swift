@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GamesDataModel: Codable {
+struct TeamDataModel: Codable {
     let resultSet: ResultSet?
     let matches: [MatchModel]?
 }

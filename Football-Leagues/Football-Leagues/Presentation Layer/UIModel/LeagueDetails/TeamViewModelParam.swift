@@ -8,7 +8,7 @@
 import Foundation
 
 struct TeamViewModelParam{
-    let coordinator: GamesCoordinator
-    let usecase: GamesUsecaseProtocol = GamesUsecase()
+    let coordinator: TeamCoordinator
+    let usecase: TeamUsecaseProtcol = TeamUsecase()
     let team:LeagueDetailsViewDataModel
 }

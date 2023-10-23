@@ -7,11 +7,12 @@
 
 import UIKit
 
+protocol linkNavigationDelegate:AnyObject{
+    func navigateTo(link:String?)
+}
 class TeamHeaderView: UIView {
 
-    
-    @IBOutlet weak var contentView: UIView!
-    
+    @IBOutlet private weak var contentView: UIView!
     @IBOutlet private weak var uiImage: UIImageView!
     @IBOutlet private var uiColorsView: [UIView]!
     @IBOutlet private weak var uiShortTitle: UILabel!
@@ -22,8 +23,10 @@ class TeamHeaderView: UIView {
     @IBOutlet private weak var uiAddress: UILabel!
     @IBOutlet private weak var uiStadiumStack: UIStackView!
     @IBOutlet private weak var uiStadium: UILabel!
-    @IBOutlet weak var uiLinkButton: UIButton!
+    @IBOutlet private weak var uiLinkButton: UIButton!
     
+    weak var delegate:linkNavigationDelegate!
+    private var link:String?
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
@@ -40,7 +43,7 @@ class TeamHeaderView: UIView {
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     }
     func configure(model:LeagueDetailsViewDataModel){
-        
+        self.link = model.link
         uiShortTitle.text = model.shortName
         uiFallName.text = model.name
         uiFoundation.text = model.foundation
@@ -71,7 +74,7 @@ class TeamHeaderView: UIView {
         uiColorsView[1].layer.borderColor = UIColor.customColor(.greenColor).cgColor
     }
     @IBAction func uiLinkPressed(_ sender: UIButton) {
-        
+        delegate.navigateTo(link: self.link)
     }
     
 }

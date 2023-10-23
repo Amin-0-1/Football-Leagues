@@ -34,7 +34,7 @@ class GameCell: UITableViewCell {
 
     }
     
-    func configure(model:GamesViewDataModel){
+    func configure(model:TeamDetailsViewDataModel){
         let defaultImage = #imageLiteral(resourceName: "logo")
         if let homeImage = model.homeTeam?.crest, let homeImageUrl = URL(string: homeImage){
             self.uiHomeImage.sd_setImage(with:homeImageUrl,placeholderImage: defaultImage)
@@ -42,8 +42,8 @@ class GameCell: UITableViewCell {
         if let awayImage = model.awayTeam?.crest, let awayImageUrl = URL(string: awayImage){
             self.uiAwayImage.sd_setImage(with: awayImageUrl,placeholderImage: defaultImage)
         }
-        uiHomeName.text = model.homeTeam?.shortName
-        uiAwayName.text = model.awayTeam?.shortName
+        uiHomeName.text = model.homeTeam?.tla
+        uiAwayName.text = model.awayTeam?.tla
         uiStatus.text = model.date
         uiHomeTeamScore.text = model.score?.home?.description
         uiAwayTeamScor.text = model.score?.away?.description

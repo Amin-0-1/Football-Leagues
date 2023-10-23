@@ -1,5 +1,5 @@
 //
-//  TeamsVC.swift
+//  TeamDetailsViewController.swift
 //  Football-Leagues
 //
 //  Created by Amin on 22/10/2023.
@@ -7,11 +7,18 @@
 
 import UIKit
 import Combine
-class GamesViewController: UIViewController {
+
+class TeamDetailsViewController: UIViewController {
 
     @IBOutlet private weak var uiTableView: UITableView!
+    private lazy var refreshControl : UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.tintColor = .systemGreen
+        refreshControl.addTarget(self, action: #selector(refreshControlValueChanged), for: .valueChanged)
+        return refreshControl
+    }()
     
-    var viewModl: gamesViewModelProtocol!
+    var viewModl: TeamViewModelProtocol!
     private var cancellables:Set<AnyCancellable> = []
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,6 +27,7 @@ class GamesViewController: UIViewController {
         viewModl.onScreenAppeared.send(false)
     }
     private func configureView(){
+        uiTableView.addSubview(refreshControl)
         let gameCellNib = UINib(nibName: GameCell.nibName, bundle: nil)
         let gameHeaderCellNib = UINib(nibName: GamesHeaderCell.nibName, bundle: nil)
         
@@ -39,8 +47,10 @@ class GamesViewController: UIViewController {
         }.store(in: &cancellables)
         viewModl.leagueDetails.sink {[weak self] model in
             guard let self = self else {return}
+            title = model.name
             let header = TeamHeaderView(frame: .init(x: 0, y: 0, width: view.frame.width, height: 250))
             header.configure(model: model)
+            header.delegate = self
             self.uiTableView.tableHeaderView = header
         }.store(in: &cancellables)
         
@@ -48,9 +58,15 @@ class GamesViewController: UIViewController {
             self.uiTableView.reloadData()
         }.store(in: &cancellables)
     }
+    @objc func refreshControlValueChanged(){
+        viewModl.onScreenAppeared.send(true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1){
+            self.refreshControl.endRefreshing()
+        }
+    }
 }
 
-extension GamesViewController:UITableViewDataSource{
+extension TeamDetailsViewController:UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModl.gamesCount
     }
@@ -62,16 +78,21 @@ extension GamesViewController:UITableViewDataSource{
         return cell
     }
 }
-extension GamesViewController:UITableViewDelegate{
+extension TeamDetailsViewController:UITableViewDelegate{
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard viewModl.gamesCount != 0 else{return nil}
         guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: GamesHeaderCell.reuseIdentifier) as? GamesHeaderCell else {fatalError()}
-        let background = UIView(frame: view.bounds)
-        background.backgroundColor = .clear
-        headerView.backgroundView = background
+        headerView.backgroundConfiguration = .clear()
         return headerView
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 40
+    }
+}
+
+extension TeamDetailsViewController : linkNavigationDelegate{
+    func navigateTo(link: String?) {
+        viewModl.onTapLink.send(link)
     }
 }

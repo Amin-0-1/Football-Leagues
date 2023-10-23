@@ -8,16 +8,22 @@
 import UIKit
 
 protocol GamesCoordinatorProtocol:AnyCoordinator{
-    
+    func navigate(to:URL)
 }
-struct GamesCoordinator:GamesCoordinatorProtocol{
+struct TeamCoordinator:GamesCoordinatorProtocol{
     var navigationController: UINavigationController
     var team:LeagueDetailsViewDataModel
     func start() {
-        let vc = GamesViewController()
+        let vc = TeamDetailsViewController()
         let params = TeamViewModelParam(coordinator: self, team: team)
-        let viewModel = GamesViewModel(param: params)
+        let viewModel = TeamViewModel(param: params)
         vc.viewModl = viewModel
         navigationController.pushViewController(vc, animated: true)
+    }
+    func navigate(to url: URL) {
+        let vc = WebViewController()
+        let coordinator = WebViewCoordinator(navigationController: navigationController, data: url)
+        vc.coordinator = coordinator
+        coordinator.start()
     }
 }
