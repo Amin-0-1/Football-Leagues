@@ -17,17 +17,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         if #available(iOS 15, *) {
+            let backImage = #imageLiteral(resourceName: "back")
             let navigationBarAppearance = UINavigationBarAppearance()
+            navigationBarAppearance.setBackIndicatorImage(backImage, transitionMaskImage: backImage)
             navigationBarAppearance.configureWithOpaqueBackground()
             navigationBarAppearance.titleTextAttributes = [
                 NSAttributedString.Key.foregroundColor : UIColor.white
             ]
+            navigationBarAppearance.backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
             navigationBarAppearance.backgroundColor = UIColor.clear
             UINavigationBar.appearance().standardAppearance = navigationBarAppearance
             UINavigationBar.appearance().compactAppearance = navigationBarAppearance
             UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
         }
-        
+
         return true
     }
 

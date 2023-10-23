@@ -16,7 +16,7 @@ struct AppCoordinator:AnyCoordinator{
     var navigationController: UINavigationController
 
     func start() {
-        let leagueCoordinator = LeaguesCoordinator(navigationController: navigationController)
-        leagueCoordinator.start()
+        let launchScrenn = LaunchScreenCoordinator(navigationController: navigationController)
+        launchScrenn.start()
     }
 }

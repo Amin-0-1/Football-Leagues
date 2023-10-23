@@ -31,7 +31,7 @@ struct LeagueDetailsCoordinator:LeagueDetailsCoordinatorProtocol{
         coordinator.start()
     }
     func navigateTo(team:LeagueDetailsViewDataModel){
-        let coordinator = GamesCoordinator(navigationController: self.navigationController,team: team)
+        let coordinator = TeamCoordinator(navigationController: self.navigationController,team: team)
         coordinator.start()
     }
 }

@@ -8,19 +8,19 @@
 import Foundation
 import Combine
 
-protocol GamesRepositoryProtocol{
-    func fetchGames(endPoint: EndPoint,localEntityType:LocalEntityType)->Future<GamesDataModel,CustomDomainError>
-    func save(model:GamesDataModel,localEntityType:LocalEntityType)->Future<Bool,Error>
+protocol TeamRepositoryProtocol{
+    func fetchGames(endPoint: EndPoint,localEntityType:LocalEntityType)->Future<TeamDataModel,CustomDomainError>
+    func save(model:TeamDataModel,localEntityType:LocalEntityType)->Future<Bool,Error>
 }
-class GamesRepository:GamesRepositoryProtocol{
+class TeamRepository:TeamRepositoryProtocol{
     
     private let appRepo:AppRepositoryInterface!
     private var cancellables:Set<AnyCancellable> = []
     init(appRepo: AppRepositoryInterface = AppRepository()) {
         self.appRepo = appRepo
     }
-    func fetchGames(endPoint: EndPoint,localEntityType:LocalEntityType)->Future<GamesDataModel,CustomDomainError> {
-        return Future<GamesDataModel,CustomDomainError>{ [weak self] promise in
+    func fetchGames(endPoint: EndPoint,localEntityType:LocalEntityType)->Future<TeamDataModel,CustomDomainError> {
+        return Future<TeamDataModel,CustomDomainError>{ [weak self] promise in
             guard let self = self else {return}
             appRepo.fetch(endPoint: endPoint, localEntityType: localEntityType).sink { completion in
                 switch completion{
@@ -42,7 +42,7 @@ class GamesRepository:GamesRepositoryProtocol{
             }.store(in: &self.cancellables)
         }
     }
-    func save(model: GamesDataModel, localEntityType: LocalEntityType) -> Future<Bool, Error> {
+    func save(model: TeamDataModel, localEntityType: LocalEntityType) -> Future<Bool, Error> {
         return appRepo.save(data: model, localEntityType: localEntityType)
     }
 }

@@ -50,7 +50,7 @@ class CoreDataManager:CoreDataManagerProtocol{
                         }
                     case .games(let id):
                         let obj = GamesEntity(context: context)
-                        if let type = data as? GamesDataModel{
+                        if let type = data as? TeamDataModel{
                             guard let encoded = try? JSONEncoder().encode(type) else {
                                 promise(.failure(Errors.decodingFailed))
                                 return

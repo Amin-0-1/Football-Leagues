@@ -34,9 +34,11 @@ extension UIViewController{
     }
     
     func showError(message:String){
-        let controller = UIAlertController(title: "Opps!!", message: message , preferredStyle: .alert)
-        controller.addAction(.init(title: "OK", style: .default))
-        present(controller, animated: true)
+        DispatchQueue.main.async {
+            let controller = UIAlertController(title: "Opps!!", message: message , preferredStyle: .alert)
+            controller.addAction(.init(title: "OK", style: .default))
+            self.present(controller, animated: true)
+        }
     }
 }
 

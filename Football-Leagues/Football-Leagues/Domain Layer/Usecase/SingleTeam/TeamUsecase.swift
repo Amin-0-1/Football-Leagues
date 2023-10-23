@@ -8,20 +8,20 @@
 import Foundation
 import Combine
 
-protocol GamesUsecaseProtocol{
-    func fetchGames(withTeamID:Int)-> Future<GamesDataModel,CustomDomainError>
+protocol TeamUsecaseProtcol{
+    func fetchGames(withTeamID:Int)-> Future<TeamDataModel,CustomDomainError>
 }
-class GamesUsecase:GamesUsecaseProtocol{
+class TeamUsecase:TeamUsecaseProtcol{
     
-    private let gamesRepo:GamesRepositoryProtocol!
+    private let gamesRepo:TeamRepositoryProtocol!
     private var cancellables:Set<AnyCancellable> = []
-    init(repo: GamesRepositoryProtocol = GamesRepository()) {
+    init(repo: TeamRepositoryProtocol = TeamRepository()) {
         self.gamesRepo = repo
     }
     
-    func fetchGames(withTeamID id: Int) -> Future<GamesDataModel, CustomDomainError> {
+    func fetchGames(withTeamID id: Int) -> Future<TeamDataModel, CustomDomainError> {
         
-        return Future<GamesDataModel,CustomDomainError>{[weak self] promise in
+        return Future<TeamDataModel,CustomDomainError>{[weak self] promise in
             guard let self = self else {return}
             gamesRepo.fetchGames(endPoint: LeaguesEndPoints.getGames(id: id), localEntityType: .games(id: id)).sink { completion in
                 switch completion{
@@ -37,7 +37,7 @@ class GamesUsecase:GamesUsecaseProtocol{
         }
     }
     
-    private func save(model:GamesDataModel,localEntityType:LocalEntityType){
+    private func save(model:TeamDataModel,localEntityType:LocalEntityType){
         gamesRepo.save(model: model, localEntityType: localEntityType).sink { completion in
             switch completion{
                 case .finished: break

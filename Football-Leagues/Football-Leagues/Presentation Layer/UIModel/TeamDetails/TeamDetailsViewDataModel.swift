@@ -7,30 +7,30 @@
 
 import Foundation
 
-struct GamesViewDataModel{
+struct TeamDetailsViewDataModel{
     let date: String?
-    let status: GameViewStatus?
-    let homeTeam,awayTeam: GameViewTeam?
-    let winner:GameViewWinner?
-    let score:GameViewScore?
+    let status: TeamViewStatus?
+    let homeTeam,awayTeam: TeamViewDataModel?
+    let winner:TeamViewWinner?
+    let score:TeamViewScore?
     
 }
-struct GameViewTeam: Codable {
+struct TeamViewDataModel: Codable {
     let shortName, tla: String?
     let crest: String?
     let clubColors:String?
 }
-struct GameViewScore{
+struct TeamViewScore{
     let home:Int?
     let away:Int?
 }
 
-enum GameViewStatus: String, Codable {
+enum TeamViewStatus: String, Codable {
     case finished = "FINISHED"
     case scheduled = "SCHEDULED"
     case timed = "TIMED"
 }
-enum GameViewWinner:String{
+enum TeamViewWinner:String{
     case away = "AWAY_TEAM"
     case draw = "DRAW"
     case home = "HOME_TEAM"
