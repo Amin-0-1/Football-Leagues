@@ -8,13 +8,12 @@
 import Foundation
 
 class FakeJsonDecoder{
-    func getModelFrom<T:Decodable>(jsonFile name:String,decodeType:T.Type)->T?{
-        guard let path = Bundle(for: type(of: self)).path(forResource: name, ofType: "geojson"),
-              let url = URL(string: path)
+    func getModelFrom<T:Decodable>(jsonFile name:String,fileType:String = "json",decodeType:T.Type)->T?{
+        guard let path = Bundle(for: type(of: self)).path(forResource: name, ofType: fileType)
         else {return nil}
         
         do {
-            let data = try Data(contentsOf: url)
+            let data = try Data(contentsOf: URL(fileURLWithPath: path))
             let decoder = JSONDecoder()
             let decodedData = try decoder.decode(decodeType, from: data)
             return decodedData
@@ -23,4 +22,6 @@ class FakeJsonDecoder{
             return nil
         }
     }
+        
+    
 }
