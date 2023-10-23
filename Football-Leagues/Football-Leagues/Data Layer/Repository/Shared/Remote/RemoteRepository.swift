@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class RemoteRepository:RemoteRepositoryInterface{
+struct RemoteRepository:DataSourceProtocol{
         
     private var apiClinet:APIClientProtocol!
     private var cancellables: Set<AnyCancellable> = []
@@ -16,21 +16,12 @@ class RemoteRepository:RemoteRepositoryInterface{
         self.apiClinet = apiClinet
     }
     
-    func fetch<T:Codable>(endPoint: EndPoint) -> Future<T, Error> {
-        return Future<T,Error>{[weak self] promise in
-            guard let self = self else {return}
-            self.apiClinet.execute(request: endPoint).sink { completion in
-                switch completion{
-                    case .finished: break
-                    case .failure(let error):
-                        let error = NSError(domain: error.localizedDescription, code: 0)
-                        promise(.failure(error))
-                }
-            } receiveValue: { value in
-                promise(.success(value))
-            }.store(in: &self.cancellables)
-
-        }
-        
+    func fetch<T:Codable>(endPoint: EndPoint?, localEntity: LocalEndPoint?) -> Future<T, Error>  {
+        guard let endPoint = endPoint else {return .init { $0(.failure(NetworkError.timeout)) }}
+        return self.apiClinet.execute(request: endPoint)
+    }
+    
+    func save<T>(data: T, localEntity: LocalEndPoint) -> Future<Bool, Error> {
+        return .init{$0(.failure(NetworkError.timeout))}
     }
 }

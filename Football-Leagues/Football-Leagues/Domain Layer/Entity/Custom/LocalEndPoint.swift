@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum LocalEntityType{
+enum LocalEndPoint{
     case leagues
     case teams(code:String)
     case games(id:Int)

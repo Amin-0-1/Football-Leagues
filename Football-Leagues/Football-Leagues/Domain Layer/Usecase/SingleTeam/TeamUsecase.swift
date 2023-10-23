@@ -15,30 +15,98 @@ class TeamUsecase:TeamUsecaseProtcol{
     
     private let gamesRepo:TeamRepositoryProtocol!
     private var cancellables:Set<AnyCancellable> = []
-    init(repo: TeamRepositoryProtocol = TeamRepository()) {
+    private var connectivity:ConnectivityProtocol!
+    init(repo: TeamRepositoryProtocol = TeamRepository(),
+         connectivity:ConnectivityProtocol = ConnectivityService()) {
         self.gamesRepo = repo
+        self.connectivity = connectivity
     }
     
     func fetchGames(withTeamID id: Int) -> Future<TeamDataModel, CustomDomainError> {
         
-        return Future<TeamDataModel,CustomDomainError>{[weak self] promise in
+        return .init{[weak self] promise in
             guard let self = self else {return}
-            gamesRepo.fetchGames(endPoint: LeaguesEndPoints.getGames(id: id), localEntityType: .games(id: id)).sink { completion in
+            // MARK: - fetch local data
+            self.gamesRepo.fetchLocalGames(localEndpoint: .games(id: id)).sink { completion in
                 switch completion{
-                    case .finished: break
+                    case .finished:
+                        break
                     case .failure(let error):
-                        promise(.failure(error))
-                        print(error)
+                        self.connectivity.isConnected { hasInternet in
+                            if !hasInternet{
+                                if let networkError = error as? NetworkError{
+                                    let customError = CustomDomainError.customError(networkError.localizedDescription)
+                                    print(error)
+                                    promise(.failure(customError))
+                                }else if let coreDataError = error as? CoreDataManager.Errors{
+                                    let customError = CustomDomainError.customError(coreDataError.localizedDescription)
+                                    print(error)
+                                    promise(.failure(customError))
+                                }
+                                promise(.failure(.customError(error.localizedDescription)))
+                                return
+                            }else{
+                                self.fetchRemoteGames(endPoint: LeaguesEndPoints.getGames(id: id)) { completion in
+                                    switch completion {
+                                        case .success(let success):
+                                            promise(.success(success))
+                                        case .failure(let failure):
+                                            promise(.failure(failure))
+                                    }
+                                }
+                            }
+                            
+                        }
                 }
             } receiveValue: { model in
-                self.save(model: model, localEntityType: .games(id: id))
+                // MARK: - local data fetched
                 promise(.success(model))
+                
+                self.connectivity.isConnected { hasInternet in
+                    if !hasInternet{
+                        promise(.failure(.connectionError))
+                    }else{
+                        self.fetchRemoteGames(endPoint: LeaguesEndPoints.getGames(id: id)) { completion in
+                            switch completion {
+                                case .success(let success):
+                                    promise(.success(success))
+                                case .failure(let failure):
+                                    promise(.failure(failure))
+                            }
+                        }
+                    }
+                }
+                
             }.store(in: &self.cancellables)
         }
     }
     
-    private func save(model:TeamDataModel,localEntityType:LocalEntityType){
-        gamesRepo.save(model: model, localEntityType: localEntityType).sink { completion in
+    private func fetchRemoteGames(endPoint:EndPoint,onFinish:@escaping (Result<TeamDataModel,CustomDomainError>)->Void){
+        self.gamesRepo.fetchRemoteGames(endpoint: endPoint).sink { completion in
+            switch completion{
+                case .finished: break
+                case .failure(let error):
+                    if let networkError = error as? NetworkError{
+                        let customError = CustomDomainError.customError(networkError.localizedDescription)
+                        onFinish(.failure(customError))
+                    }else if let coreDataError = error as? CoreDataManager.Errors{
+                        let customError = CustomDomainError.customError(coreDataError.localizedDescription)
+                        onFinish(.failure(customError))
+                    }
+                    onFinish(.failure(CustomDomainError.customError(error.localizedDescription)))
+            }
+        } receiveValue: { model in
+            onFinish(.success(model))
+            if let endpoint = endPoint as? LeaguesEndPoints,let id = Int(endpoint.code ?? ""){
+                self.save(model: model, localEntityType: .games(id: id))
+            }
+        }.store(in: &self.cancellables)
+        
+    }
+    
+    // MARK: - update local data
+    private func save(model:TeamDataModel,localEntityType:LocalEndPoint){
+        gamesRepo.saveGames(model: model, localEntityType: localEntityType).sink { completion in
             switch completion{
                 case .finished: break
                 case .failure(let error):

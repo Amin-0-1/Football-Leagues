@@ -9,61 +9,114 @@ import Foundation
 import Combine
 
 protocol LeaguesUsecaseProtocol{
-    func fetchLeagues() -> Future<LeagueDataModel,CustomDomainError>
+    func fetchLeagues() -> Future<LeaguesDataModel,CustomDomainError>
 }
 
 class LeaguesUsecase : LeaguesUsecaseProtocol{
     
     private var leaguesRepo:LeaguesRepoInterface!
+    private var connectivity:ConnectivityProtocol!
     private var cancellables:Set<AnyCancellable> = []
-    init(leaguesRepo: LeaguesRepoInterface = LeaguesReposiotory()) {
+    init(leaguesRepo: LeaguesRepoInterface = LeaguesReposiotory(),
+         connectivity:ConnectivityProtocol = ConnectivityService()) {
         self.leaguesRepo = leaguesRepo
+        self.connectivity = connectivity
     }
     
-    
-    func fetchLeagues() -> Future<LeagueDataModel, CustomDomainError> {
-        return Future<LeagueDataModel,CustomDomainError> { promise in
-            self.leaguesRepo.fetchLeagues(endPoint: LeaguesEndPoints.getAllLeagues).sink { completion in
-                switch completion{
-                    case .finished:
-                        break
-                    case .failure(let error):
-                        promise(.failure(error))
-                }
-            } receiveValue: { model in
-                self.save(leagues: model,localEntityType: .leagues)
-                promise(.success(model))
-            }.store(in: &self.cancellables)
+    func fetchLeagues() -> Future<LeaguesDataModel, CustomDomainError> {
+        return .init { promise in
+            self.fetchRemoteLeagues(endPoint: LeaguesEndPoints.getAllLeagues) { result in
+                promise(result)
+            }
         }
-    }
-
-    private func save(leagues:LeagueDataModel,localEntityType:LocalEntityType){
-        leaguesRepo.save(leagues: leagues,localEntityType: .leagues).sink { _ in } receiveValue: { isSaved in
-            print(isSaved)
-        }.store(in: &cancellables)
-
-    }
-    
+//        return .init{ [weak self] promise in
+//            guard let self = self else {return}
 //
-//    func fetchGames() -> Single<Result<LeagueDataModel, Error>> {
-//        return Single.create {[weak self] single in
-//            guard let self = self,let competitions = self.leagueModel?.competitions else {return Disposables.create()}
-//
-//            for index in competitions.indices{
-//                if let code = self.leagueModel?.competitions[index].code{
-//                    self.leaguesRepo.fetchMatches(endPoint: LeaguesEndPoints.getMatches(code: code)).subscribe(onSuccess: { event in
-//                        switch event{
-//                            case .success(let model):
-//                                self.leagueModel?.competitions[index].numberOfGames = model.matches?.count
-//                                single(.success(.success(self.leagueModel!)))
-//                            case .failure(let error):
-//                                print(error.localizedDescription)
+//            // MARK: - fetch local data
+//            self.leaguesRepo.fetchLocalLeagues(localEntityType: .leagues).sink { completion in
+//                switch completion{
+//                    case .finished: break
+//                    case .failure(let error):
+//                        self.connectivity.isConnected { hasInternet in
+//                            if !hasInternet{
+//                                if let networkError = error as? NetworkError{
+//                                    let customError = CustomDomainError.customError(networkError.localizedDescription)
+//                                    promise(.failure(customError))
+//                                }else if let coreDataError = error as? CoreDataManager.Errors{
+//                                    let customError = CustomDomainError.customError(coreDataError.localizedDescription)
+//                                    promise(.failure(customError))
+//                                }
+//                                promise(.failure(.customError(error.localizedDescription)))
+//                            }else{
+//                                // MARK: - fetch remote data
+//                                self.fetchRemoteLeagues(endPoint:LeaguesEndPoints.getAllLeagues) { result in
+//                                    switch result {
+//                                        case .success(let success):
+//                                            promise(.success(success))
+//                                        case .failure(let failure):
+//                                            promise(.failure(failure))
+//                                    }
+//                                }
+//                            }
 //                        }
-//                    }).disposed(by: bag)
 //                }
-//            }
-//            return Disposables.create()
+//            } receiveValue: { model in
+//                // MARK: - on local data fetched
+//                promise(.success(model))
+//                // get remote data to update local
+//                self.connectivity.isConnected { hasInternet in
+//                    if !hasInternet{
+//                        promise(.failure(.connectionError))
+//                    }else{
+//                        // MARK: - fetch remote data
+//                        self.fetchRemoteLeagues(endPoint:LeaguesEndPoints.getAllLeagues) { result in
+//                            switch result {
+//                                case .success(let success):
+//                                    promise(.success(success))
+//                                case .failure(let failure):
+//                                    promise(.failure(failure))
+//                            }
+//                        }
+//                    }
+//                }
+//
+//            }.store(in: &self.cancellables)
 //        }
-//    }
+        
+        
+    }
+    private func fetchRemoteLeagues(endPoint:EndPoint,onFinish:@escaping (Result<LeaguesDataModel,CustomDomainError>)->Void){
+        leaguesRepo.fetchRemoteLeagues(endpoint: endPoint).sink { completion in
+            switch completion{
+                case .finished: break
+                case .failure(let error):
+                    if let networkError = error as? NetworkError{
+                        let customError = CustomDomainError.customError(networkError.localizedDescription)
+                        onFinish(.failure(customError))
+                    }else if let coreDataError = error as? CoreDataManager.Errors{
+                        let customError = CustomDomainError.customError(coreDataError.localizedDescription)
+                        onFinish(.failure(customError))
+                    }
+                    onFinish(.failure(CustomDomainError.customError(error.localizedDescription)))
+            }
+        } receiveValue: { model in
+            self.save(leagues: model, localEntityType: .leagues)
+            onFinish(.success(model))
+        }.store(in: &self.cancellables)
+
+    }
+    // MARK: - update local data
+    private func save(leagues:LeaguesDataModel,localEntityType:LocalEndPoint){
+        leaguesRepo.saveLeagues(leagues: leagues,localEntity: localEntityType).sink { completion in
+            switch completion{
+                case .finished: break
+                case .failure(let error):
+                    print(error.localizedDescription)
+            }
+        } receiveValue: { isSaved in
+            print("local \(localEntityType) saved -> \(isSaved)")
+        }.store(in: &cancellables)
+        
+    }
 }
 

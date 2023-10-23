@@ -9,7 +9,7 @@ import Combine
 import Foundation
 @testable import Football_Leagues
 
-class FakeLeagueDetailsRepo:LeagueDetailsRepositoryProtocol{
+class FakeLeagueDetailsRepo:LeagueDetailsRepositoryInteface{
     let shouldFail:Bool
     var isVisited:Bool = false
     var error = "mock error"
@@ -18,10 +18,10 @@ class FakeLeagueDetailsRepo:LeagueDetailsRepositoryProtocol{
         self.shouldFail = shouldFail
     }
     
-    func fetchTeams(endPoint: EndPoint, localEntityType: LocalEntityType) -> Future<TeamsDataModel, CustomDomainError> {
-        return Future<TeamsDataModel,CustomDomainError>{ promise in
+    func fetchTeams(endPoint: EndPoint, localEntityType: LocalEndPoint) -> Future<LeagueDetailsDataModel, CustomDomainError> {
+        return Future<LeagueDetailsDataModel,CustomDomainError>{ promise in
             if !self.shouldFail{
-                guard let fakeModel = FakeJsonDecoder().getModelFrom(jsonFile: "StubLeagueDetails", decodeType: TeamsDataModel.self) else {
+                guard let fakeModel = FakeJsonDecoder().getModelFrom(jsonFile: "StubLeagueDetails", decodeType: LeagueDetailsDataModel.self) else {
                     promise(.failure(.customError("Failed to decode in testing")))
                     return
                 }
@@ -34,7 +34,7 @@ class FakeLeagueDetailsRepo:LeagueDetailsRepositoryProtocol{
         }
     }
     
-    func save(model: TeamsDataModel, localEntityType: LocalEntityType) -> Future<Bool, Error> {
+    func save(model: LeagueDetailsDataModel, localEntityType: LocalEndPoint) -> Future<Bool, Error> {
         self.isVisited = true
         return Future<Bool,Error>{ promise in
             promise(.failure(NSError(domain: self.error, code: 0)))
