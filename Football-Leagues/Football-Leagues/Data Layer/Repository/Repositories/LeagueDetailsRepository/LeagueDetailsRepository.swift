@@ -35,6 +35,7 @@ class LeagueDetailsRepository:LeagueDetailsRepositoryProtocol{
                             let customError = CustomDomainError.customError(coreDataError.localizedDescription)
                             promise(.failure(customError))
                         }
+                        promise(.failure(.customError(error.localizedDescription)))
                 }
             } receiveValue: { model in
                 promise(.success(model))

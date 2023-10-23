@@ -11,6 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LeagueDetailsViewController" customModule="Football_Leagues" customModuleProvider="target">
             <connections>
+                <outlet property="uiNotFound" destination="zmM-iU-sdG" id="WpM-L1-VGt"/>
                 <outlet property="uiTableView" destination="CRs-eK-8J0" id="0Jc-EZ-Yvw"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -20,6 +21,30 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zmM-iU-sdG">
+                    <rect key="frame" x="125" y="334.66666666666669" width="143" height="142.66666666666669"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="404" translatesAutoresizingMaskIntoConstraints="NO" id="c2I-VV-fSc">
+                            <rect key="frame" x="21.666666666666657" y="21.333333333333314" width="100" height="100"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="100" id="S2q-ti-s0T"/>
+                                <constraint firstAttribute="height" constant="100" id="VNM-Fq-ReZ"/>
+                            </constraints>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="c2I-VV-fSc" firstAttribute="centerY" secondItem="zmM-iU-sdG" secondAttribute="centerY" id="45z-OI-CIx"/>
+                        <constraint firstItem="c2I-VV-fSc" firstAttribute="height" secondItem="zmM-iU-sdG" secondAttribute="height" multiplier="0.7" id="bPX-go-94R"/>
+                        <constraint firstItem="c2I-VV-fSc" firstAttribute="width" secondItem="zmM-iU-sdG" secondAttribute="width" multiplier="0.7" id="dbb-UM-9U4"/>
+                        <constraint firstItem="c2I-VV-fSc" firstAttribute="centerX" secondItem="zmM-iU-sdG" secondAttribute="centerX" id="pJ1-pm-Bic"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="20"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="CRs-eK-8J0">
                     <rect key="frame" x="0.0" y="59" width="393" height="759"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -35,12 +60,15 @@
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="CRs-eK-8J0" secondAttribute="bottom" id="6mY-F7-JUQ"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="CRs-eK-8J0" secondAttribute="trailing" id="AYG-q2-0j2"/>
                 <constraint firstItem="CRs-eK-8J0" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="S7Z-qy-Ejt"/>
+                <constraint firstItem="zmM-iU-sdG" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="Zgz-aM-v4W"/>
+                <constraint firstItem="zmM-iU-sdG" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" constant="-20" id="ohC-5Z-KTc"/>
                 <constraint firstItem="CRs-eK-8J0" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="xpE-N6-3qJ"/>
             </constraints>
             <point key="canvasLocation" x="115" y="21"/>
         </view>
     </objects>
     <resources>
+        <image name="404" width="626" height="626"/>
         <namedColor name="MainColor">
             <color red="0.093999996781349182" green="0.097999997437000275" blue="0.15700000524520874" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

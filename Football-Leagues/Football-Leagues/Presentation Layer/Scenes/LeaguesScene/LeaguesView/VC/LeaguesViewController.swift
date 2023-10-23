@@ -12,6 +12,7 @@ import Combine
 class LeaguesViewController: UIViewController {
 
     @IBOutlet private weak var uiTableView: UITableView!
+    @IBOutlet private weak var uiNotFound: UIView!
     private lazy var refreshControl : UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.tintColor = .systemGreen
@@ -25,7 +26,7 @@ class LeaguesViewController: UIViewController {
         super.viewDidLoad()
         configureView()
         bind()
-        viewModel.input.onScreenAppeared.send(false)
+        viewModel.onScreenAppeared.send(false)
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -42,24 +43,27 @@ class LeaguesViewController: UIViewController {
         
         // MARK: - View Model Binding
 
-        viewModel.output.progress.sink {[weak self] value in
+        viewModel.progress.sink {[weak self] value in
             guard let self = self else {return}
             value ? self.showProgress() : self.hideProgress()
         }.store(in: &cancellable)
         
-        viewModel.output.showError.sink { [weak self] message in
+        viewModel.showError.sink { [weak self] message in
             guard let self = self else {return}
-            self.showError(message: message)
+            self.showError(message: message) {
+                self.uiNotFound.isHidden = false
+            }
         }.store(in: &cancellable)
         
-        viewModel.output.leagues.sink {[weak self] model in
+        viewModel.leagues.sink {[weak self] model in
             guard let self = self else {return}
+            self.uiNotFound.isHidden = true
             self.uiTableView.reloadData()
         }.store(in: &cancellable)
     }
     @objc func refreshControlValueChanged(){
-        self.viewModel.input.onScreenAppeared.send(true)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1){
+            self.viewModel.onScreenAppeared.send(true)
             self.refreshControl.endRefreshing()
         }
     }
@@ -68,18 +72,18 @@ class LeaguesViewController: UIViewController {
 extension LeaguesViewController:UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.output.publishableLeagues.value.count ?? 0
+        return viewModel.leagueCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: LeagueCell.reuseIdentifier) as? LeagueCell else {fatalError()}
-        let model = viewModel.output.publishableLeagues.value.models[indexPath.row]
+        let model = viewModel.getMode(forIndex: indexPath.row)
         cell.configure(withModel: model)
         return cell
     }
 }
 extension LeaguesViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        viewModel.input.onTappedCell.send(indexPath.row)
+        viewModel.onTappedCell.send(indexPath.row)
     }
 }

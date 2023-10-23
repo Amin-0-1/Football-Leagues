@@ -10,6 +10,7 @@ import Combine
 
 class TeamDetailsViewController: UIViewController {
 
+    @IBOutlet weak var uiNotFound: UIView!
     @IBOutlet private weak var uiTableView: UITableView!
     private lazy var refreshControl : UIRefreshControl = {
         let refreshControl = UIRefreshControl()
@@ -39,7 +40,9 @@ class TeamDetailsViewController: UIViewController {
     private func bind(){
         viewModl.showError.sink { [weak self] error in
             guard let self = self else {return}
-            self.showError(message: error)
+            self.showError(message: error) {
+                self.uiNotFound.isHidden = true
+            }
         }.store(in: &cancellables)
         viewModl.progress.sink { [weak self] value in
             guard let self = self else {return}
@@ -55,12 +58,14 @@ class TeamDetailsViewController: UIViewController {
         }.store(in: &cancellables)
         
         viewModl.gamesDetails.sink { games in
+            self.uiNotFound.isHidden = true
             self.uiTableView.reloadData()
         }.store(in: &cancellables)
     }
     @objc func refreshControlValueChanged(){
-        viewModl.onScreenAppeared.send(true)
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 1){
+            self.viewModl.onScreenAppeared.send(true)
             self.refreshControl.endRefreshing()
         }
     }
