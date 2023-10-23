@@ -23,6 +23,7 @@ struct LeagueDetailsCoordinator:LeagueDetailsCoordinatorProtocol{
     func start() {
         let vc = LeagueDetailsViewController()
         let viewModel = LeagueDetailsViewModel(params: .init(coordinator: self,code: data))
+        
         vc.viewModel = viewModel
         self.navigationController.pushViewController(vc, animated: true)
     }

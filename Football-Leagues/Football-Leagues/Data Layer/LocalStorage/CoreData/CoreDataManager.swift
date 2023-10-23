@@ -185,11 +185,11 @@ extension CoreDataManager{
         var localizedDescription:String{
             switch self{
                 case .empty:
-                    return "data not found locally, so please reconnect to the internet"
+                    return "Data not found locally, so please reconnect to the internet"
                 case .uncompleted:
-                    return "uncompleted process"
+                    return "Uncompleted process, please try again later"
                 case .decodingFailed:
-                    return "failed to decode data locally"
+                    return "Failed to decode data locally"
                 case .custom(let string):
                     return string
             }
@@ -197,69 +197,3 @@ extension CoreDataManager{
     }
 }
 
-
-
-
-
-
-//            switch localEntityType {
-//                case .leagues:
-//                    let request : NSFetchRequest<LeagueEntity> = LeagueEntity.fetchRequest()
-//                    do{
-//                        let all = try self.coreData.mainContext.fetch(request)
-//                        guard let first = all.first else {
-//                            promise(.failure(Errors.empty))
-//                            return
-//                        }
-//                        if let data = first.data{
-//                            let decoded = try JSONDecoder().decode(T.self, from: data)
-//                            promise(.success(decoded))
-//                        }else{
-//                            promise(.failure(Errors.decodingFailed))
-//                        }
-//                    }catch{
-//                        promise(.failure(Errors.uncompleted))
-//                    }
-//                case .teams(let code):
-//                    let request : NSFetchRequest<LeagueDetailsEntity> = LeagueDetailsEntity.fetchRequest()
-//                    let attribute = "code"
-//                    let predicate = NSPredicate(format: "%K == %@",attribute,code)
-//                    request.predicate = predicate
-//                    do{
-//                        let all = try self.coreData.mainContext.fetch(request)
-//                        guard let first = all.first else {
-//                            promise(.failure(Errors.empty))
-//                            return
-//                        }
-//                        if let data = first.data{
-//                            let decoded = try JSONDecoder().decode(T.self, from: data)
-//
-//                            promise(.success(decoded))
-//                        }else{
-//                            promise(.failure(Errors.decodingFailed))
-//                        }
-//                    }catch{
-//                        promise(.failure(Errors.uncompleted))
-//                    }
-//                case .games(let id):
-//                    let request : NSFetchRequest<GamesEntity> = GamesEntity.fetchRequest()
-//                    let attribute = "id"
-//                    let predicate = NSPredicate(format: "%K == %ld",attribute,id)
-//                    request.predicate = predicate
-//                    do{
-//                        let all = try self.coreData.mainContext.fetch(request)
-//                        guard let first = all.first else {
-//                            promise(.failure(Errors.empty))
-//                            return
-//                        }
-//                        if let data = first.data{
-//                            let decoded = try JSONDecoder().decode(T.self, from: data)
-//                            promise(.success(decoded))
-//                        }else{
-//                            promise(.failure(Errors.decodingFailed))
-//                        }
-//                    }catch{
-//                        promise(.failure(Errors.uncompleted))
-//                    }
-//                    break
-//            }

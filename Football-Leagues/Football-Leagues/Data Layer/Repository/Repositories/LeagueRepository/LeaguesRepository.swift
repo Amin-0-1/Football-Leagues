@@ -33,6 +33,7 @@ class LeaguesReposiotory:LeaguesRepoInterface{
                             let customError = CustomDomainError.customError(coreDataError.localizedDescription)
                             promise(.failure(customError))
                         }
+                        promise(.failure(.customError(error.localizedDescription)))
                 }
             } receiveValue: { value in
                 promise(.success(value))

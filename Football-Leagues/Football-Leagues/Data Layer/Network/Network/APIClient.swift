@@ -26,7 +26,6 @@ class APIClient:NSObject, URLSessionDataDelegate,APIClientProtocol{
         
         return Future<T,NetworkError>{ promise in
             let task = self.session.dataTask(with: request.request){ data, response, error in
-                
                 if let error = error {
                     if let urlError = error as? URLError {
                         switch urlError.code {
@@ -46,20 +45,28 @@ class APIClient:NSObject, URLSessionDataDelegate,APIClientProtocol{
                 
                 guard let httpResponse = response as? HTTPURLResponse, (200..<300).contains(httpResponse.statusCode) else {
                     if let httpResponse = response as? HTTPURLResponse {
-                        promise(.failure(.serverError(statusCode: httpResponse.statusCode)))
+                        DispatchQueue.main.async {
+                            promise(.failure(.serverError(statusCode: httpResponse.statusCode)))
+                        }
                     } else {
-                        promise(.failure(.invalidResponse))
+                        DispatchQueue.main.async {
+                            promise(.failure(.invalidResponse))
+                        }
                     }
                     return
                 }
                 
                 guard let data = data else {
-                    promise(.failure(.invalidResponse))
+                    DispatchQueue.main.async {
+                        promise(.failure(.invalidResponse))
+                    }
                     return
                 }
                 
                 guard let model = try? JSONDecoder().decode(T.self, from: data)else {
-                    promise(.failure(.decodingFailed))
+                    DispatchQueue.main.async {
+                        promise(.failure(.decodingFailed))
+                    }
                     return
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3){

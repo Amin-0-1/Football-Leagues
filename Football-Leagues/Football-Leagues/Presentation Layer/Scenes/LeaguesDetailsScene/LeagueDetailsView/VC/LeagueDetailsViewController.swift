@@ -9,6 +9,7 @@ import UIKit
 import Combine
 class LeagueDetailsViewController: UIViewController {
 
+    @IBOutlet weak var uiNotFound: UIView!
     @IBOutlet weak var uiTableView: UITableView!
     private lazy var refreshControl : UIRefreshControl = {
         let refreshControl = UIRefreshControl()
@@ -18,7 +19,7 @@ class LeagueDetailsViewController: UIViewController {
     }()
     
     
-    var viewModel:leagueDetailsVMProtocol!
+    var viewModel:LeagueDetailsViewModelProtocol!
     
     private var cancellables:Set<AnyCancellable> = []
     override func viewDidLoad() {
@@ -32,29 +33,34 @@ class LeagueDetailsViewController: UIViewController {
         self.uiTableView.addSubview(refreshControl)
     }
     private func bind(){
-        viewModel.output.publishableError.sink { [weak self] message in
+        viewModel.showError.sink { [weak self] message in
             guard let self = self else {return}
-            self.showError(message: message)
+            self.showError(message: message) {
+                self.uiNotFound.isHidden = false
+            }
+            
         }.store(in: &cancellables)
-        viewModel.output.publishableProgress.sink { [weak self] isProgress in
+        viewModel.progress.sink { [weak self] isProgress in
             guard let self = self else {return}
             isProgress ? self.showProgress() : self.hideProgress()
         }.store(in: &cancellables)
-        viewModel.output.publishableTeams.sink { [weak self] model in
+        viewModel.teams.sink { [weak self] model in
             guard let self = self else {return}
             guard !model.models.isEmpty else {return}
             self.title = model.header?.name
             self.configureHeaderView(withData: model)
+            self.uiNotFound.isHidden = true
             self.uiTableView.reloadData()
 
         }.store(in: &cancellables)
 
-        viewModel.input.onScreenAppeared.send(false)
+        viewModel.onScreenAppeared.send(false)
     }
     
     @objc func refreshControlValueChanged(){
-        self.viewModel.input.onScreenAppeared.send(true)
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1){
+            self.viewModel.onScreenAppeared.send(true)
             self.refreshControl.endRefreshing()
         }
     }
@@ -69,16 +75,16 @@ class LeagueDetailsViewController: UIViewController {
 
 extension LeagueDetailsViewController:UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.output.publishableTeams.value.countOfTeams ?? 0
+        return viewModel.modelCount
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TeamsCell.reuseIdentifier) as? TeamsCell else {fatalError()}
-        let model = viewModel.output.publishableTeams.value.models[indexPath.row]
+        let model = viewModel.getModel(index: indexPath.row)
         cell.configure(withModel:model,viewModel:self.viewModel)
         return cell
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard viewModel.output.publishableTeams.value.countOfTeams ?? 0  > 0 else {return nil}
+        guard viewModel.modelCount > 0 else {return nil}
         guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TeamsHeaderCell.reuseIdentifier) as? TeamsHeaderCell else {fatalError()}
         headerView.backgroundConfiguration = .clear()
         return headerView
@@ -91,7 +97,7 @@ extension LeagueDetailsViewController:UITableViewDataSource{
 
 extension LeagueDetailsViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        viewModel.input.onTappingCell.send(indexPath.row)
+        viewModel.onTappingCell.send(indexPath.row)
         return indexPath
     }
 }

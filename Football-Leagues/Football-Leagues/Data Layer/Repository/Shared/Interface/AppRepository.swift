@@ -32,6 +32,7 @@ class AppRepository:AppRepositoryInterface{
             
             self.local.fetch(model: localEntityType).sink { completion in
                 switch completion{
+                        // MARK: - failed to fetch local data
                     case .failure(let error):
                         Connection { isConnected in
                             if !isConnected{

@@ -8,15 +8,42 @@
 import Foundation
 import Combine
 
-
-protocol leagueDetailsVMProtocol{
-    var input:LeagueDetailVMInputProtocol! {get}
-    var output:LeagueDetailsVMOutputProtocol! {get}
+protocol LeagueDetailsViewModelProtocol{
+    
+    // MARK: - view can trigger or bind these
+    var onScreenAppeared:PassthroughSubject<Bool,Never> {get}
+    var onTappingLink: PassthroughSubject<String?, Never> {get}
+    var onTappingCell: PassthroughSubject<Int,Never>{get}
+    var teams:AnyPublisher<LeaguesDetailsViewDataModel,Never> {get}
+    func getModel(index: Int)->LeagueDetailsViewDataModel
+    
+    // MARK: - view binds on these
+    var showError : AnyPublisher<String,Never> {get}
+    var progress : AnyPublisher<Bool,Never> {get}
+    var modelCount:Int {get}
+    
 }
-
-class LeagueDetailsViewModel:leagueDetailsVMProtocol{
-    var input: LeagueDetailVMInputProtocol!
-    var output: LeagueDetailsVMOutputProtocol!
+class LeagueDetailsViewModel:LeagueDetailsViewModelProtocol{
+    // MARK: - view model binds on these
+    var onScreenAppeared: PassthroughSubject<Bool, Never> = .init()
+    var onTappingLink: PassthroughSubject<String?, Never> = .init()
+    var onTappingCell: PassthroughSubject<Int, Never> = .init()
+    var teams:AnyPublisher<LeaguesDetailsViewDataModel,Never> {
+        publishableTeams.eraseToAnyPublisher()
+    }
+    @Published var modelCount: Int = 0
+    
+    
+    var showError: AnyPublisher<String, Never>{
+        publishError.eraseToAnyPublisher()
+    }
+    var progress: AnyPublisher<Bool, Never>{
+        publishProgress.eraseToAnyPublisher()
+    }
+    private var publishError:PassthroughSubject<String,Never> = .init()
+    private var publishProgress:PassthroughSubject<Bool,Never> = .init()
+    private var publishableTeams : CurrentValueSubject<LeaguesDetailsViewDataModel,Never> = .init(.init(models: []))
+    
     
     private var coordinator:LeagueDetailsCoordinatorProtocol
     private var usecase:LeagueDetailsUsecaseProtocol
@@ -25,8 +52,6 @@ class LeagueDetailsViewModel:leagueDetailsVMProtocol{
     private var cancellables:Set<AnyCancellable> = []
     
     init(params:LeaguesViewModelParams) {
-        self.input = params.input
-        self.output = params.output
         self.coordinator = params.coordinator
         self.usecase = params.usecase
         self.code = params.code
@@ -40,17 +65,17 @@ class LeagueDetailsViewModel:leagueDetailsVMProtocol{
     }
     
     private func bindOnScreenAppeared(){
-        input.onScreenAppeared.sink {[weak self] isPullToRefresh in
+        onScreenAppeared.sink {[weak self] isPullToRefresh in
             guard let self = self else {return}
             if !isPullToRefresh{
-                self.output.publishableProgress.send(true)
+                self.publishProgress.send(true)
             }
             self.usecase.fetchTeams(withData: self.code).sink { completion in
-                self.output.publishableProgress.send(false)
+                self.publishProgress.send(false)
                 switch completion{
                     case .finished: break
                     case .failure(let error):
-                        self.output.publishableError.send(error.localizedDescription)
+                        self.publishError.send(error.localizedDescription)
                 }
             } receiveValue: { model in
                 self.handleData(withModel: model)
@@ -59,19 +84,19 @@ class LeagueDetailsViewModel:leagueDetailsVMProtocol{
         }.store(in: &cancellables)
     }
     private func bindOnTapLink(){
-        input.onTappingLink.sink { [weak self] link in
+        onTappingLink.sink { [weak self] link in
             guard let self = self else {return}
             guard let link = link ,let url = URL(string: link) else {
-                output.publishableError.send("Cannot open this page right now, please try again later!")
+                publishError.send("Cannot open this page right now, please try again later!")
                 return
             }
             self.coordinator.navigateToWebView(withLink: url)
         }.store(in: &cancellables)
     }
     private func bindOnTapCell(){
-        input.onTappingCell.sink { [weak self] index in
+        onTappingCell.sink { [weak self] index in
             guard let self = self else {return}
-            let team = self.output.publishableTeams.value.models[index]
+            let team = self.publishableTeams.value.models[index]
             self.coordinator.navigateTo(team: team)
         }.store(in: &cancellables)
     }
@@ -84,7 +109,13 @@ class LeagueDetailsViewModel:leagueDetailsVMProtocol{
         let newModel = LeaguesDetailsViewDataModel(header: header, countOfTeams: model.count,
                                                    models: model.teams?.compactMap{LeagueDetailsViewDataModel(id:$0.id,image: $0.crest, name: $0.shortName, shortName: $0.tla, colors: splitColors($0.clubColors), link: $0.website, stadium: $0.venue, address: $0.address, foundation: $0.founded?.description)} ?? [])
 
-        output.publishableTeams.send(newModel)
+        self.modelCount = newModel.countOfTeams ?? newModel.models.count
+        publishableTeams.send(newModel)
+    }
+    
+    func getModel(index: Int) -> LeagueDetailsViewDataModel {
+        let model = publishableTeams.value.models[index]
+        return model
     }
     
     private func splitColors(_ input: String?) -> [String] {
