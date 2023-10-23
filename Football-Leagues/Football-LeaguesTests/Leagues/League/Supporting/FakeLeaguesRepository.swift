@@ -21,10 +21,10 @@ class FakeLeaguesRepository:LeaguesRepoInterface{
     var isSaveVisited = false
     let error:String = "mock error"
     let competitionCounts = 2    // count of competition in json files
-    func fetchLeagues(endPoint: EndPoint) -> Future<LeagueDataModel, CustomDomainError> {
-        return Future<LeagueDataModel,CustomDomainError>{ promise in
+    func fetchLeagues(endPoint: EndPoint) -> Future<LeaguesDataModel, CustomDomainError> {
+        return Future<LeaguesDataModel,CustomDomainError>{ promise in
             if !self.shouldFail{
-                guard let fakeModel = FakeJsonDecoder().getModelFrom(jsonFile: "StubLeague", decodeType: LeagueDataModel.self) else {
+                guard let fakeModel = FakeJsonDecoder().getModelFrom(jsonFile: "StubLeague", decodeType: LeaguesDataModel.self) else {
                     promise(.failure(.customError("Failed to decode in testing")))
                     return
                 }
@@ -35,7 +35,7 @@ class FakeLeaguesRepository:LeaguesRepoInterface{
         }
     }
     
-    func save<T>(leagues: T, localEntityType: Football_Leagues.LocalEntityType) -> Future<Bool, Error>  {
+    func save<T>(leagues: T, localEntityType: Football_Leagues.LocalEndPoint) -> Future<Bool, Error>  {
         isSaveVisited = true
         return Future<Bool,Error>{ promise in
             promise(.failure(NSError(domain: self.error, code: 0)))

@@ -11,9 +11,10 @@ protocol GamesCoordinatorProtocol:AnyCoordinator{
     func navigate(to:URL)
 }
 struct TeamCoordinator:GamesCoordinatorProtocol{
-    var navigationController: UINavigationController
+    var navigationController: UINavigationController?
     var team:LeagueDetailsViewDataModel
     func start() {
+        guard let navigationController = navigationController else {return}
         let vc = TeamDetailsViewController()
         let params = TeamViewModelParam(coordinator: self, team: team)
         let viewModel = TeamViewModel(param: params)
@@ -21,6 +22,7 @@ struct TeamCoordinator:GamesCoordinatorProtocol{
         navigationController.pushViewController(vc, animated: true)
     }
     func navigate(to url: URL) {
+        guard let navigationController = navigationController else {return}
         let vc = WebViewController()
         let coordinator = WebViewCoordinator(navigationController: navigationController, data: url)
         vc.coordinator = coordinator

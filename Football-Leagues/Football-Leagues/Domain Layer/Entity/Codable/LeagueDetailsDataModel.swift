@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct TeamsDataModel: Codable {
+struct LeagueDetailsDataModel: Codable {
     let count: Int?
     let competition: Competition?
     let teams: [Team]?

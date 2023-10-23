@@ -8,86 +8,69 @@
 import Foundation
 import Combine
 
-protocol AppRepositoryInterface{
-    func fetch<T:Codable>(endPoint: EndPoint,localEntityType:LocalEntityType) -> Future<T,Error>
-    func save<T:Codable>(data: T,localEntityType:LocalEntityType) -> Future<Bool, Error>
+//protocol AppRepositoryInterface{
+//    func fetch<T:Codable>(endPoint: EndPoint,localEntityType:LocalEntityType) -> Future<T,Error>
+//    func save<T:Codable>(data: T,localEntityType:LocalEntityType) -> Future<Bool, Error>
+//}
+
+// MARK: - either remote or local
+protocol DataSourceProtocol{
+    func fetch<T:Codable>(endPoint:EndPoint?, localEntity:LocalEndPoint?) -> Future<T,Error>
+    func save<T:Codable>(data:T,localEntity:LocalEndPoint)->Future<Bool,Error>
 }
+class AppRepository:RepositoryInterface{
 
-// MARK: - single interface for a complex subsystems
-class AppRepository:AppRepositoryInterface{
-
-   
-    private var local:LocalRepositoryInterface!
-    private var remote:RemoteRepositoryInterface!
+    
+    
+//    private var local:LocalRepositoryInterface!
+//    private var remote:RemoteRepositoryInterface!
+    
+    private var remoteDataSource:DataSourceProtocol
+    private var localDataSource:DataSourceProtocol
+    
     private var cancellables:Set<AnyCancellable> = []
-    init(local: LocalRepositoryInterface = LocalRepository(), remote: RemoteRepositoryInterface = RemoteRepository()) {
-        self.local = local
-        self.remote = remote
+    init(remote:DataSourceProtocol = RemoteRepository(),local:DataSourceProtocol = LocalRepository()) {
+        self.remoteDataSource = remote
+        self.localDataSource = local
     }
     
-    func fetch<T:Codable>(endPoint: EndPoint,localEntityType:LocalEntityType) -> Future<T,Error>{
-        return Future<T,Error> { [weak self] promise in
+    func fetch<T:Codable>(endPoint: EndPoint?,localEntity localEntityType:LocalEndPoint?) -> Future<T,Error>{
+        return .init{ [weak self] promise in
             guard let self = self else {return}
-            // MARK: - local fetch
-            
-            self.local.fetch(model: localEntityType).sink { completion in
-                switch completion{
-                        // MARK: - failed to fetch local data
-                    case .failure(let error):
-                        Connection { isConnected in
-                            if !isConnected{
+            guard let endpoint = endPoint else {
+                // MARK: - fetch local data
+                self.localDataSource.fetch(endPoint: endPoint, localEntity: localEntityType).sink { completion in
+                    self.localDataSource.fetch(endPoint: endPoint, localEntity: localEntityType).sink { completion in
+                        switch completion{
+                            case .finished:break
+                            case .failure(let error):
                                 promise(.failure(error))
-                            }else{
-                                self.fetchRemoteData(endPoint: endPoint,type: T.self) { result in
-                                    switch result {
-                                        case .success(let model):
-                                            promise(.success(model))
-                                        case .failure(let failure):
-                                            promise(.failure(failure))
-                                    }
-                                }
-                            }
                         }
-                    case .finished:
-                        Connection { isConnected in
-                            if !isConnected{
-                                promise(.failure(NetworkError.noInternetConnection))
-                            }else{
-                                self.fetchRemoteData(endPoint: endPoint, type: T.self) { result in
-                                    switch result {
-                                        case .success(let model):
-                                            promise(.success(model))
-                                        case .failure(let failure):
-                                            promise(.failure(failure))
-                                    }
-                                }
-                            }
-                        }
+                    } receiveValue: { model in
+                        promise(.success(model))
+                    }.store(in: &self.cancellables)
+
+                } receiveValue: { model in
+                    promise(.success(model))
+                }.store(in: &self.cancellables)
+                return
+            }
+            // MARK: - fetch remote data
+            self.remoteDataSource.fetch(endPoint: endpoint, localEntity: localEntityType).sink { completion in
+                switch completion{
+                    case .finished: break
+                    case .failure(let error):
+                        promise(.failure(error))
                 }
-            } receiveValue: { value in
-                // MARK: - local data fetched successfully
-                promise(.success(value))
-            }.store(in: &self.cancellables)
+            } receiveValue: { model in
+                promise(.success(model))
+            }.store(in: &cancellables)
 
         }
         
     }
-    func save<T:Codable>(data: T,localEntityType:LocalEntityType) -> Future<Bool, Error>  {
-        return local.save(data: data,localEntityType: localEntityType)
-    }
-    
-    private func fetchRemoteData<T:Codable>(endPoint: EndPoint,type:T.Type,completion:@escaping (Result<T,Error>)->Void){
-        self.remote.fetch(endPoint: endPoint).sink { completionState in
-            switch completionState{
-                case .finished: break
-                case .failure(let error):
-                    completion(.failure(error))
-            }
-        } receiveValue: { model in
-            completion(.success(model))
-        }.store(in: &self.cancellables)
-
-
+    func save<T:Codable>(data: T, localEntity: LocalEndPoint) -> Future<Bool, Error> {
+        // MARK: - we only save data locally
+        return localDataSource.save(data: data, localEntity: localEntity)
     }
 }
-

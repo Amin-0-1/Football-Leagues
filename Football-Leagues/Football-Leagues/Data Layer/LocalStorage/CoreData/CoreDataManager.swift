@@ -11,8 +11,8 @@ import Combine
 
 
 protocol CoreDataManagerProtocol{
-    func insert<T:Codable>(data:T,localEntityType:LocalEntityType)->Future<Bool,Error>
-    func fetch<T:Codable>(localEntityType:LocalEntityType)-> Future<T,Error>
+    func insert<T:Codable>(data:T,localEntityType:LocalEndPoint)->Future<Bool,Error>
+    func fetch<T:Codable>(localEntityType:LocalEndPoint)-> Future<T,Error>
 }
 class CoreDataManager:CoreDataManagerProtocol{
     
@@ -22,7 +22,7 @@ class CoreDataManager:CoreDataManagerProtocol{
     private init(){}
     
     
-    func insert<T:Codable>(data: T, localEntityType: LocalEntityType)-> Future<Bool,Error> {
+    func insert<T:Codable>(data: T, localEntityType: LocalEndPoint)-> Future<Bool,Error> {
     
         return Future<Bool, Error> { promise in
 
@@ -31,7 +31,7 @@ class CoreDataManager:CoreDataManagerProtocol{
                 switch localEntityType {
                     case .leagues:
                         let obj = LeagueEntity(context: context)
-                        if let type = data as? LeagueDataModel{
+                        if let type = data as? LeaguesDataModel{
                             guard let encoded = try? JSONEncoder().encode(type) else {
                                 promise(.failure(Errors.decodingFailed))
                                 return
@@ -40,7 +40,7 @@ class CoreDataManager:CoreDataManagerProtocol{
                         }
                     case .teams(let code):
                         let obj = LeagueDetailsEntity(context: context)
-                        if let type = data as? TeamsDataModel{
+                        if let type = data as? LeagueDetailsDataModel{
                             guard let encoded = try? JSONEncoder().encode(type) else {
                                 promise(.failure(Errors.decodingFailed))
                                 return
@@ -71,7 +71,7 @@ class CoreDataManager:CoreDataManagerProtocol{
         }
     }
     
-    private func generateRequest(from localEntity:LocalEntityType) -> NSFetchRequest<NSFetchRequestResult>{
+    private func generateRequest(from localEntity:LocalEndPoint) -> NSFetchRequest<NSFetchRequestResult>{
         let request: NSFetchRequest<NSFetchRequestResult>!
         switch localEntity {
             case .leagues:
@@ -92,7 +92,7 @@ class CoreDataManager:CoreDataManagerProtocol{
         return request
     }
 
-    func fetch<T:Codable>(localEntityType:LocalEntityType)-> Future<T,Error>{
+    func fetch<T:Codable>(localEntityType:LocalEndPoint)-> Future<T,Error>{
         let request = generateRequest(from: localEntityType)
         var allData: [NSFetchRequestResult] = []
         return Future<T, Error>{ promise in
@@ -146,17 +146,16 @@ class CoreDataManager:CoreDataManagerProtocol{
         }
     }
     
-    private func truncate(entity:LocalEntityType,context:NSManagedObjectContext){
+    private func truncate(entity:LocalEndPoint,context:NSManagedObjectContext){
         var request: NSFetchRequest<NSFetchRequestResult>
         switch entity {
             case .leagues:
                 request = LeagueEntity.fetchRequest()
             case .teams(let code):
-                request = LeagueEntity.fetchRequest()
-                let fetch: NSFetchRequest<LeagueDetailsEntity> = LeagueDetailsEntity.fetchRequest()
+                request = LeagueDetailsEntity.fetchRequest()
                 let attribute = "code"
                 let predicate = NSPredicate(format: "%K == %@",attribute,code)
-                fetch.predicate = predicate
+                request.predicate = predicate
             case .games(let id):
                 request = GamesEntity.fetchRequest()
                 let attribute = "id"

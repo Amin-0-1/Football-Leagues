@@ -64,6 +64,7 @@ class LeaguesViewModel:LeaguesViewModelProtocol{
     }
     
     private func bindOnScreenAppeared(){
+        
         onScreenAppeared.sink {[weak self] isPullToRefresh in
             guard let self = self else {return}
             if !isPullToRefresh{
