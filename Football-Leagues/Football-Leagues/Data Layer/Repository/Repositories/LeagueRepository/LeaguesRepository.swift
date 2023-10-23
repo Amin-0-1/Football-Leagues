@@ -9,98 +9,29 @@ import Foundation
 import Combine
 
 protocol LeaguesRepoInterface{
-    func fetchLeagues(endPoint: EndPoint) -> Future<LeagueDataModel, CustomDomainError>
-    func save<T:Codable>(leagues: T,localEntityType:LocalEntityType) -> Future<Bool, Error>
+    func fetchLocalLeagues(localEntityType:LocalEndPoint) ->Future<LeaguesDataModel,Error>
+    func fetchRemoteLeagues(endpoint:EndPoint)-> Future<LeaguesDataModel,Error>
+    func saveLeagues(leagues:LeaguesDataModel,localEntity:LocalEndPoint) ->Future<Bool,Error>
 }
-class LeaguesReposiotory:LeaguesRepoInterface{
-    
-    private let appRepo:AppRepositoryInterface!
+struct LeaguesReposiotory:LeaguesRepoInterface{
+
+    private let appRepo:RepositoryInterface!
     private var cancellables:Set<AnyCancellable> = []
-    init(appRepo: AppRepositoryInterface = AppRepository()) {
+    init(appRepo: RepositoryInterface = AppRepository()) {
         self.appRepo = appRepo
     }
     
-    func fetchLeagues(endPoint: EndPoint) -> Future<LeagueDataModel, CustomDomainError> {
-        return Future<LeagueDataModel,CustomDomainError> { promise in
-            self.appRepo.fetch(endPoint: endPoint, localEntityType: .leagues).sink { completion in
-                switch completion{
-                    case .finished: break
-                    case .failure(let error):
-                        if let networkError = error as? NetworkError{
-                            let customError = CustomDomainError.customError(networkError.localizedDescription)
-                            promise(.failure(customError))
-                        }else if let coreDataError = error as? CoreDataManager.Errors{
-                            let customError = CustomDomainError.customError(coreDataError.localizedDescription)
-                            promise(.failure(customError))
-                        }
-                        promise(.failure(.customError(error.localizedDescription)))
-                }
-            } receiveValue: { value in
-                promise(.success(value))
-            }.store(in: &self.cancellables)
-        }
+    func fetchLocalLeagues(localEntityType: LocalEndPoint) -> Future<LeaguesDataModel, Error> {
+        return appRepo.fetch(endPoint: nil, localEntity: localEntityType)
     }
     
-    func save<T:Codable>(leagues: T,localEntityType:LocalEntityType) -> Future<Bool, Error> {
-        return appRepo.save(data: leagues,localEntityType: localEntityType)
+    func fetchRemoteLeagues(endpoint: EndPoint) -> Future<LeaguesDataModel, Error> {
+        return self.appRepo.fetch(endPoint: endpoint, localEntity: nil)
     }
+    
+    
+    func saveLeagues(leagues: LeaguesDataModel,localEntity:LocalEndPoint) -> Future<Bool, Error> {
+        return self.appRepo.save(data: leagues, localEntity: localEntity)
+    }
+    
 }
-
-
-
-
-
-
-
-//Protocol{
-    //    func fetchTeams(endPoint:EndPoint) -> Single<Result<TeamsDataModel,Error>>
-    //    func fetchSeasons(endPoint:EndPoint) -> Single<Result<SeasonDataModel,Error>>
-    //    func fetchMatches(endPoint:EndPoint) -> Single<Result<GamesDataModel,Error>>
-//}
-//    func fetchTeams(endPoint: EndPoint) -> Single<Result<TeamsDataModel, Error>> {
-//        return Single.create { single in
-//            self.appRepo.fetch(endPoint: endPoint, type: TeamsDataModel.self).subscribe(onSuccess: { event in
-//                switch event{
-//                    case .success(let model):
-//                        single(.success(.success(model)))
-//                    case .failure(let error):
-//                        let customError = NSError(domain: error.localizedDescription, code: 0)
-//                        single(.success(.failure(customError)))
-//                }
-//            }).disposed(by: bag)
-//
-//            return Disposables.create()
-//        }
-//    }
-//
-//    func fetchSeasons(endPoint: EndPoint) -> Single<Result<SeasonDataModel, Error>> {
-//        return Single.create { single in
-//            self.appRepo.fetch(endPoint: endPoint, type: SeasonDataModel.self).subscribe(onSuccess: { event in
-//                switch event{
-//                    case .success(let model):
-//                        single(.success(.success(model)))
-//                    case .failure(let error):
-//                        let customError = NSError(domain: error.localizedDescription, code: 0)
-//                        single(.success(.failure(customError)))
-//                }
-//            }).disposed(by: bag)
-//
-//            return Disposables.create()
-//        }
-//    }
-//
-//    func fetchMatches(endPoint: EndPoint) -> Single<Result<GamesDataModel, Error>> {
-//        return Single.create { single in
-//            self.appRepo.fetch(endPoint: endPoint, type: GamesDataModel.self).subscribe(onSuccess: { event in
-//                switch event{
-//                    case .success(let model):
-//                        single(.success(.success(model)))
-//                    case .failure(let error):
-//                        let customError = NSError(domain: error.localizedDescription, code: 0)
-//                        single(.success(.failure(customError)))
-//                }
-//            }).disposed(by: bag)
-//
-//            return Disposables.create()
-//        }
-//    }

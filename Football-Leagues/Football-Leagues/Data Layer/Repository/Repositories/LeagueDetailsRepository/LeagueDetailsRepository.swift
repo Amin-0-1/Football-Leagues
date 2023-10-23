@@ -8,41 +8,77 @@
 import Foundation
 import Combine
 
-protocol LeagueDetailsRepositoryProtocol{
-    func fetchTeams(endPoint:EndPoint,localEntityType:LocalEntityType)->Future<TeamsDataModel,CustomDomainError>
-    func save(model:TeamsDataModel,localEntityType:LocalEntityType)->Future<Bool,Error>
+protocol LeagueDetailsRepositoryInteface{
+    func fetchLocalTeams(localEntityType:LocalEndPoint) ->Future<LeagueDetailsDataModel,Error>
+    func fetchRemoteTeams(endpoint:EndPoint)-> Future<LeagueDetailsDataModel,Error>
+    func saveTeam(model:LeagueDetailsDataModel,localEntity:LocalEndPoint) ->Future<Bool,Error>
 }
-class LeagueDetailsRepository:LeagueDetailsRepositoryProtocol{
-    private var appRepo:AppRepositoryInterface
+class LeagueDetailsRepository:LeagueDetailsRepositoryInteface{
+
+    private var appRepo:RepositoryInterface
     private var cancellables:Set<AnyCancellable> = []
-    init(appRepo: AppRepositoryInterface = AppRepository()) {
+    init(appRepo: RepositoryInterface = AppRepository()) {
         self.appRepo = appRepo
     }
-    
-    func fetchTeams(endPoint:EndPoint,localEntityType:LocalEntityType)->Future<TeamsDataModel,CustomDomainError> {
-        
-        return Future<TeamsDataModel,CustomDomainError>{[weak self] promise in
+
+    func fetchLocalTeams(localEntityType: LocalEndPoint) -> Future<LeagueDetailsDataModel, Error> {
+        return .init { [weak self] promise in
             guard let self = self else {return}
-            appRepo.fetch(endPoint: endPoint, localEntityType: localEntityType).sink { completion in
+            appRepo.fetch(endPoint: nil, localEntity: localEntityType).sink { completion in
                 switch completion{
-                    case .finished:
-                        break
+                    case .finished: break
                     case .failure(let error):
-                        if let networkError = error as? NetworkError{
-                            let customError = CustomDomainError.customError(networkError.localizedDescription)
-                            promise(.failure(customError))
-                        }else if let coreDataError = error as? CoreDataManager.Errors{
-                            let customError = CustomDomainError.customError(coreDataError.localizedDescription)
-                            promise(.failure(customError))
-                        }
-                        promise(.failure(.customError(error.localizedDescription)))
+                        promise(.failure(error))
                 }
             } receiveValue: { model in
                 promise(.success(model))
             }.store(in: &self.cancellables)
+
         }
     }
-    func save(model: TeamsDataModel, localEntityType: LocalEntityType) -> Future<Bool, Error> {
-        return appRepo.save(data: model, localEntityType: localEntityType)
+    func fetchRemoteTeams(endpoint: EndPoint) -> Future<LeagueDetailsDataModel, Error> {
+        return .init { [weak self] promise in
+            guard let self = self else {return}
+            self.appRepo.fetch(endPoint: endpoint, localEntity: nil).sink { completion in
+                switch completion{
+                    case .finished: break
+                    case .failure(let error):
+                        print(error)
+                        promise(.failure(error))
+                }
+            } receiveValue: { model in
+                promise(.success(model))
+            }.store(in: &self.cancellables)
+            
+        }
     }
+
+//    func fetchTeams(endPoint:EndPoint,localEntityType:LocalEntityType)->Future<TeamsDataModel,CustomDomainError> {
+//
+//        return Future<TeamsDataModel,CustomDomainError>{[weak self] promise in
+//            guard let self = self else {return}
+//            self.appRepo.fetch(endPoint: endPoint, localEntity: localEntityType).sink { completion in
+//                switch completion{
+//                    case .finished:
+//                        break
+//                    case .failure(let error):
+//                        if let networkError = error as? NetworkError{
+//                            let customError = CustomDomainError.customError(networkError.localizedDescription)
+//                            promise(.failure(customError))
+//                        }else if let coreDataError = error as? CoreDataManager.Errors{
+//                            let customError = CustomDomainError.customError(coreDataError.localizedDescription)
+//                            promise(.failure(customError))
+//                        }
+//                        promise(.failure(.customError(error.localizedDescription)))
+//                }
+//            } receiveValue: { model in
+//                promise(.success(model))
+//            }.store(in: &self.cancellables)
+//        }
+//    }
+    
+    func saveTeam(model: LeagueDetailsDataModel,localEntity:LocalEndPoint) -> Future<Bool, Error> {
+        return appRepo.save(data: model, localEntity: localEntity)
+    }
+
 }

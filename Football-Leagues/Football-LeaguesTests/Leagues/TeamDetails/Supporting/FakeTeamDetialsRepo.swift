@@ -20,7 +20,7 @@ class FakeTeamDetailsRepo:TeamRepositoryProtocol{
     }
     
     
-    func fetchGames(endPoint: EndPoint, localEntityType: LocalEntityType) -> Future<TeamDataModel, CustomDomainError> {
+    func fetchGames(endPoint: EndPoint, localEntityType: LocalEndPoint) -> Future<TeamDataModel, CustomDomainError> {
         return Future<TeamDataModel,CustomDomainError>{ promise in
             if !self.shouldFail{
                 guard let decoded = FakeJsonDecoder().getModelFrom(jsonFile: "StubTeamDetails", decodeType: TeamDataModel.self) else{
@@ -35,7 +35,7 @@ class FakeTeamDetailsRepo:TeamRepositoryProtocol{
         }
     }
     
-    func save(model: TeamDataModel, localEntityType: LocalEntityType) -> Future<Bool, Error> {
+    func save(model: TeamDataModel, localEntityType: LocalEndPoint) -> Future<Bool, Error> {
         isVisited = true
         return Future<Bool,Error>{ promise in
             promise(.failure(NSError(domain: self.error, code: 0)))

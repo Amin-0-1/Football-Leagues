@@ -8,7 +8,7 @@
 import Foundation
 
 enum CustomDomainError{
-    case connection
+    case connectionError
     case serverError
     case customError(String)
 }
@@ -18,8 +18,8 @@ extension CustomDomainError:Error{
         switch self {
             case .serverError:
                 return "Server Error"
-            case .connection:
-                return "An Error Occured, Please try again later!"
+            case .connectionError:
+                return "An Error Occured, no internet connection, try again later"
             case .customError(let string):
                 return string
         }

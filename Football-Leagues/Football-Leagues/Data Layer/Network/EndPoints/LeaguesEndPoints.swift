@@ -22,16 +22,16 @@ enum LeaguesEndPoints:CustomStringConvertible{
                 return "/v4/teams/\(id)/matches"
         }
     }
-//    var code:String?{
-//        switch self {
-//            case .getAllLeagues:
-//                return nil
-//            case .getMatches(let code):
-//                return code
-//                    .getTeams(let code):
-//                    return code
-//        }
-//    }
+    var code:String?{
+        switch self {
+            case .getAllLeagues:
+                return nil
+            case .getTeams(let code):
+                return code
+            case .getGames(let id):
+                return id.description
+        }
+    }
 }
 
 extension LeaguesEndPoints:EndPoint{

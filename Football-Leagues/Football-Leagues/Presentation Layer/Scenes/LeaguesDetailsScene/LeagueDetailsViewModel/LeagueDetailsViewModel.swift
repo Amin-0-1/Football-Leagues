@@ -100,7 +100,7 @@ class LeagueDetailsViewModel:LeagueDetailsViewModelProtocol{
             self.coordinator.navigateTo(team: team)
         }.store(in: &cancellables)
     }
-    private func handleData(withModel model:TeamsDataModel){
+    private func handleData(withModel model:LeagueDetailsDataModel){
         var header:LeagueViewDataModel? = nil
         
         if let league = model.competition{

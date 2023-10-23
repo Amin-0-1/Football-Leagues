@@ -11,16 +11,18 @@ protocol LaunchScreenCoordinatorProtocol:AnyCoordinator{
     func onFinishLoading()
 }
 class LaunchScreenCoordinator:LaunchScreenCoordinatorProtocol{
-    var navigationController: UINavigationController
+    var navigationController: UINavigationController?
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
     func start() {
+        guard let navigationController = navigationController else {return}
         let vc = LaunchScreen()
         vc.coordinator = self
         navigationController.setViewControllers([vc], animated: false)
     }
     func onFinishLoading() {
+        guard let navigationController = navigationController else {return}
         let leagueCoordinator = LeaguesCoordinator(navigationController: navigationController)
         leagueCoordinator.start()
     }

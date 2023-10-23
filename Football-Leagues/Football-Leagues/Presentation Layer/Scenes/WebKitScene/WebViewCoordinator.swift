@@ -12,7 +12,7 @@ protocol WebViewControllerProtocol:AnyCoordinator{
 }
 
 struct WebViewCoordinator:WebViewControllerProtocol{
-    var navigationController: UINavigationController
+    var navigationController: UINavigationController?
     var data:URL!
     
     init(navigationController: UINavigationController, data: URL) {
@@ -20,6 +20,7 @@ struct WebViewCoordinator:WebViewControllerProtocol{
         self.data = data
     }
     func start() {
+        guard let navigationController = navigationController else {return}
         let vc = WebViewController()
         vc.coordinator = self
         vc.url = self.data
@@ -27,6 +28,7 @@ struct WebViewCoordinator:WebViewControllerProtocol{
     }
     
     func dismiss() {
+        guard let navigationController = navigationController else {return}
         navigationController.dismiss(animated: true)
     }
 }
