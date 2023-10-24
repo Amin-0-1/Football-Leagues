@@ -16,10 +16,8 @@ struct AppCoordinator:AnyCoordinator{
     var navigationController: UINavigationController?
 
     func start() {
-        #warning("delete this")
         guard let navigationController = navigationController else {return}
         let launchScreen = LaunchScreenCoordinator(navigationController: navigationController)
-        let launchScrenn = LeaguesCoordinator(navigationController: navigationController)
-        launchScrenn.start()
+        launchScreen.start()
     }
 }
