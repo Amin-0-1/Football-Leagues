@@ -10,35 +10,71 @@ import Foundation
 @testable import Football_Leagues
 
 class FakeLeagueDetailsRepo:LeagueDetailsRepositoryInteface{
-    let shouldFail:Bool
-    var isVisited:Bool = false
-    var error = "mock error"
+
+    
+    
+    let localShouldFail:Bool
+    let remoteShouldFail:Bool
+    let fetchTeamsShouldFail:Bool
+    
+    var isSuccessLocalVisited:Bool = false
+    var isSuccessRemoteVisited:Bool = false
+    var isSuccessSaveVisted:Bool = false
+    
+    var error = "FakeLeagueDetailsRepo.error"
     var checkTeamCount = 0
-    init(shouldFail: Bool){
-        self.shouldFail = shouldFail
+    
+    init(localShouldFail: Bool = false, remoteShouldFail: Bool = false, fetchTeamsShouldFail: Bool = false) {
+        self.localShouldFail = localShouldFail
+        self.remoteShouldFail = remoteShouldFail
+        self.fetchTeamsShouldFail = fetchTeamsShouldFail
+
     }
     
-    func fetchTeams(endPoint: EndPoint, localEntityType: LocalEndPoint) -> Future<LeagueDetailsDataModel, CustomDomainError> {
-        return Future<LeagueDetailsDataModel,CustomDomainError>{ promise in
-            if !self.shouldFail{
+    func fetchLocalTeams(localEndPoint: Football_Leagues.LocalEndPoint) -> Future<Football_Leagues.LeagueDetailsDataModel, Error> {
+        return .init {[weak self] promise in
+            guard let self = self else {return}
+            if !self.localShouldFail{
                 guard let fakeModel = FakeJsonDecoder().getModelFrom(jsonFile: "StubLeagueDetails", decodeType: LeagueDetailsDataModel.self) else {
-                    promise(.failure(.customError("Failed to decode in testing")))
+                    promise(.failure(CustomDomainError.customError("Failed to decode in testing")))
                     return
                 }
-                self.checkTeamCount =  fakeModel.count ?? 0 
+                self.isSuccessLocalVisited = true
+                self.checkTeamCount =  fakeModel.count ?? 0
                 promise(.success(fakeModel))
             }else{
-                promise(.failure(.customError(self.error)))
+                promise(.failure(CustomDomainError.customError(self.error)))
             }
-
         }
     }
     
-    func save(model: LeagueDetailsDataModel, localEntityType: LocalEndPoint) -> Future<Bool, Error> {
-        self.isVisited = true
-        return Future<Bool,Error>{ promise in
-            promise(.failure(NSError(domain: self.error, code: 0)))
+    func fetchRemoteTeams(remoteEndPoint: Football_Leagues.EndPoint) -> Future<Football_Leagues.LeagueDetailsDataModel, Error> {
+        return .init {[weak self] promise in
+            guard let self = self else {return}
+            if !self.remoteShouldFail{
+                guard let fakeModel = FakeJsonDecoder().getModelFrom(jsonFile: "StubLeagueDetails", decodeType: LeagueDetailsDataModel.self) else {
+                    promise(.failure(CustomDomainError.customError("Failed to decode in testing")))
+                    return
+                }
+                self.isSuccessRemoteVisited = true
+                self.checkTeamCount =  fakeModel.count ?? 0
+                promise(.success(fakeModel))
+            }else{
+                promise(.failure(CustomDomainError.customError(self.error)))
+            }
         }
     }
     
+    func saveTeam(model: Football_Leagues.LeagueDetailsDataModel, localEndPoint: Football_Leagues.LocalEndPoint) -> Future<Bool, Error> {
+        return .init { [weak self] promise in
+            guard let self = self else {return}
+            if !fetchTeamsShouldFail{
+                isSuccessSaveVisted = true
+                promise(.success(true))
+            }else{
+                promise(.failure(CustomDomainError.serverError))
+            }
+        }
+    }
 }
+

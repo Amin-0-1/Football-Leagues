@@ -13,7 +13,7 @@ struct LeaguesCoordinator:LeaguesCoordinatorProtocol{
     var navigationController: UINavigationController?
     
     func start() {
-        guard let navigationController = navigationController else {return}
+        guard navigationController != nil else {return}
         let vc = LeaguesViewController()
         let viewModel = LeaguesViewModel(coordinator: self)
         vc.viewModel = viewModel

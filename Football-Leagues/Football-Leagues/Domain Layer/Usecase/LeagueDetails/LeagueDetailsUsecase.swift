@@ -27,7 +27,7 @@ class LeagueDetailsUsecase:LeagueDetailsUsecaseProtocol{
         return .init{ [weak self] promise in
             guard let self = self else {return}
             // MARK: - fetch local data
-            leageDetailsRepo.fetchLocalTeams(localEntityType: .teams(code: code)).sink { completion in
+            leageDetailsRepo.fetchLocalTeams(localEndPoint: .teams(code: code)).sink { completion in
                 switch completion{
                     case .finished:
                         break
@@ -79,7 +79,7 @@ class LeagueDetailsUsecase:LeagueDetailsUsecaseProtocol{
     }
     
     private func fetchRemoteTeams(endPoint:EndPoint,onFinish:@escaping (Result<LeagueDetailsDataModel,CustomDomainError>)->Void){
-        leageDetailsRepo.fetchRemoteTeams(endpoint: endPoint).sink { completion in
+        leageDetailsRepo.fetchRemoteTeams(remoteEndPoint: endPoint).sink { completion in
             switch completion{
                 case .finished: break
                 case .failure(let error):
@@ -103,7 +103,7 @@ class LeagueDetailsUsecase:LeagueDetailsUsecaseProtocol{
     
     
     private func save(model:LeagueDetailsDataModel,localEntityType:LocalEndPoint){
-        leageDetailsRepo.saveTeam(model: model, localEntity: localEntityType).sink { completion in
+        leageDetailsRepo.saveTeam(model: model, localEndPoint: localEntityType).sink { completion in
             switch completion{
                 case .finished: break
                 case .failure(let error):

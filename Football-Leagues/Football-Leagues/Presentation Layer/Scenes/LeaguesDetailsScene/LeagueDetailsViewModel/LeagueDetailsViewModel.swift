@@ -42,7 +42,8 @@ class LeagueDetailsViewModel:LeagueDetailsViewModelProtocol{
     }
     private var publishError:PassthroughSubject<String,Never> = .init()
     private var publishProgress:PassthroughSubject<Bool,Never> = .init()
-    private var publishableTeams : CurrentValueSubject<LeaguesDetailsViewDataModel,Never> = .init(.init(models: []))
+//    private var publishableTeams : CurrentValueSubject<LeaguesDetailsViewDataModel,Never> = .init(.init(models: []))
+    var publishableTeams : CurrentValueSubject<LeaguesDetailsViewDataModel,Never> = .init(.init(models: []))
     
     
     private var coordinator:LeagueDetailsCoordinatorProtocol

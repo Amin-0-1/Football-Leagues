@@ -11,24 +11,19 @@ import Combine
 
 
 protocol CoreDataManagerProtocol{
-    func insert<T:Codable>(data:T,localEntityType:LocalEndPoint)->Future<Bool,Error>
-    func fetch<T:Codable>(localEntityType:LocalEndPoint)-> Future<T,Error>
+    func insert<T:Codable>(data:T,localEndPoint:LocalEndPoint)->Future<Bool,Error>
+    func fetch<T:Codable>(localEndPoint:LocalEndPoint)-> Future<T,Error>
 }
-class CoreDataManager:CoreDataManagerProtocol{
-    
-    private let coreData = CoreDataStack.getInstance(withModel: AppConfiguration.shared.dataModel)
-    
-    public static let shared = CoreDataManager()
-    private init(){}
-    
-    
-    func insert<T:Codable>(data: T, localEntityType: LocalEndPoint)-> Future<Bool,Error> {
-    
-        return Future<Bool, Error> { promise in
 
-            self.coreData.performBackgroundTask { context in
-                self.truncate(entity: localEntityType, context: context)
-                switch localEntityType {
+
+extension CoreDataManager:CoreDataManagerProtocol{
+    
+    func insert<T:Codable>(data: T, localEndPoint: LocalEndPoint)-> Future<Bool,Error> {
+        
+        return Future<Bool, Error> { promise in
+            self.performBackgroundTask { context in
+                self.truncate(entity: localEndPoint, context: context)
+                switch localEndPoint {
                     case .leagues:
                         let obj = LeagueEntity(context: context)
                         if let type = data as? LeaguesDataModel{
@@ -74,7 +69,7 @@ class CoreDataManager:CoreDataManagerProtocol{
     private func generateRequest(from localEntity:LocalEndPoint) -> NSFetchRequest<NSFetchRequestResult>{
         let request: NSFetchRequest<NSFetchRequestResult>!
         switch localEntity {
-            case .leagues:
+            case .leagues: 
                 request = LeagueEntity.fetchRequest()
             case .teams(let code):
                 request = LeagueDetailsEntity.fetchRequest()
@@ -92,18 +87,20 @@ class CoreDataManager:CoreDataManagerProtocol{
         return request
     }
 
-    func fetch<T:Codable>(localEntityType:LocalEndPoint)-> Future<T,Error>{
-        let request = generateRequest(from: localEntityType)
+    func fetch<T:Codable>(localEndPoint:LocalEndPoint)-> Future<T,Error>{
+        let request = generateRequest(from: localEndPoint)
         var allData: [NSFetchRequestResult] = []
+        
         return Future<T, Error>{ promise in
             do{
-                allData = try self.coreData.mainContext.fetch(request)
+                
+                allData = try self.mainContext.fetch(request)
                 guard let first = allData.first else{
                     promise(.failure(Errors.empty))
                     return
                 }
                 
-                switch localEntityType {
+                switch localEndPoint {
                     case .leagues:
                         guard let leagueEntity = first as? LeagueEntity else{
                             promise(.failure(Errors.uncompleted))
@@ -173,6 +170,7 @@ class CoreDataManager:CoreDataManagerProtocol{
         }
     }
 }
+
 
 extension CoreDataManager{
 

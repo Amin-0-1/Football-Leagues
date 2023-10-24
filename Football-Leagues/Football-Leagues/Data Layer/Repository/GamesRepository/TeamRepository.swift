@@ -10,8 +10,8 @@ import Combine
 
 protocol TeamRepositoryProtocol{
     func fetchLocalGames(localEndpoint:LocalEndPoint)->Future<TeamDataModel,Error>
-    func fetchRemoteGames(endpoint:EndPoint)-> Future<TeamDataModel,Error>
-    func saveGames(model:TeamDataModel,localEntityType:LocalEndPoint)->Future<Bool,Error>
+    func fetchRemoteGames(remoteEndPoint:EndPoint)-> Future<TeamDataModel,Error>
+    func saveGames(model:TeamDataModel,localEndPoint:LocalEndPoint)->Future<Bool,Error>
     
 }
 class TeamRepository:TeamRepositoryProtocol{
@@ -24,16 +24,16 @@ class TeamRepository:TeamRepositoryProtocol{
     }
     
     func fetchLocalGames(localEndpoint: LocalEndPoint) -> Future<TeamDataModel, Error> {
-        return self.appRepo.fetch(endPoint: nil, localEntity: localEndpoint)
+        return self.appRepo.fetch(localEndPoint: localEndpoint)
     }
     
     
-    func fetchRemoteGames(endpoint: EndPoint) -> Future<TeamDataModel, Error> {
-        return self.appRepo.fetch(endPoint: endpoint, localEntity: nil)
+    func fetchRemoteGames(remoteEndPoint: EndPoint) -> Future<TeamDataModel, Error> {
+        return self.appRepo.fetch(remoteEndPoint: remoteEndPoint)
     }
     
-    func saveGames(model: TeamDataModel, localEntityType: LocalEndPoint) -> Future<Bool, Error> {
-        return appRepo.save(data: model, localEntity: localEntityType)
+    func saveGames(model: TeamDataModel, localEndPoint localEntityType: LocalEndPoint) -> Future<Bool, Error> {
+        return appRepo.save(data: model, localEndPoint: localEntityType)
     }
 }
 

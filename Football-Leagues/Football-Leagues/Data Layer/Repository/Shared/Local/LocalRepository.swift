@@ -9,23 +9,24 @@ import Foundation
 import CoreData
 import Combine
 
-class LocalRepository:DataSourceProtocol{
+class LocalRepository:LocalRepositoryInterface{
+    
     
     var localClient: CoreDataManagerProtocol
     var cancellables: Set<AnyCancellable> = []
     
-    init(localClient: CoreDataManagerProtocol = CoreDataManager.shared) {
+    init(localClient: CoreDataManagerProtocol = CoreDataManager.configure(model:
+                                                                            AppConfiguration.shared.dataModel,
+                                                                            store: .sqlite)) {
         self.localClient = localClient
     }
+
     
-    func fetch<T:Codable>(endPoint endPoin: EndPoint?, localEntity: LocalEndPoint?) -> Future<T, Error> {
-        guard let localEntity = localEntity else {return .init { promise in
-            promise(.failure(CoreDataManager.Errors.uncompleted))
-        }}
-        return self.localClient.fetch(localEntityType: localEntity)
+    func fetch<T:Codable>(localEndPoint: LocalEndPoint) -> Future<T, Error> {
+        return self.localClient.fetch(localEndPoint: localEndPoint)
     }
     
-    func save<T:Codable>(data: T, localEntity: LocalEndPoint) -> Future<Bool, Error> {
-        return localClient.insert(data: data,localEntityType: localEntity)
+    func save<T:Codable>(data:T,localEndPoint:LocalEndPoint)->Future<Bool,Error>{
+        return localClient.insert(data: data, localEndPoint: localEndPoint)
     }
 }
