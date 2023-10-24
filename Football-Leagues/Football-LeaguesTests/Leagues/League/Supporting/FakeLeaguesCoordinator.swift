@@ -10,13 +10,18 @@ import UIKit
 
 
 class FakeLeaguesCoordinator:LeaguesCoordinatorProtocol{
+
     var navigationController: UINavigationController?
-    var isVisited = false
+    var onSuccessNavigation : ()->Void = {}
+    
+    init(onNavigation:@escaping()->Void = {}) {
+        self.onSuccessNavigation = onNavigation
+    }
     
     func start() {}
     
     
     func navigateToDetails(withData: String) {
-        isVisited = true
+        onSuccessNavigation()
     }
 }

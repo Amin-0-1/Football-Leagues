@@ -23,28 +23,22 @@ class ConnectivityService:ConnectivityProtocol{
         let task = URLSession.shared.dataTask(with: url) { (_, response, error) in
             DispatchQueue.main.async {
                 if let error = error {
-                    print("Error: \(error)")
-                    DispatchQueue.main.async {
-                        completion(false)
-                    }
+                    print(error)
+                    completion(false)
                     return
                 }
                 
                 if let httpResponse = response as? HTTPURLResponse,
                    (200...299).contains(httpResponse.statusCode) {
-                    DispatchQueue.main.async {
-                        completion(true)
-                    }
+                    completion(true)
                 } else {
-                    DispatchQueue.main.async {
-                        completion(false)
-                    }
+                    completion(false)
                 }
             }
         }
         
         task.resume()
-
     }
+
 }
 

@@ -82,7 +82,7 @@ class TeamUsecase:TeamUsecaseProtcol{
     }
     
     private func fetchRemoteGames(endPoint:EndPoint,onFinish:@escaping (Result<TeamDataModel,CustomDomainError>)->Void){
-        self.gamesRepo.fetchRemoteGames(endpoint: endPoint).sink { completion in
+        self.gamesRepo.fetchRemoteGames(remoteEndPoint: endPoint).sink { completion in
             switch completion{
                 case .finished: break
                 case .failure(let error):
@@ -106,14 +106,14 @@ class TeamUsecase:TeamUsecaseProtcol{
     
     // MARK: - update local data
     private func save(model:TeamDataModel,localEntityType:LocalEndPoint){
-        gamesRepo.saveGames(model: model, localEntityType: localEntityType).sink { completion in
+        gamesRepo.saveGames(model: model, localEndPoint: localEntityType).sink { completion in
             switch completion{
                 case .finished: break
                 case .failure(let error):
                     debugPrint(error.localizedDescription)
             }
         } receiveValue: { isSaved in
-            debugPrint(isSaved)
+            print("local \(localEntityType) saved -> \(isSaved)")
         }.store(in: &cancellables)
     }
 }

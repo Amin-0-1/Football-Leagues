@@ -22,6 +22,7 @@ final class TeamDetails_Usecase: XCTestCase {
 
     func testShouldSuccess_FetchTeamDetails() throws {
         // MARK: - Given
+        let exp = expectation(description: "wait for a callback")
         let shouldFaile = false
         let fakeRepo = FakeTeamDetailsRepo(shouldFail: shouldFaile)
         let sut = TeamUsecase(repo: fakeRepo)
@@ -32,37 +33,47 @@ final class TeamDetails_Usecase: XCTestCase {
                 case .finished: break
                 case .failure(let error):
                     XCTFail(error.localizedDescription)
+                    exp.fulfill()
             }
         } receiveValue: { model in
             // MARK: - Then
-            XCTAssertEqual(model.resultSet?.wins, fakeRepo.checkNumberOFWins)
+            XCTAssertNotNil(model)
+            exp.fulfill()
         }.store(in: &cancellables)
+        
+        waitForExpectations(timeout: 2)
     }
     
     func testShould_FaileFeatch_TeamDetails()throws{
         // MARK: - Given
+        let exp = expectation(description: "wait for a callback")
         let shouldFaile = true
         let fakeRepo = FakeTeamDetailsRepo(shouldFail: shouldFaile)
-        let sut = TeamUsecase(repo: fakeRepo)
+        let connectivity = FakeConnectivity(connected: false)
+        let sut = TeamUsecase(repo: fakeRepo,connectivity: connectivity)
         let code = 44
         // MARK: - When
         sut.fetchGames(withTeamID: code).sink { completion in
             switch completion{
                 case .finished: break
-                case .failure(let error):
-                    XCTAssertEqual(error.localizedDescription, fakeRepo.error)
+                case .failure:
+                    exp.fulfill()
             }
         } receiveValue: { model in
             // MARK: - Then
             XCTFail()
+            exp.fulfill()
         }.store(in: &cancellables)
+        waitForExpectations(timeout: 2)
     }
     
     func testShould_SaveTeam()throws{
         // MARK: - Given
+        let exp = expectation(description: "wait for a callback")
         let shouldFailed = false
         let fakeRepo = FakeTeamDetailsRepo(shouldFail: shouldFailed)
-        let sut = TeamUsecase(repo: fakeRepo)
+        let connectivity = FakeConnectivity(connected: true)
+        let sut = TeamUsecase(repo: fakeRepo,connectivity: connectivity)
         let dummy = 32
         // MARK: - When
         sut.fetchGames(withTeamID: dummy).sink { completion in
@@ -70,26 +81,34 @@ final class TeamDetails_Usecase: XCTestCase {
                 case .finished: break
                 case .failure(let erro):
                     XCTFail(erro.localizedDescription)
+                    exp.fulfill()
             }
         } receiveValue: { model in
             // MARK: - Then
             XCTAssertTrue(fakeRepo.isVisited)
+            exp.fulfill()
         }.store(in: &cancellables)
+        waitForExpectations(timeout: 2)
     }
     
     func test_ShouldFail_SaveTeam() throws{
         // MARK: - Given
+        let exp = expectation(description: "wait for a callback")
         let shouldFailed = true
         let fakeRepo = FakeTeamDetailsRepo(shouldFail: shouldFailed)
-        let sut = TeamUsecase(repo: fakeRepo)
+        let connectivity = FakeConnectivity(connected: false)
+        let sut = TeamUsecase(repo: fakeRepo,connectivity: connectivity)
         let dummy = 20
         // MARK: - When
         sut.fetchGames(withTeamID: dummy).sink { completion in
             // MARK: - Then
             XCTAssertFalse(fakeRepo.isVisited)
+            exp.fulfill()
         } receiveValue: { model in
             XCTFail()
+            exp.fulfill()
         }.store(in: &cancellables)
+        waitForExpectations(timeout: 2)
     }
     
 

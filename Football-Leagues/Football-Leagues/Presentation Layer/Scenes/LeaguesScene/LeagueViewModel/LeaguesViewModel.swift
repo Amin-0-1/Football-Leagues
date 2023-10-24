@@ -44,7 +44,8 @@ class LeaguesViewModel:LeaguesViewModelProtocol{
     // MARK: - view model can publish
     private var publishProgress:PassthroughSubject<Bool,Never> = .init()
     private var publishError:PassthroughSubject<String,Never> = .init()
-    private var publishLeague:CurrentValueSubject<LeaguesViewDataModel,Never> = .init(.init(count: nil, models: []))
+    // kept internal just for testing porpose 
+    var publishLeague:CurrentValueSubject<LeaguesViewDataModel,Never> = .init(.init(count: nil, models: []))
     
     var usecase:LeaguesUsecaseProtocol
     var coordinator:LeaguesCoordinatorProtocol!

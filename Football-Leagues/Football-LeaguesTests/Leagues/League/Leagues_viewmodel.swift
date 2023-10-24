@@ -10,21 +10,18 @@ import Combine
 @testable import Football_Leagues
 final class Leagues_viewmodel: XCTestCase {
     
-    var expectation:XCTestExpectation!
+    
     var cancellables:Set<AnyCancellable> = []
     
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-        expectation = .init(description: "wait for expected int value")
     }
 
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        
     }
 
-    func testShould_Display_LeaguesData() throws {
+    func test_Should_Display_LeaguesData() throws {
         // MARK: - Given
+        let exp = expectation(description: "wait for response")
         let fakeUsecase = FakeLeaguesUsecase(shouldFail: false)
         let fakeCoordinator = FakeLeaguesCoordinator()
         let sutViewModel = LeaguesViewModel(usecase: fakeUsecase, coordinator: fakeCoordinator)
@@ -33,41 +30,66 @@ final class Leagues_viewmodel: XCTestCase {
         
         // MARK: - Then
         sutViewModel.leagues.sink { completion in
-            XCTFail()
+            switch completion{
+                case .finished : break
+                case .failure(_):
+                    XCTFail()
+                    exp.fulfill()
+            }
         } receiveValue: { data in
+            XCTAssertTrue(fakeUsecase.isSuccessVisited)
             XCTAssertEqual(data.count, fakeUsecase.leagueCount)
-            self.expectation.fulfill()
+            exp.fulfill()
         }.store(in: &cancellables)
 
-        wait(for: [expectation],timeout: 3)
+        waitForExpectations(timeout: 2)
     }
     
-    func testShould_Fail_FetchData() throws{
+    func test_Should_Fail_FetchData() throws{
         // MARK: - Given
+        let exp = expectation(description: "wait for response")
         let fakeUsecase = FakeLeaguesUsecase(shouldFail: true)
-        let fakeCoordinator = FakeLeaguesCoordinator()
+        let fakeCoordinator = FakeLeaguesCoordinator {
+            exp.fulfill()
+        }
         let sut = LeaguesViewModel(usecase: fakeUsecase, coordinator: fakeCoordinator)
+        
+        sut.showError.sink {  error in
+            // MARK: - Then
+            XCTAssertEqual(error, fakeUsecase.error)
+            exp.fulfill()
+        }.store(in: &self.cancellables)
+        
         // MARK: - When
         sut.onScreenAppeared.send(true)
-
-        // MARK: - Then
-        sut.showError.sink { error in
-            self.expectation.fulfill()
-        }.store(in: &cancellables)
-
-        sut.leagues.sink { completion in
-            XCTFail()
-        } receiveValue: { model in
-            print(model)
-
-        }.store(in: &cancellables)
-
-
-        wait(for: [expectation], timeout: 3)
+        
+        waitForExpectations(timeout: 2)
     }
     
-    func testShould_Success_NavigateToLeagueDetails(){
+    func test_Should_Success_NavigateTo_LeagueDetails(){
+        // MARK: - Given
+        let exp = expectation(description: "wait for response")
+        let fakeUsecase = FakeLeaguesUsecase(shouldFail: false)
+        let fakeCoordinator = FakeLeaguesCoordinator {
+            exp.fulfill()
+        }
+        let sut = LeaguesViewModel(coordinator: fakeCoordinator)
         
+        
+        // MARK: - When
+        fakeUsecase.fetchLeagues().sink { completion in
+            switch completion{
+                case .finished: break
+                case .failure(_):
+                    XCTFail()
+            }
+        } receiveValue: { model in
+            let mapped = fakeUsecase.prepareForFakePublish(model: model)
+            sut.publishLeague.send(mapped)
+        }.store(in: &self.cancellables)
+        
+        sut.onTappedCell.send(0)
+        waitForExpectations(timeout: 2)
     }
 
     func testPerformanceExample() throws {
