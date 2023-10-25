@@ -57,7 +57,8 @@ class TeamDetailsViewController: UIViewController {
             self.uiTableView.tableHeaderView = header
         }.store(in: &cancellables)
         
-        viewModl.gamesDetails.sink { games in
+        viewModl.gamesDetails.sink {[weak self] games in
+            guard let self = self else {return}
             self.uiNotFound.isHidden = true
             self.uiTableView.reloadData()
         }.store(in: &cancellables)
