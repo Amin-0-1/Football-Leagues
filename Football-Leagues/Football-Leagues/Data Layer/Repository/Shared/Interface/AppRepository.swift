@@ -29,7 +29,7 @@ class AppRepository:RepositoryInterface{
     }
     
     func fetch<T:Codable>(localEndPoint: LocalEndPoint) -> Future<T, Error> {
-        return self.localDataSource.fetch(localEndPoint: localEndPoint)
+        return localDataSource.fetch(localEndPoint: localEndPoint)
     }
     
     func fetch<T:Codable>(remoteEndPoint: EndPoint) -> Future<T, Error> {

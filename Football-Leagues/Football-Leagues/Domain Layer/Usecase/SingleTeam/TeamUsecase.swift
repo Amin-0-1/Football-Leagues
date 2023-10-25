@@ -58,7 +58,8 @@ class TeamUsecase:TeamUsecaseProtcol{
                             
                         }
                 }
-            } receiveValue: { model in
+            } receiveValue: {[weak self] model in
+                guard let self = self else {return}
                 // MARK: - local data fetched
                 promise(.success(model))
                 
@@ -95,7 +96,8 @@ class TeamUsecase:TeamUsecaseProtcol{
                     }
                     onFinish(.failure(CustomDomainError.customError(error.localizedDescription)))
             }
-        } receiveValue: { model in
+        } receiveValue: {[weak self] model in
+            guard let self = self else {return}
             onFinish(.success(model))
             if let endpoint = endPoint as? LeaguesEndPoints,let id = Int(endpoint.code ?? ""){
                 self.save(model: model, localEntityType: .games(id: id))

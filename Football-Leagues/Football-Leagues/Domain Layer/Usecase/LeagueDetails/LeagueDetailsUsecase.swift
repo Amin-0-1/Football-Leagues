@@ -92,7 +92,8 @@ class LeagueDetailsUsecase:LeagueDetailsUsecaseProtocol{
                     }
                     onFinish(.failure(CustomDomainError.customError(error.localizedDescription)))
             }
-        } receiveValue: { model in
+        } receiveValue: {[weak self] model in
+            guard let self = self else {return}
             onFinish(.success(model))
             if let endpoint = endPoint as? LeaguesEndPoints,let code = endpoint.code?.description{
                 self.save(model: model, localEntityType: .teams(code: code))
@@ -109,7 +110,8 @@ class LeagueDetailsUsecase:LeagueDetailsUsecaseProtocol{
                 case .failure(let error):
                     print(error.localizedDescription)
             }
-        } receiveValue: { isSaved in
+        } receiveValue: {[weak self] isSaved in
+            guard let self = self else {return}
             print("local \(localEntityType) saved -> \(isSaved)")
         }.store(in: &self.cancellables)
     }
