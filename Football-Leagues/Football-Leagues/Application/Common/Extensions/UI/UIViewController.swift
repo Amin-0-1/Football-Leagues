@@ -9,7 +9,7 @@ import UIKit
 
 extension UIViewController{
     var indicator:UIActivityIndicatorView{
-        let indicator = ActivityIndicator.shared.color(color: .systemGreen).build()
+        let indicator = ActivityIndicator.shared.set().build()
         DispatchQueue.main.async {
             self.view.addSubview(indicator)
             indicator.center = self.view.center
