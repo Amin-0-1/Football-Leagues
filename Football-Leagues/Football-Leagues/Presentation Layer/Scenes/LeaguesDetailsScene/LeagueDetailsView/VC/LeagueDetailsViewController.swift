@@ -17,7 +17,7 @@ class LeagueDetailsViewController: UIViewController {
         refreshControl.addTarget(self, action: #selector(refreshControlValueChanged), for: .valueChanged)
         return refreshControl
     }()
-    
+
     
     var viewModel:LeagueDetailsViewModelProtocol!
     

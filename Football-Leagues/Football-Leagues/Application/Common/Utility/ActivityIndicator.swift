@@ -11,12 +11,12 @@ class ActivityIndicator{
     static let shared = ActivityIndicator()
     private let indicator: UIActivityIndicatorView!
     private init(){
-        indicator = UIActivityIndicatorView(style: .large)
-        indicator.color = .cyan
+        indicator = UIActivityIndicatorView()
         indicator.hidesWhenStopped = true
     }
-    func color(color :UIColor) -> ActivityIndicator{
+    func set(color:UIColor = .green,style:UIActivityIndicatorView.Style = .large)->ActivityIndicator{
         indicator.color = color
+        indicator.style = style
         return self
     }
     func build()->UIActivityIndicatorView{

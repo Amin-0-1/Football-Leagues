@@ -92,7 +92,8 @@ class LeagueDetailsUsecase:LeagueDetailsUsecaseProtocol{
                     }
                     onFinish(.failure(CustomDomainError.customError(error.localizedDescription)))
             }
-        } receiveValue: { model in
+        } receiveValue: {[weak self] model in
+            guard let self = self else {return}
             onFinish(.success(model))
             if let endpoint = endPoint as? LeaguesEndPoints,let code = endpoint.code?.description{
                 self.save(model: model, localEntityType: .teams(code: code))
@@ -103,7 +104,8 @@ class LeagueDetailsUsecase:LeagueDetailsUsecaseProtocol{
     
     
     private func save(model:LeagueDetailsDataModel,localEntityType:LocalEndPoint){
-        leageDetailsRepo.saveTeam(model: model, localEndPoint: localEntityType).sink { completion in
+        leageDetailsRepo.saveTeam(model: model, localEndPoint: localEntityType).sink { [weak self] completion in
+            guard let self = self else {return}
             switch completion{
                 case .finished: break
                 case .failure(let error):
