@@ -7,7 +7,7 @@
 
 import UIKit
 import CoreData
-
+import SDWebImageSVGCoder
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -29,7 +29,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             UINavigationBar.appearance().compactAppearance = navigationBarAppearance
             UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
         }
-
+        let svgCoder = SDImageSVGCoder.shared
+        SDImageCodersManager.shared.addCoder(svgCoder)
         return true
     }
 
