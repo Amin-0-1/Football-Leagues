@@ -29,6 +29,7 @@
 		271EC4372ADE94620029B86C /* RemoteRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271EC4362ADE94620029B86C /* RemoteRepository.swift */; };
 		271EC43C2ADE9B1A0029B86C /* LeaguesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271EC43B2ADE9B1A0029B86C /* LeaguesRepository.swift */; };
 		271EC4412ADE9F310029B86C /* Connectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271EC4402ADE9F310029B86C /* Connectivity.swift */; };
+		272FEAD52AEB272100F65988 /* SDWebImageSVGCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 272FEAD42AEB272100F65988 /* SDWebImageSVGCoder */; };
 		2737BBD62AE746790030308E /* FakeConnectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2737BBD52AE746790030308E /* FakeConnectivity.swift */; };
 		2740B25C2ADEC2E500379194 /* LeagueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740B25A2ADEC2E500379194 /* LeagueCell.swift */; };
 		2740B25D2ADEC2E500379194 /* LeagueCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2740B25B2ADEC2E500379194 /* LeagueCell.xib */; };
@@ -219,6 +220,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				272FEAD52AEB272100F65988 /* SDWebImageSVGCoder in Frameworks */,
 				27BCAB7C2AE25A1600A8A10F /* SDWebImage in Frameworks */,
 				27CCD6292AE62ED800F3F24D /* Lottie in Frameworks */,
 			);
@@ -932,6 +934,7 @@
 			packageProductDependencies = (
 				27BCAB7B2AE25A1600A8A10F /* SDWebImage */,
 				27CCD6282AE62ED800F3F24D /* Lottie */,
+				272FEAD42AEB272100F65988 /* SDWebImageSVGCoder */,
 			);
 			productName = "Football-Leagues";
 			productReference = 271EC3B22ADDBB450029B86C /* Football-Leagues.app */;
@@ -966,7 +969,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1430;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					271EC3B12ADDBB450029B86C = {
 						CreatedOnToolsVersion = 14.3.1;
@@ -989,6 +992,7 @@
 			packageReferences = (
 				2740B26F2ADF499D00379194 /* XCRemoteSwiftPackageReference "SDWebImage" */,
 				27CCD6272AE62ED800F3F24D /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				272FEAD32AEB272100F65988 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */,
 			);
 			productRefGroup = 271EC3B32ADDBB450029B86C /* Products */;
 			projectDirPath = "";
@@ -1172,6 +1176,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1232,6 +1237,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1381,6 +1387,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		272FEAD32AEB272100F65988 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSVGCoder.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.7.0;
+			};
+		};
 		2740B26F2ADF499D00379194 /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
@@ -1400,6 +1414,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		272FEAD42AEB272100F65988 /* SDWebImageSVGCoder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 272FEAD32AEB272100F65988 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */;
+			productName = SDWebImageSVGCoder;
+		};
 		27BCAB7B2AE25A1600A8A10F /* SDWebImage */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2740B26F2ADF499D00379194 /* XCRemoteSwiftPackageReference "SDWebImage" */;

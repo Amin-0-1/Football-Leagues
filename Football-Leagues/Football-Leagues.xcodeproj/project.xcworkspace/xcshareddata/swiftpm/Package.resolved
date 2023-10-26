@@ -17,6 +17,15 @@
         "revision" : "1f06ef5007b6a580b3873ed2adee19e05d3b215a",
         "version" : "5.18.3"
       }
+    },
+    {
+      "identity" : "sdwebimagesvgcoder",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SDWebImage/SDWebImageSVGCoder.git",
+      "state" : {
+        "revision" : "950167445ab703740569869c8b7510efc9d09a26",
+        "version" : "1.7.0"
+      }
     }
   ],
   "version" : 2
