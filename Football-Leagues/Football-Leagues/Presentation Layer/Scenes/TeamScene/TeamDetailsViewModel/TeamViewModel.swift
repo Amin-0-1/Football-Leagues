@@ -72,7 +72,8 @@ class TeamViewModel:TeamViewModelProtocol{
                     case .failure(let error):
                         self.self.publishError.send(error.localizedDescription)
                 }
-            } receiveValue: { model in
+            } receiveValue: {[weak self] model in
+                guard let self = self else {return}
                 let viewModels = self.getMappedViewGames(from: model)
                 self.gamesCount = viewModels.count
                 self.publishGames.send(viewModels)
@@ -80,7 +81,8 @@ class TeamViewModel:TeamViewModelProtocol{
 
         }.store(in: &cancellables)
         
-        onTapLink.sink { link in
+        onTapLink.sink {[weak self] link in
+            guard let self = self else {return}
             guard let link = link,let url = URL(string: link) else {return}
             self.coordinator.navigate(to: url)
         }.store(in: &cancellables)
