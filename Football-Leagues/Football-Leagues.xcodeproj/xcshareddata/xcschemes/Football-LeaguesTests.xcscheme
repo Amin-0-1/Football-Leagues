@@ -60,6 +60,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "27BCAB702AE259BB00A8A10F"
+            BuildableName = "Football-LeaguesTests.xctest"
+            BlueprintName = "Football-LeaguesTests"
+            ReferencedContainer = "container:Football-Leagues.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

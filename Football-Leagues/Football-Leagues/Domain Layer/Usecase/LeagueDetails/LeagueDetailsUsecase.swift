@@ -104,14 +104,14 @@ class LeagueDetailsUsecase:LeagueDetailsUsecaseProtocol{
     
     
     private func save(model:LeagueDetailsDataModel,localEntityType:LocalEndPoint){
-        leageDetailsRepo.saveTeam(model: model, localEndPoint: localEntityType).sink { completion in
+        leageDetailsRepo.saveTeam(model: model, localEndPoint: localEntityType).sink { [weak self] completion in
+            guard let self = self else {return}
             switch completion{
                 case .finished: break
                 case .failure(let error):
                     print(error.localizedDescription)
             }
-        } receiveValue: {[weak self] isSaved in
-            guard let self = self else {return}
+        } receiveValue: { isSaved in
             print("local \(localEntityType) saved -> \(isSaved)")
         }.store(in: &self.cancellables)
     }
