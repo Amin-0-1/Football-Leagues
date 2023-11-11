@@ -24,11 +24,6 @@ class LeaguesUsecase : LeaguesUsecaseProtocol{
     }
     
     func fetchLeagues() -> Future<LeaguesDataModel, CustomDomainError> {
-//        return .init { promise in
-//            self.fetchRemoteLeagues(endPoint: LeaguesEndPoints.getAllLeagues) { result in
-//                promise(result)
-//            }
-//        }
         return .init{ [weak self] promise in
             guard let self = self else {return}
 

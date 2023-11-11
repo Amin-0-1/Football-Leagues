@@ -7,12 +7,26 @@
 
 import Foundation
 
-enum ParameterEncoding {
+enum Encoding {
     case URLEncoding
     case JSONEncoding
     case MULTIPARTEncoding
     
-    static func jsonEncode(urlRequest: inout URLRequest, with parameters: Parameters) throws {
+    func encode(urlRequest: inout URLRequest, with parameters: Parameters) throws{
+        do{
+            switch self {
+                case .URLEncoding:
+                    try urlEncode(urlRequest: &urlRequest, with: parameters)
+                case .JSONEncoding:
+                    try jsonEncode(urlRequest: &urlRequest, with: parameters)
+                case .MULTIPARTEncoding:
+                    try multipartEncode(urlRequest: &urlRequest, with: parameters)
+            }
+        }catch{
+            throw error
+        }
+    }
+    private func jsonEncode(urlRequest: inout URLRequest, with parameters: Parameters) throws {
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)
             urlRequest.httpBody = jsonData
@@ -24,8 +38,8 @@ enum ParameterEncoding {
         }
     }
     
-    static func urlEncode(urlRequest: inout URLRequest, with parameters: Parameters) throws {
-        guard let url = urlRequest.url else { throw NetworkError.invalidURL }
+    private func urlEncode(urlRequest: inout URLRequest, with parameters: Parameters) throws {
+        guard let url = urlRequest.url else { throw NetworkError.invalidURL(urlRequest.url?.description) }
         if var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false), !parameters.isEmpty {
             urlComponents.queryItems = [URLQueryItem]()
             for (key, value) in parameters {
@@ -39,7 +53,7 @@ enum ParameterEncoding {
         }
     }
     
-    static func multipartEncode(urlRequest: inout URLRequest, with parameters: Parameters) throws {
+    private func multipartEncode(urlRequest: inout URLRequest, with parameters: Parameters) throws {
         let boundary = "Boundary-\(UUID().uuidString)"
         urlRequest.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         let httpBody = NSMutableData()

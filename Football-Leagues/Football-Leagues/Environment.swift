@@ -37,13 +37,20 @@ public struct Environment {
     public func get(_ key: PlistKey) -> String {
         switch key {
             case .ServerURL:
-                let urlProtocol = infoDict[PlistKey.ConnectionProtocol.value] as! String
-                let baseUrl = infoDict[PlistKey.ServerURL.value] as! String
-                return urlProtocol.appending(baseUrl)
+                guard let baseUrl = infoDict[PlistKey.ServerURL.value] as? String else {
+                    fatalError("Unable to get environment data with key \(key)")
+                }
+                return baseUrl
             case .TimeoutInterval:
-                return infoDict[PlistKey.TimeoutInterval.value] as! String
+                guard let timeout = infoDict[PlistKey.TimeoutInterval.value] as? String else {
+                    fatalError("Unable to get environment data with key \(key)")
+                }
+                return timeout
             case .ConnectionProtocol:
-                return infoDict[PlistKey.ConnectionProtocol.value] as! String
+                guard let urlProtocol = infoDict[PlistKey.ConnectionProtocol.value] as? String else{
+                    fatalError("Unable to get environment data with key \(key)")
+                }
+                return urlProtocol
         }
     }
 }

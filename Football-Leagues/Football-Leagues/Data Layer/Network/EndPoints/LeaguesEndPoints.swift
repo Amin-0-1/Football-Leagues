@@ -55,7 +55,7 @@ extension LeaguesEndPoints:EndPoint{
         return .get
     }
     
-    var encoding: ParameterEncoding {
+    var encoding: Encoding {
         switch self {
             case .getAllLeagues:
                 return .JSONEncoding

@@ -9,7 +9,7 @@ import UIKit
 
 class ActivityIndicator{
     static let shared = ActivityIndicator()
-    private let indicator: UIActivityIndicatorView!
+    private let indicator: UIActivityIndicatorView
     private init(){
         indicator = UIActivityIndicatorView()
         indicator.hidesWhenStopped = true

@@ -15,7 +15,7 @@ protocol RemoteRepositoryInterface{
 
 protocol LocalRepositoryInterface{
     func fetch<T:Codable>(localEndPoint:LocalEndPoint) -> Future<T,Error>
-    func save<T:Codable>(data:T,localEndPoint:LocalEndPoint)->Future<Bool,Error>
+    func save<T:Codable>(data:T,localEndPoint:LocalEndPoint)->Future<T,Error>
 }
 
 

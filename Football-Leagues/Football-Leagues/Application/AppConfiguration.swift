@@ -11,7 +11,9 @@ class AppConfiguration{
     static var shared:AppConfiguration = AppConfiguration()
     private init(){}
     
-    let BASE_URL = Environment().get(.ServerURL)
+    var BASE_URL:String{
+        return Environment().get(.ConnectionProtocol) .appending("://").appending( Environment().get(.ServerURL) )
+    }
     let AUTH_TOKEN = "4860e6fcf225488f8a7988607a85c4da"
     
     let dataModel:String = "Football_Leagues"

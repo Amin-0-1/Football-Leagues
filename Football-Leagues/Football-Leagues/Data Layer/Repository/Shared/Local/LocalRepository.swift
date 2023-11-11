@@ -26,7 +26,7 @@ class LocalRepository:LocalRepositoryInterface{
         return self.localClient.fetch(localEndPoint: localEndPoint)
     }
     
-    func save<T:Codable>(data:T,localEndPoint:LocalEndPoint)->Future<Bool,Error>{
+    func save<T:Codable>(data:T,localEndPoint:LocalEndPoint)->Future<T,Error>{
         return localClient.insert(data: data, localEndPoint: localEndPoint)
     }
 }

@@ -16,29 +16,34 @@ protocol EndPoint {
     var header: HTTPHeaders? { get }
     var parameters: Parameters? { get }
     var method: HTTPMethods { get }
-    var encoding: ParameterEncoding { get }
+    var encoding: Encoding { get }
 }
 
 extension EndPoint {
     var urlComponents: URLComponents {
-        var components = URLComponents(string: base)!
+        guard var components = URLComponents(string: base) else {
+            print("Invalid URL: \(base)")
+            return .init()
+        }
         components.path = path
         return components
     }
     
-    var request: URLRequest {
-        let url = urlComponents.url!
+    var request: URLRequest? {
+        guard let url = urlComponents.url else {
+            print("failed to load URL from \(urlComponents)")
+            return nil
+        }
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = method.rawValue
         urlRequest.allHTTPHeaderFields = header
+        
         if let parameters = parameters {
-            switch encoding {
-                case .JSONEncoding:
-                    try? ParameterEncoding.jsonEncode(urlRequest: &urlRequest, with: parameters)
-                case .URLEncoding:
-                    try? ParameterEncoding.urlEncode(urlRequest: &urlRequest, with: parameters)
-                case .MULTIPARTEncoding:
-                    try? ParameterEncoding.multipartEncode(urlRequest: &urlRequest, with: parameters)
+            do{
+                try encoding.encode(urlRequest: &urlRequest, with: parameters)
+            }catch{
+                print(error)
+                return nil
             }
         }
         return urlRequest

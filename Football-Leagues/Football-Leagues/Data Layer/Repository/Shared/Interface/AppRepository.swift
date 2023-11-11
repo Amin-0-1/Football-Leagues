@@ -36,7 +36,7 @@ class AppRepository:RepositoryInterface{
         return self.remoteDataSource.fetch(remoteEndPoint: remoteEndPoint)
     }
 
-    func save<T:Codable>(data: T, localEndPoint: LocalEndPoint) -> Future<Bool, Error> {
+    func save<T:Codable>(data: T, localEndPoint: LocalEndPoint) -> Future<T, Error> {
         // MARK: - we only save data locally
         return localDataSource.save(data: data, localEndPoint: localEndPoint)
     }

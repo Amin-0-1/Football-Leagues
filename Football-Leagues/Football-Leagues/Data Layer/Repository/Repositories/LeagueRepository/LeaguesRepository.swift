@@ -11,7 +11,7 @@ import Combine
 protocol LeaguesRepoInterface{
     func fetchLocalLeagues(localEndPoint:LocalEndPoint) ->Future<LeaguesDataModel,Error>
     func fetchRemoteLeagues(remoteEndPoint:EndPoint)-> Future<LeaguesDataModel,Error>
-    func saveLeagues(leagues:LeaguesDataModel,localEndPoint:LocalEndPoint) ->Future<Bool,Error>
+    func saveLeagues(leagues:LeaguesDataModel,localEndPoint:LocalEndPoint) ->Future<LeaguesDataModel,Error>
 }
 struct LeaguesReposiotory:LeaguesRepoInterface{
 
@@ -30,7 +30,7 @@ struct LeaguesReposiotory:LeaguesRepoInterface{
     }
     
     
-    func saveLeagues(leagues: LeaguesDataModel,localEndPoint:LocalEndPoint) -> Future<Bool, Error> {
+    func saveLeagues(leagues: LeaguesDataModel,localEndPoint:LocalEndPoint) -> Future<LeaguesDataModel, Error> {
         return self.appRepo.save(data: leagues, localEndPoint: localEndPoint)
     }
     

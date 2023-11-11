@@ -6,36 +6,41 @@
 //
 
 import Foundation
-public enum NetworkError: Error{
-    
+
+public enum NetworkError: Error,Equatable{
     case noInternetConnection
-    case requestFailed
     case timeout
+    case invalidURL(String?)
+    case requestFailed
     case encodingFailed
     case invalidResponse
     case decodingFailed
-    case invalidURL
-    case serverError(statusCode: Int)
-    
+    case serverError(Data)
+    case custom(error:String)
     public var localizedDescription: String {
         switch self {
-            case .requestFailed:
-                return "Network is down.";
-            case .invalidResponse:
-                return "The operation couldn’t be completed."
-            case .decodingFailed:
-                return "failed to decode data"
             case .noInternetConnection:
-                return "The Internet connection appears to be offline."
+                return "Oops! It seems you're not connected to the internet. Please check your internet connection and try again."
             case .timeout:
-                return "The request timed out."
-            case .serverError(statusCode: let statusCode):
-                return "Could not connect to the server, \(statusCode) has found."
+                return "Sorry, the operation took longer than expected. Please check your internet connection and try again. If the issue persists, please contact support."
+            case .invalidURL(let url):
+                var urlString:String = "Invalid URL provided. Please double-check the URL and try again."
+                if let url {
+                    urlString =  "Invalid URL provided \(url). Please double-check the URL and try again."
+                }
+                return urlString
+            case .requestFailed:
+                return "Oops, something went wrong with the network. Please check your connection, try again later, or contact support if the issue persists.";
             case .encodingFailed:
                 return "Unable to encode request data"
-            case .invalidURL:
-                return "Invalid url for network"
+            case .invalidResponse:
+                return "Empty Response: No Available Data"
+            case .decodingFailed:
+                return "Oops, an error occured in server data please try again later."
+            case .serverError:
+                return "Oops, we've encountered a server response error, please try again later"
+            case .custom(let error):
+                return error
         }
     }
-    
 }
