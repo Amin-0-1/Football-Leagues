@@ -40,9 +40,9 @@ class TeamViewModel:TeamViewModelProtocol{
     var progress: AnyPublisher<Bool, Never>
     var gamesDetails: AnyPublisher<[TeamDetailsViewDataModel], Never>
     
-    var coordinator:GamesCoordinatorProtocol!
-    var usecase:TeamUsecaseProtcol!
-    private var headerModel : LeagueDetailsViewDataModel!
+    var coordinator:GamesCoordinatorProtocol
+    var usecase:TeamUsecaseProtcol
+    private var headerModel : LeagueDetailsViewDataModel
     private var cancellables:Set<AnyCancellable> = []
     
     init(param:TeamViewModelParam) {

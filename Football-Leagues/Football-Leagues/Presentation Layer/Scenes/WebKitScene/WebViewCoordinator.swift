@@ -13,7 +13,7 @@ protocol WebViewControllerProtocol:AnyCoordinator{
 
 struct WebViewCoordinator:WebViewControllerProtocol{
     var navigationController: UINavigationController?
-    var data:URL!
+    var data:URL
     
     init(navigationController: UINavigationController, data: URL) {
         self.navigationController = navigationController

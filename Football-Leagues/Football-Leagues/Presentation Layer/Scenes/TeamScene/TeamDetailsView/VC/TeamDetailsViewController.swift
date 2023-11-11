@@ -19,8 +19,17 @@ class TeamDetailsViewController: UIViewController {
         return refreshControl
     }()
     
-    var viewModl: TeamViewModelProtocol!
+    var viewModl: TeamViewModelProtocol
     private var cancellables:Set<AnyCancellable> = []
+    
+    
+    init(viewModel:TeamViewModelProtocol){
+        self.viewModl = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
@@ -52,8 +61,7 @@ class TeamDetailsViewController: UIViewController {
             guard let self = self else {return}
             title = model.name
             let header = TeamHeaderView(frame: .init(x: 0, y: 0, width: view.frame.width, height: 250))
-            header.configure(model: model)
-            header.delegate = self
+            header.configure(delegate:self,model: model)
             self.uiTableView.tableHeaderView = header
         }.store(in: &cancellables)
         

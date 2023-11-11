@@ -21,10 +21,8 @@ struct LeagueDetailsCoordinator:LeagueDetailsCoordinatorProtocol{
         self.data = data
     }
     func start() {
-        let vc = LeagueDetailsViewController()
         let viewModel = LeagueDetailsViewModel(params: .init(coordinator: self,code: data))
-        
-        vc.viewModel = viewModel
+        let vc = LeagueDetailsViewController(viewModel: viewModel)
         self.navigationController.pushViewController(vc, animated: true)
     }
     func navigateToWebView(withLink url: URL) {

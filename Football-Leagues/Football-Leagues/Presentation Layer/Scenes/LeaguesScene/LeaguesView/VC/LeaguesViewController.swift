@@ -20,8 +20,17 @@ class LeaguesViewController: UIViewController {
         return refreshControl
     }()
     
-    var viewModel:LeaguesViewModel!
+    var viewModel:LeaguesViewModelProtocol
     private var cancellable:Set<AnyCancellable> = []
+    
+    init(viewModel:LeaguesViewModelProtocol){
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()

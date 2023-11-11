@@ -21,8 +21,10 @@ class TeamsCell: UITableViewCell {
     @IBOutlet private weak var uiStadiumStack: UIStackView!
     @IBOutlet private weak var uiStadium: UILabel!
     @IBOutlet weak var uiLinkButton: UIButton!
-    private var model:LeagueDetailsViewDataModel!
-    private var viewModel:LeagueDetailsViewModelProtocol!
+    
+    private var model:LeagueDetailsViewDataModel?
+    private var viewModel:LeagueDetailsViewModelProtocol?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -39,7 +41,7 @@ class TeamsCell: UITableViewCell {
     
     
     @IBAction func linkPressed(_ sender: UIButton) {
-        viewModel.onTappingLink.send(model.link)
+        viewModel?.onTappingLink.send(model?.link)
     }
     
     func configure(withModel model:LeagueDetailsViewDataModel,viewModel:LeagueDetailsViewModelProtocol){

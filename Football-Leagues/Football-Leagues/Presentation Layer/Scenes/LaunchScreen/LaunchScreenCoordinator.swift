@@ -17,8 +17,7 @@ class LaunchScreenCoordinator:LaunchScreenCoordinatorProtocol{
     }
     func start() {
         guard let navigationController = navigationController else {return}
-        let vc = LaunchScreen()
-        vc.coordinator = self
+        let vc = LaunchScreen(coordinator: self)
         navigationController.setViewControllers([vc], animated: false)
     }
     func onFinishLoading() {

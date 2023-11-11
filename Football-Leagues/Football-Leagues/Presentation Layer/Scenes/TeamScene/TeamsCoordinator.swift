@@ -14,12 +14,10 @@ struct TeamCoordinator:GamesCoordinatorProtocol{
     var navigationController: UINavigationController?
     var team:LeagueDetailsViewDataModel
     func start() {
-        guard let navigationController = navigationController else {return}
-        let vc = TeamDetailsViewController()
         let params = TeamViewModelParam(coordinator: self, team: team)
         let viewModel = TeamViewModel(param: params)
-        vc.viewModl = viewModel
-        navigationController.pushViewController(vc, animated: true)
+        let vc = TeamDetailsViewController(viewModel: viewModel)
+        navigationController?.pushViewController(vc, animated: true)
     }
     func navigate(to url: URL) {
         guard let navigationController = navigationController else {return}

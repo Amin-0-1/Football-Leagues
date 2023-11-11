@@ -15,7 +15,7 @@ protocol LeaguesRepoInterface{
 }
 struct LeaguesReposiotory:LeaguesRepoInterface{
 
-    private let appRepo:RepositoryInterface!
+    private let appRepo:RepositoryInterface
     private var cancellables:Set<AnyCancellable> = []
     init(appRepo: RepositoryInterface = AppRepository()) {
         self.appRepo = appRepo
@@ -26,12 +26,12 @@ struct LeaguesReposiotory:LeaguesRepoInterface{
     }
     
     func fetchRemoteLeagues(remoteEndPoint: EndPoint) -> Future<LeaguesDataModel, Error> {
-        return self.appRepo.fetch(remoteEndPoint: remoteEndPoint)
+        return appRepo.fetch(remoteEndPoint: remoteEndPoint)
     }
     
     
     func saveLeagues(leagues: LeaguesDataModel,localEndPoint:LocalEndPoint) -> Future<LeaguesDataModel, Error> {
-        return self.appRepo.save(data: leagues, localEndPoint: localEndPoint)
+        return appRepo.save(data: leagues, localEndPoint: localEndPoint)
     }
     
 }

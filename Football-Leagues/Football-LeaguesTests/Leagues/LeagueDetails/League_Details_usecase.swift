@@ -10,7 +10,7 @@ import Combine
 
 @testable import Football_Leagues
 final class League_Details_usecase: XCTestCase {
-    var cancellables:Set<AnyCancellable>!
+    var cancellables:Set<AnyCancellable>
     override func setUpWithError() throws {
         cancellables = []
     }

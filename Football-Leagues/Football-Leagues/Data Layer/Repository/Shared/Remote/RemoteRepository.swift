@@ -10,7 +10,7 @@ import Combine
 
 class RemoteRepository:RemoteRepositoryInterface{
         
-    private var apiClinet:APIClientProtocol!
+    private var apiClinet:APIClientProtocol
     private var cancellables: Set<AnyCancellable> = []
     init(apiClinet: APIClientProtocol = APIClient.shared) {
         self.apiClinet = apiClinet
@@ -21,18 +21,7 @@ class RemoteRepository:RemoteRepositoryInterface{
         return self.apiClinet.execute(request: endPoint)
     }
     func fetch<T:Codable>(remoteEndPoint: EndPoint) -> Future<T, Error>{
-        return self.apiClinet.execute(request: remoteEndPoint)
-//        return .init { promise in
-//            self.apiClinet.execute(request: remoteEndPoint).sink { completion in
-//                switch completion{
-//                    case .finished: break
-//                    case .failure(let error):
-//                        promise(.failure(error))
-//                }
-//            } receiveValue: { model in
-//                promise(.success(model))
-//            }.store(in: &self.cancellables)
-//        }
+        return apiClinet.execute(request: remoteEndPoint)
     }
     
     

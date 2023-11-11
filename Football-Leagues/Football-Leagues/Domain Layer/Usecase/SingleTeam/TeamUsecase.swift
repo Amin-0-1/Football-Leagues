@@ -13,9 +13,9 @@ protocol TeamUsecaseProtcol{
 }
 class TeamUsecase:TeamUsecaseProtcol{
     
-    private let gamesRepo:TeamRepositoryProtocol!
+    private let gamesRepo:TeamRepositoryProtocol
     private var cancellables:Set<AnyCancellable> = []
-    private var connectivity:ConnectivityProtocol!
+    private var connectivity:ConnectivityProtocol
     init(repo: TeamRepositoryProtocol = TeamRepository(),
          connectivity:ConnectivityProtocol = ConnectivityService()) {
         self.gamesRepo = repo

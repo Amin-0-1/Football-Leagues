@@ -25,7 +25,7 @@ class TeamHeaderView: UIView {
     @IBOutlet private weak var uiStadium: UILabel!
     @IBOutlet private weak var uiLinkButton: UIButton!
     
-    weak var delegate:linkNavigationDelegate!
+    private weak var delegate:linkNavigationDelegate?
     private var link:String?
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -42,7 +42,8 @@ class TeamHeaderView: UIView {
         contentView.frame = bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     }
-    func configure(model:LeagueDetailsViewDataModel){
+    func configure(delegate:linkNavigationDelegate,model:LeagueDetailsViewDataModel){
+        self.delegate = delegate
         self.link = model.link
         uiShortTitle.text = model.shortName
         uiFallName.text = model.name
@@ -74,7 +75,7 @@ class TeamHeaderView: UIView {
         uiColorsView[1].layer.borderColor = UIColor.customColor(.greenColor).cgColor
     }
     @IBAction func uiLinkPressed(_ sender: UIButton) {
-        delegate.navigateTo(link: self.link)
+        delegate?.navigateTo(link: self.link)
     }
     
 }

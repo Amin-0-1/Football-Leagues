@@ -48,12 +48,12 @@ class LeaguesViewModel:LeaguesViewModelProtocol{
     var publishLeague:CurrentValueSubject<LeaguesViewDataModel,Never> = .init(.init(count: nil, models: []))
     
     var usecase:LeaguesUsecaseProtocol
-    var coordinator:LeaguesCoordinatorProtocol!
+    var coordinator:LeaguesCoordinatorProtocol
     
     private var cancellable:Set<AnyCancellable> = []
     
     init(usecase: LeaguesUsecaseProtocol = LeaguesUsecase(),
-         coordinator: LeaguesCoordinatorProtocol!) {
+         coordinator: LeaguesCoordinatorProtocol) {
         self.usecase = usecase
         self.coordinator = coordinator
         bind()
@@ -96,7 +96,7 @@ class LeaguesViewModel:LeaguesViewModelProtocol{
         onTappedCell.sink { [weak self] index in
             guard let self = self else {return}
             guard let data = publishLeague.value.models[index].code else {return}
-            coordinator?.navigateToDetails(withData: data)
+            coordinator.navigateToDetails(withData: data)
         }.store(in: &cancellable)
     }
     

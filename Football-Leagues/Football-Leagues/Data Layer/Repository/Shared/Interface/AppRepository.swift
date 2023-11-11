@@ -8,18 +8,11 @@
 import Foundation
 import Combine
 
-
-//protocol DataSourceProtocol{
-//    func fetch<T:Codable>(endPoint:EndPoint?, localEntity:LocalEndPoint?) -> Future<T,Error>
-//    func save<T:Codable>(data:T,localEndPoint:LocalEndPoint)->Future<Bool,Error>
-//}
-
-
 class AppRepository:RepositoryInterface{
     
     
-    private var remoteDataSource:RemoteRepositoryInterface!
-    private var localDataSource:LocalRepositoryInterface!
+    private var remoteDataSource:RemoteRepositoryInterface
+    private var localDataSource:LocalRepositoryInterface
     private var cancellables:Set<AnyCancellable> = []
     
     init(remote:RemoteRepositoryInterface = RemoteRepository(),
@@ -33,7 +26,7 @@ class AppRepository:RepositoryInterface{
     }
     
     func fetch<T:Codable>(remoteEndPoint: EndPoint) -> Future<T, Error> {
-        return self.remoteDataSource.fetch(remoteEndPoint: remoteEndPoint)
+        return remoteDataSource.fetch(remoteEndPoint: remoteEndPoint)
     }
 
     func save<T:Codable>(data: T, localEndPoint: LocalEndPoint) -> Future<T, Error> {

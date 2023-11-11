@@ -64,7 +64,7 @@ extension CoreDataManager:CoreDataManagerProtocol{
     }
     
     private func generateRequest(from localEntity:LocalEndPoint) -> NSFetchRequest<NSFetchRequestResult>{
-        let request: NSFetchRequest<NSFetchRequestResult>!
+        let request: NSFetchRequest<NSFetchRequestResult>
         switch localEntity {
             case .leagues: 
                 request = LeagueEntity.fetchRequest()
@@ -159,7 +159,9 @@ extension CoreDataManager:CoreDataManagerProtocol{
         do{
             let allRecord = try context.fetch(request)
             allRecord.forEach { record in
-                context.delete(record as! NSManagedObject)
+                if let record = record as? NSManagedObject{
+                    context.delete(record)
+                }
             }
             try context.save()
         }catch{

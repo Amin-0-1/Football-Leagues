@@ -9,7 +9,15 @@ import UIKit
 import Lottie
 class LaunchScreen: UIViewController {
     @IBOutlet weak var uiLottie: LottieAnimationView!
-    var coordinator:LaunchScreenCoordinatorProtocol!
+    var coordinator:LaunchScreenCoordinatorProtocol
+    init(coordinator: LaunchScreenCoordinatorProtocol) {
+        self.coordinator = coordinator
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         uiLottie.loopMode = .loop

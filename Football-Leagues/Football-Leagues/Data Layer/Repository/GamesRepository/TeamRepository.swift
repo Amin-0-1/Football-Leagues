@@ -16,7 +16,7 @@ protocol TeamRepositoryProtocol{
 }
 class TeamRepository:TeamRepositoryProtocol{
     
-    private let appRepo:RepositoryInterface!
+    private let appRepo:RepositoryInterface
     private var cancellables:Set<AnyCancellable> = []
     init(appRepo: RepositoryInterface = AppRepository(),
          connectivity: ConnectivityProtocol = ConnectivityService()) {
@@ -29,7 +29,7 @@ class TeamRepository:TeamRepositoryProtocol{
     
     
     func fetchRemoteGames(remoteEndPoint: EndPoint) -> Future<TeamDataModel, Error> {
-        return self.appRepo.fetch(remoteEndPoint: remoteEndPoint)
+        return appRepo.fetch(remoteEndPoint: remoteEndPoint)
     }
     
     func saveGames(model: TeamDataModel, localEndPoint localEntityType: LocalEndPoint) -> Future<TeamDataModel, Error> {

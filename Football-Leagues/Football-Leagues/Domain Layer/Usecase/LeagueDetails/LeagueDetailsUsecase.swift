@@ -15,7 +15,7 @@ protocol LeagueDetailsUsecaseProtocol{
 class LeagueDetailsUsecase:LeagueDetailsUsecaseProtocol{
 
     private var leageDetailsRepo:LeagueDetailsRepositoryInteface
-    private var connectivity:ConnectivityProtocol!
+    private var connectivity:ConnectivityProtocol
     private var cancellables:Set<AnyCancellable> = []
     init(leageDetailsRepo: LeagueDetailsRepositoryInteface = LeagueDetailsRepository(),
          connectivity:ConnectivityProtocol = ConnectivityService()) {

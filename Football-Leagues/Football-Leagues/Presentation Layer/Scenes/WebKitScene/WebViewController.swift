@@ -9,27 +9,35 @@ import UIKit
 import WebKit
 
 class WebViewController: UIViewController, WKUIDelegate {
-    var webView:WKWebView!
+    var webView:WKWebView?
     
-    var url:URL!
-    var coordinator:WebViewCoordinator!
+    var url:URL?
+    var coordinator:WebViewCoordinator?
     override func loadView() {
         super.loadView()
     
         webView = WKWebView(frame: view.bounds)
-        webView.navigationDelegate = self
-        webView.uiDelegate = self
-        webView.allowsBackForwardNavigationGestures = true
-        webView.allowsLinkPreview = true
-        view.addSubview(webView)
+        webView?.navigationDelegate = self
+        webView?.uiDelegate = self
+        webView?.allowsBackForwardNavigationGestures = true
+        webView?.allowsLinkPreview = true
+        if let webView = webView {
+            view.addSubview(webView)
+        }
         
     }
     override func viewDidLoad(){
         super.viewDidLoad()
-        if UIApplication.shared.canOpenURL(self.url){
+        guard let url = url else {
+            showError(message: "Cannot open this page right now, please try again later!") {
+                self.dismiss(animated: true)
+            }
+            return
+        }
+        if UIApplication.shared.canOpenURL(url){
             showProgress()
-            let request = URLRequest(url: self.url)
-            webView.load(request)
+            let request = URLRequest(url: url)
+            webView?.load(request)
         }else{
             showError(message: "Cannot open this page right now, please try again later!")
         }
