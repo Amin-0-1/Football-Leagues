@@ -7,10 +7,4 @@
 
 import UIKit
 
-class GamesHeaderCell: UITableViewHeaderFooterView {
-
-    override class func awakeFromNib() {
-        super.awakeFromNib()
-        
-    }
-}
+class GamesHeaderCell: UITableViewHeaderFooterView {}

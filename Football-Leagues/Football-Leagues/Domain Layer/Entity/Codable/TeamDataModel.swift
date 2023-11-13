@@ -45,7 +45,6 @@ enum Winner: String, Codable {
     case homeTeam = "HOME_TEAM"
 }
 
-
 enum GameStatus: String, Codable {
     case finished = "FINISHED"
     case scheduled = "SCHEDULED"

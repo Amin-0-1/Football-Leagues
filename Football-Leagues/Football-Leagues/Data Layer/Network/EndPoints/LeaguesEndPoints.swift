@@ -7,12 +7,12 @@
 
 import Foundation
 
-enum LeaguesEndPoints:CustomStringConvertible{
+enum LeaguesEndPoints: CustomStringConvertible {
     case getAllLeagues
-    case getTeams(code:String)
-    case getGames(id:Int)
+    case getTeams(code: String)
+    case getGames(id: Int)
     
-    var description: String{
+    var description: String {
         switch self {
             case .getAllLeagues:
                 return "/v4/competitions/"
@@ -22,7 +22,7 @@ enum LeaguesEndPoints:CustomStringConvertible{
                 return "/v4/teams/\(id)/matches"
         }
     }
-    var code:String?{
+    var code: String? {
         switch self {
             case .getAllLeagues:
                 return nil
@@ -34,9 +34,9 @@ enum LeaguesEndPoints:CustomStringConvertible{
     }
 }
 
-extension LeaguesEndPoints:EndPoint{
+extension LeaguesEndPoints: EndPoint {
     var base: String {
-        AppConfiguration.shared.BASE_URL
+        AppConfiguration.shared.baseUrl
     }
     
     var path: String {
@@ -66,5 +66,3 @@ extension LeaguesEndPoints:EndPoint{
         }
     }
 }
-
-

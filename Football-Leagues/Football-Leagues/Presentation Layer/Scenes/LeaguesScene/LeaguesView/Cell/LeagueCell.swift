@@ -25,57 +25,51 @@ class LeagueCell: UITableViewCell {
         // Initialization code
         
         [
-         uiExtraDetailsStack,
-         uiTypeStack,
-         uiAreaStack,
-         uiSeasonStack
-        ].forEach{$0?.isHidden = true}
+            uiExtraDetailsStack,
+            uiTypeStack,
+            uiAreaStack,
+            uiSeasonStack
+        ].forEach { $0?.isHidden = true }
         
         [
-        uiTypeLabel,
-        uiAreaLabel,
-        uiNumberOfSeasons
-        ].forEach{$0?.text = 0.description}
+            uiTypeLabel,
+            uiAreaLabel,
+            uiNumberOfSeasons
+        ].forEach { $0?.text = 0.description }
         
-
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
     
-    func configure(withModel model: LeagueViewDataModel){
-        if let urlString = model.imageUrl,let url = URL(string: urlString){
+    func configure(withModel model: LeagueViewDataModel) {
+        if let urlString = model.imageUrl, let url = URL(string: urlString) {
             let placeholder = #imageLiteral(resourceName: "logo")
             uiLogo.sd_setImage(with: url, placeholderImage: placeholder)
         }
         
         uiTitle.text = model.name ?? "League"
         
-        if let type = model.type{
-            animate{
+        if let type = model.type {
+            animate {
                 self.uiExtraDetailsStack.isHidden = false
-            }completion: {
+            } completion: {
                 self.uiTypeStack.isHidden = false
             }
             uiTypeLabel.text = type
+            
         }
         
-        if let area = model.area{
-            animate{
+        if let area = model.area {
+            animate {
                 self.uiExtraDetailsStack.isHidden = false
-            }completion: {
+            } completion: {
                 self.uiAreaStack.isHidden = false
             }
             uiAreaLabel.text = area
         }
         
-        if let seasons = model.numberOfSeasons{
-            animate{
+        if let seasons = model.numberOfSeasons {
+            animate {
                 self.uiExtraDetailsStack.isHidden = false
-            }completion: {
+            } completion: {
                 self.uiSeasonStack.isHidden = false
             }
             uiNumberOfSeasons.text = seasons.description

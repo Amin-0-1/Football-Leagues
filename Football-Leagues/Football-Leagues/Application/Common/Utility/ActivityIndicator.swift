@@ -7,20 +7,19 @@
 
 import UIKit
 
-class ActivityIndicator{
+class ActivityIndicator {
     static let shared = ActivityIndicator()
     private let indicator: UIActivityIndicatorView
-    private init(){
+    private init() {
         indicator = UIActivityIndicatorView()
         indicator.hidesWhenStopped = true
     }
-    func set(color:UIColor = .green,style:UIActivityIndicatorView.Style = .large)->ActivityIndicator{
+    func set(color: UIColor = .green, style: UIActivityIndicatorView.Style = .large) -> ActivityIndicator {
         indicator.color = color
         indicator.style = style
         return self
     }
-    func build()->UIActivityIndicatorView{
+    func build() -> UIActivityIndicatorView {
         return self.indicator
     }
-    
 }

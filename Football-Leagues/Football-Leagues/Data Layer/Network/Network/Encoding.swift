@@ -12,8 +12,14 @@ enum Encoding {
     case JSONEncoding
     case MULTIPARTEncoding
     
-    func encode(urlRequest: inout URLRequest, with parameters: Parameters) throws{
-        do{
+    private struct MultipartFormData {
+        let name: String
+        let data: Data
+        let mimeType: String
+    }
+    
+    func encode(urlRequest: inout URLRequest, with parameters: Parameters) throws {
+        do {
             switch self {
                 case .URLEncoding:
                     try urlEncode(urlRequest: &urlRequest, with: parameters)
@@ -22,7 +28,7 @@ enum Encoding {
                 case .MULTIPARTEncoding:
                     try multipartEncode(urlRequest: &urlRequest, with: parameters)
             }
-        }catch{
+        } catch {
             throw error
         }
     }
@@ -41,7 +47,7 @@ enum Encoding {
     private func urlEncode(urlRequest: inout URLRequest, with parameters: Parameters) throws {
         guard let url = urlRequest.url else { throw NetworkError.invalidURL(urlRequest.url?.description) }
         if var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false), !parameters.isEmpty {
-            urlComponents.queryItems = [URLQueryItem]()
+            urlComponents.queryItems = []
             for (key, value) in parameters {
                 let queryItem = URLQueryItem(name: key, value: "\(value)")
                 urlComponents.queryItems?.append(queryItem)
@@ -57,31 +63,25 @@ enum Encoding {
         let boundary = "Boundary-\(UUID().uuidString)"
         urlRequest.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         let httpBody = NSMutableData()
-        parameters.forEach { param in
-            let key = param.key
-            let value = param.value
-            switch value {
-                case is String:
-                    guard let value = value as? String else { return }
-                    var fieldString = "--\(boundary)\r\n"
-                    fieldString += "Content-Disposition: form-data; name=\"\(key)\"\r\n"
-                    fieldString += "\r\n"
-                    fieldString += "\(value)\r\n"
-                    httpBody.appendString(fieldString)
-                case is (name: String, data: Data, mimeType: String):
-                    guard let value = value as? (name: String, data: Data, mimeType: String) else { return }
-                    let data = NSMutableData()
-                    
-                    data.appendString("--\(boundary)\r\n")
-                    data.appendString("Content-Disposition: form-data; name=\"\(key)\"; filename=\"\(value.name)\"\r\n")
-                    data.appendString("Content-Type: \(value.mimeType)\r\n\r\n")
-                    data.append(value.data)
-                    data.appendString("\r\n")
-                    httpBody.append(data as Data)
-                default:
-                    break
+        
+        for (key, value) in parameters {
+            if let value = value as? String {
+                let fieldString = "--\(boundary)\r\n" +
+                "Content-Disposition: form-data; name=\"\(key)\"\r\n" +
+                "\r\n" +
+                "\(value)\r\n"
+                httpBody.appendString(fieldString)
+            } else if let formData = value as? MultipartFormData {
+                let data = NSMutableData()
+                data.appendString("--\(boundary)\r\n")
+                data.appendString("Content-Disposition: form-data; name=\"\(key)\"; filename=\"\(formData.name)\"\r\n")
+                data.appendString("Content-Type: \(formData.mimeType)\r\n\r\n")
+                data.append(formData.data)
+                data.appendString("\r\n")
+                httpBody.append(data as Data)
             }
         }
+        
         httpBody.appendString("--\(boundary)--")
         urlRequest.httpBody = httpBody as Data
     }

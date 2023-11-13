@@ -6,10 +6,10 @@
 //
 
 import UIKit
-protocol LeaguesCoordinatorProtocol:AnyCoordinator{
-    func navigateToDetails(withData:String)
+protocol LeaguesCoordinatorProtocol: AnyCoordinator {
+    func navigateToDetails(withData: String)
 }
-struct LeaguesCoordinator:LeaguesCoordinatorProtocol{    
+struct LeaguesCoordinator: LeaguesCoordinatorProtocol {
     var navigationController: UINavigationController?
     
     func start() {
@@ -20,7 +20,7 @@ struct LeaguesCoordinator:LeaguesCoordinatorProtocol{
     }
     func navigateToDetails(withData data: String) {
         guard let navigationController = navigationController else {return}
-        let coordinator = LeagueDetailsCoordinator(navigationController: navigationController,data: data)
+        let coordinator = LeagueDetailsCoordinator(navigationController: navigationController, data: data)
         coordinator.start()
     }
 }

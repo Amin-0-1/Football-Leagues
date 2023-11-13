@@ -7,12 +7,12 @@
 
 import UIKit
 
-protocol GamesCoordinatorProtocol:AnyCoordinator{
-    func navigate(to:URL)
+protocol GamesCoordinatorProtocol: AnyCoordinator {
+    func navigate(to: URL)
 }
-struct TeamCoordinator:GamesCoordinatorProtocol{
+struct TeamCoordinator: GamesCoordinatorProtocol {
     var navigationController: UINavigationController?
-    var team:LeagueDetailsViewDataModel
+    var team: LeagueDetailsViewDataModel
     func start() {
         let params = TeamViewModelParam(coordinator: self, team: team)
         let viewModel = TeamViewModel(param: params)

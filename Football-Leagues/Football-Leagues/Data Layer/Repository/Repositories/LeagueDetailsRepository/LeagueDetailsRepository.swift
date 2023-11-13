@@ -8,15 +8,15 @@
 import Foundation
 import Combine
 
-protocol LeagueDetailsRepositoryInteface{
-    func fetchLocalTeams(localEndPoint:LocalEndPoint) ->Future<LeagueDetailsDataModel,Error>
-    func fetchRemoteTeams(remoteEndPoint:EndPoint)-> Future<LeagueDetailsDataModel,Error>
-    func saveTeam(model:LeagueDetailsDataModel,localEndPoint:LocalEndPoint) ->Future<LeagueDetailsDataModel,Error>
+protocol LeagueDetailsRepositoryInteface {
+    func fetchLocalTeams(localEndPoint: LocalEndPoint) -> Future<LeagueDetailsDataModel, Error>
+    func fetchRemoteTeams(remoteEndPoint: EndPoint) -> Future<LeagueDetailsDataModel, Error>
+    func saveTeam(model: LeagueDetailsDataModel, localEndPoint: LocalEndPoint) -> Future<LeagueDetailsDataModel, Error>
 }
-class LeagueDetailsRepository:LeagueDetailsRepositoryInteface{
+class LeagueDetailsRepository: LeagueDetailsRepositoryInteface {
 
-    private var appRepo:RepositoryInterface
-    private var cancellables:Set<AnyCancellable> = []
+    private var appRepo: RepositoryInterface
+    private var cancellables: Set<AnyCancellable> = []
     init(appRepo: RepositoryInterface = AppRepository()) {
         self.appRepo = appRepo
     }

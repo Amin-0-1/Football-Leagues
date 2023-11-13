@@ -8,28 +8,26 @@
 import Foundation
 import Combine
 
-protocol APIClientProtocol{
-    func execute<T:Codable>(request:EndPoint) -> Future<T, Error>
+protocol APIClientProtocol {
+    func execute<T: Codable>(request: EndPoint) -> Future<T, Error>
 }
 
-class APIClient: APIClientProtocol{
-    
+class APIClient: APIClientProtocol {
     static let shared = APIClient(config: .default)
     private var session: URLSession
     
     init(config: URLSessionConfiguration) {
         self.session = URLSession(configuration: config)
     }
-    
-    func execute<T:Codable>(request:EndPoint) -> Future<T, Error>{
-        return Future<T,Error>{ promise in
-            
+
+    func execute<T: Codable>(request: EndPoint) -> Future<T, Error> {
+        return Future<T, Error> { promise in
             guard let request = request.request else {
                 let url = request.urlComponents.string
                 promise(.failure(NetworkError.invalidURL(url)))
                 return
             }
-            let task = self.session.dataTask(with: request){ data, response, error in
+            let task = self.session.dataTask(with: request) { data, response, error in
                 DispatchQueue.main.async {
                     if let error = error {
                         if let urlError = error as? URLError {
@@ -38,7 +36,7 @@ class APIClient: APIClientProtocol{
                                     promise(.failure(NetworkError.noInternetConnection))
                                 case .timedOut:
                                     promise(.failure(NetworkError.timeout))
-                                case .badURL,.badURL:
+                                case .badURL:
                                     promise(.failure(NetworkError.invalidURL(nil)))
                                 default:
                                     promise(.failure(NetworkError.requestFailed))
@@ -55,7 +53,7 @@ class APIClient: APIClientProtocol{
                     }
                     
                     guard let httpResponse = response as? HTTPURLResponse,
-                          (200..<300).contains(httpResponse.statusCode) else{
+                    (200..<300).contains(httpResponse.statusCode) else {
                         self.serialize(data: data)
                         promise(.failure(NetworkError.serverError(data)))
                         return
@@ -66,10 +64,10 @@ class APIClient: APIClientProtocol{
                         // MARK: - success
                         promise(.success(model))
                     } catch let error as DecodingError {
-                        print(error.localizedDescription,error)
+                        print(error.localizedDescription, error)
                         promise(.failure(NetworkError.decodingFailed))
-                    } catch{
-                        print(error.localizedDescription,error)
+                    } catch {
+                        print(error.localizedDescription, error)
                         promise(.failure(NetworkError.custom(error: error.localizedDescription)))
                     }
                 }
@@ -77,14 +75,14 @@ class APIClient: APIClientProtocol{
             task.resume()
         }
     }
-    private func serialize(data:Data){
-        do{
+    /// Serialize
+    /// - Parameter data: the data object to be serialized
+    private func serialize(data: Data) {
+        do {
             let object = try JSONSerialization.jsonObject(with: data)
             print(object)
-        }catch{
-            print(error.localizedDescription,error)
+        } catch {
+            print(error.localizedDescription, error)
         }
     }
 }
-
-

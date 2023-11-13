@@ -12,7 +12,7 @@ protocol AnyCoordinator {
     func start()
 }
 
-struct AppCoordinator:AnyCoordinator{
+struct AppCoordinator: AnyCoordinator {
     var navigationController: UINavigationController?
 
     func start() {

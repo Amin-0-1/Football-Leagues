@@ -7,22 +7,18 @@
 
 import Foundation
 
-class AppConfiguration{
-    static var shared:AppConfiguration = AppConfiguration()
-    private init(){}
+class AppConfiguration {
+    static var shared = AppConfiguration()
+    private init() {}
     
-    var BASE_URL:String{
-        return Environment().get(.ConnectionProtocol) .appending("://").appending( Environment().get(.ServerURL) )
+    var baseUrl: String {
+        return Environment().get(.connectionProtocol) .appending(": //").appending( Environment().get(.serverURL) )
     }
-    let AUTH_TOKEN = "4860e6fcf225488f8a7988607a85c4da"
+    let authToken = "4860e6fcf225488f8a7988607a85c4da"
     
-    let dataModel:String = "Football_Leagues"
+    let dataModel: String = "Football_Leagues"
     
-    lazy var header:[String:String] = {
-        return ["X-Auth-Token" : AUTH_TOKEN]
+    lazy var header: [String: String] = {
+        return ["X-Auth-Token": authToken]
     }()
-    
-    
 }
-
-

@@ -8,18 +8,16 @@
 import UIKit
 @testable import Football_Leagues
 
-
-class FakeLeaguesCoordinator:LeaguesCoordinatorProtocol{
+class FakeLeaguesCoordinator: LeaguesCoordinatorProtocol {
 
     var navigationController: UINavigationController?
-    var onSuccessNavigation : ()->Void = {}
+    var onSuccessNavigation: () -> Void = {}
     
-    init(onNavigation:@escaping()->Void = {}) {
+    init(onNavigation: @escaping() -> Void = {}) {
         self.onSuccessNavigation = onNavigation
     }
     
     func start() {}
-    
     
     func navigateToDetails(withData: String) {
         onSuccessNavigation()

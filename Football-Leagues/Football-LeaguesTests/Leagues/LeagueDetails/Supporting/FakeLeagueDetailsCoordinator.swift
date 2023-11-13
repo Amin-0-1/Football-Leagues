@@ -7,15 +7,15 @@
 
 import Foundation
 @testable import Football_Leagues
-class FakeLeagueDetailsCoordinator:LeagueDetailsCoordinatorProtocol{
+class FakeLeagueDetailsCoordinator: LeagueDetailsCoordinatorProtocol {
     
-    var onSuccessNavigation : ()->Void = {}
+    var onSuccessNavigation: () -> Void = {}
     init(onSuccessNavigation: @escaping () -> Void = {}) {
         self.onSuccessNavigation = onSuccessNavigation
     }
     
     func navigateToWebView(withLink: URL) {
-            onSuccessNavigation()
+        onSuccessNavigation()
     }
     
     func navigateTo(team: Football_Leagues.LeagueDetailsViewDataModel) {

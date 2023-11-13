@@ -7,11 +7,10 @@
 
 import UIKit
 
-protocol linkNavigationDelegate:AnyObject{
-    func navigateTo(link:String?)
+protocol LinkNavigationDelegate: AnyObject {
+    func navigateTo(link: String?)
 }
 class TeamHeaderView: UIView {
-
     @IBOutlet private weak var contentView: UIView!
     @IBOutlet private weak var uiImage: UIImageView!
     @IBOutlet private var uiColorsView: [UIView]!
@@ -25,8 +24,8 @@ class TeamHeaderView: UIView {
     @IBOutlet private weak var uiStadium: UILabel!
     @IBOutlet private weak var uiLinkButton: UIButton!
     
-    private weak var delegate:linkNavigationDelegate?
-    private var link:String?
+    private weak var delegate: LinkNavigationDelegate?
+    private var link: String?
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
@@ -42,7 +41,7 @@ class TeamHeaderView: UIView {
         contentView.frame = bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     }
-    func configure(delegate:linkNavigationDelegate,model:LeagueDetailsViewDataModel){
+    func configure(delegate: LinkNavigationDelegate, model: LeagueDetailsViewDataModel) {
         self.delegate = delegate
         self.link = model.link
         uiShortTitle.text = model.shortName
@@ -51,31 +50,30 @@ class TeamHeaderView: UIView {
         uiAddress.text = model.address
         uiStadium.text = model.stadium
         let defaultImage = #imageLiteral(resourceName: "logo")
-        if let image = model.image ,let url = URL(string: image){
-            uiImage.sd_setImage(with: url,placeholderImage: defaultImage)
+        if let image = model.image, let url = URL(string: image) {
+            uiImage.sd_setImage(with: url, placeholderImage: defaultImage)
         }
-        if let _ = uiAddress{
+        if uiAddress != nil {
             self.uiAddressStack.isHidden = false
         }
-        if let _ = uiFoundation{
+        if uiFoundation != nil {
             self.uiFoundationStack.isHidden = false
         }
-        if let _ = uiStadium{
+        if uiStadium != nil {
             self.uiStadiumStack.isHidden = false
         }
-        if let _ = model.link {
+        if model.link != nil {
             self.uiLinkButton.isHidden = false
         }
         
-        zip(self.uiColorsView,model.colors).forEach { view,colorName in
+        zip(self.uiColorsView, model.colors).forEach { view, colorName in
             view.backgroundColor = UIColor.getColor(name: colorName)
         }
-        uiColorsView.forEach{$0.layer.borderWidth = 1}
+        uiColorsView.forEach { $0.layer.borderWidth = 1 }
         uiColorsView[0].layer.borderColor = UIColor.customColor(.greenColor).cgColor
         uiColorsView[1].layer.borderColor = UIColor.customColor(.greenColor).cgColor
     }
     @IBAction func uiLinkPressed(_ sender: UIButton) {
         delegate?.navigateTo(link: self.link)
     }
-    
 }

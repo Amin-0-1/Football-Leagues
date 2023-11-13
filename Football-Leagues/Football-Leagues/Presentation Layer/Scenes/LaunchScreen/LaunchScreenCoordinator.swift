@@ -7,10 +7,10 @@
 
 import UIKit
 
-protocol LaunchScreenCoordinatorProtocol:AnyCoordinator{
+protocol LaunchScreenCoordinatorProtocol: AnyCoordinator {
     func onFinishLoading()
 }
-class LaunchScreenCoordinator:LaunchScreenCoordinatorProtocol{
+class LaunchScreenCoordinator: LaunchScreenCoordinatorProtocol {
     var navigationController: UINavigationController?
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController

@@ -9,10 +9,10 @@ import UIKit
 import WebKit
 
 class WebViewController: UIViewController, WKUIDelegate {
-    var webView:WKWebView?
+    var webView: WKWebView?
     
-    var url:URL?
-    var coordinator:WebViewCoordinator?
+    var url: URL?
+    var coordinator: WebViewCoordinator?
     override func loadView() {
         super.loadView()
     
@@ -26,7 +26,7 @@ class WebViewController: UIViewController, WKUIDelegate {
         }
         
     }
-    override func viewDidLoad(){
+    override func viewDidLoad() {
         super.viewDidLoad()
         guard let url = url else {
             showError(message: "Cannot open this page right now, please try again later!") {
@@ -34,21 +34,21 @@ class WebViewController: UIViewController, WKUIDelegate {
             }
             return
         }
-        if UIApplication.shared.canOpenURL(url){
+        if UIApplication.shared.canOpenURL(url) {
             showProgress()
             let request = URLRequest(url: url)
             webView?.load(request)
-        }else{
+        } else {
             showError(message: "Cannot open this page right now, please try again later!")
         }
     }
 }
 
-extension WebViewController:WKNavigationDelegate{
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+extension WebViewController: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
         hideProgress()
     }
-    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation, withError error: Error) {
         hideProgress()
     }
 }

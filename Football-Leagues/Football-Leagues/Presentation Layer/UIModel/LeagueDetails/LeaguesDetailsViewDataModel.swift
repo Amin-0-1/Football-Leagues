@@ -7,19 +7,19 @@
 
 import Foundation
 
-struct LeaguesDetailsViewDataModel{
+struct LeaguesDetailsViewDataModel {
     var header: LeagueViewDataModel?
     var countOfTeams: Int?
     var models: [LeagueDetailsViewDataModel]
 }
-struct LeagueDetailsViewDataModel{
-    let id:Int?
-    let image:String?
-    let name:String?
-    let shortName:String?
-    let colors:[String]
-    let link:String?
-    let stadium:String?
-    let address:String?
-    let foundation:String?
+struct LeagueDetailsViewDataModel {
+    let id: Int?
+    let image: String?
+    let name: String?
+    let shortName: String?
+    let colors: [String]
+    let link: String?
+    let stadium: String?
+    let address: String?
+    let foundation: String?
 }

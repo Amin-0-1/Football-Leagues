@@ -7,8 +7,8 @@
 
 import Foundation
 
-class FakeJsonDecoder{
-    func getModelFrom<T:Decodable>(jsonFile name:String,fileType:String = "json",decodeType:T.Type)->T?{
+class FakeJsonDecoder {
+    func getModelFrom<T: Decodable>(jsonFile name: String, fileType: String = "json", decodeType: T.Type) -> T? {
         guard let path = Bundle(for: type(of: self)).path(forResource: name, ofType: fileType)
         else {return nil}
         
@@ -22,6 +22,4 @@ class FakeJsonDecoder{
             return nil
         }
     }
-        
-    
 }

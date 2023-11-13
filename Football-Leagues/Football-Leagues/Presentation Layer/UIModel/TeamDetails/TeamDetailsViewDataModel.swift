@@ -7,22 +7,22 @@
 
 import Foundation
 
-struct TeamDetailsViewDataModel{
+struct TeamDetailsViewDataModel {
     let date: String?
     let status: TeamViewStatus?
-    let homeTeam,awayTeam: TeamViewDataModel?
-    let winner:TeamViewWinner?
-    let score:TeamViewScore?
+    let homeTeam, awayTeam: TeamViewDataModel?
+    let winner: TeamViewWinner?
+    let score: TeamViewScore?
     
 }
 struct TeamViewDataModel: Codable {
     let shortName, tla: String?
     let crest: String?
-    let clubColors:String?
+    let clubColors: String?
 }
-struct TeamViewScore{
-    let home:Int?
-    let away:Int?
+struct TeamViewScore {
+    let home: Int?
+    let away: Int?
 }
 
 enum TeamViewStatus: String, Codable {
@@ -30,7 +30,7 @@ enum TeamViewStatus: String, Codable {
     case scheduled = "SCHEDULED"
     case timed = "TIMED"
 }
-enum TeamViewWinner:String{
+enum TeamViewWinner: String {
     case away = "AWAY_TEAM"
     case draw = "DRAW"
     case home = "HOME_TEAM"

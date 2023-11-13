@@ -26,6 +26,15 @@
         "revision" : "950167445ab703740569869c8b7510efc9d09a26",
         "version" : "1.7.0"
       }
+    },
+    {
+      "identity" : "swiftlintplugin",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/lukepistrol/SwiftLintPlugin",
+      "state" : {
+        "revision" : "ea6d3ca895b49910f790e98e4b4ca658e0fe490e",
+        "version" : "0.54.0"
+      }
     }
   ],
   "version" : 2

@@ -9,20 +9,18 @@ import Foundation
 import CoreData
 import Combine
 
-
-protocol CoreDataManagerProtocol{
-    func insert<T:Codable>(data:T,localEndPoint:LocalEndPoint)->Future<T,Error>
-    func fetch<T:Codable>(localEndPoint:LocalEndPoint)-> Future<T,Error>
+protocol CoreDataManagerProtocol {
+    func insert<T: Codable>(data: T, localEndPoint: LocalEndPoint) -> Future<T, Error>
+    func fetch<T: Codable>(localEndPoint: LocalEndPoint) -> Future<T, Error>
 }
 
-
-extension CoreDataManager:CoreDataManagerProtocol{
+extension CoreDataManager: CoreDataManagerProtocol {
     
-    func insert<T:Codable>(data: T, localEndPoint: LocalEndPoint)-> Future<T,Error> {
+    func insert<T: Codable>(data: T, localEndPoint: LocalEndPoint) -> Future<T, Error> {
         
         return Future<T, Error> { promise in
             self.performBackgroundTask { context in
-                var encodedData:Data?
+                var encodedData: Data?
                 self.truncate(entity: localEndPoint, context: context)
                 switch localEndPoint {
                     case .leagues:
@@ -63,84 +61,91 @@ extension CoreDataManager:CoreDataManagerProtocol{
         }
     }
     
-    private func generateRequest(from localEntity:LocalEndPoint) -> NSFetchRequest<NSFetchRequestResult>{
+    private func generateRequest(from localEntity: LocalEndPoint) -> NSFetchRequest<NSFetchRequestResult> {
         let request: NSFetchRequest<NSFetchRequestResult>
         switch localEntity {
-            case .leagues: 
+            case .leagues:
                 request = LeagueEntity.fetchRequest()
             case .teams(let code):
                 request = LeagueDetailsEntity.fetchRequest()
                 let attribute = "code"
-                let predicate = NSPredicate(format: "%K == %@",attribute,code)
+                let predicate = NSPredicate(format: "%K == %@", attribute, code)
                 request.predicate = predicate
                 
             case .games(let id):
                 request = GamesEntity.fetchRequest()
                 let attribute = "id"
-                let predicate = NSPredicate(format: "%K == %ld",attribute,id)
+                let predicate = NSPredicate(format: "%K == %ld", attribute, id)
                 request.predicate = predicate
-                
         }
         return request
     }
+    
+    private func decode<T: Codable>(result: NSFetchRequestResult, withType type: T.Type, withEndPoint localEndPoint: LocalEndPoint) throws -> T {
+        switch localEndPoint {
+            case .leagues:
+                guard let leagueEntity = result as? LeagueEntity else {
+                    throw Errors.uncompleted
+                }
+                guard let data = leagueEntity.data else {
+                    throw Errors.decodingFailed
+                }
+                guard let decode = try? JSONDecoder().decode(type, from: data) else {
+                    throw Errors.decodingFailed
+                }
+                return decode
+            case .teams:
+                guard let detailsEntity = result as? LeagueDetailsEntity else {
+                    throw Errors.uncompleted
+                }
+                guard let data = detailsEntity.data else {
+                    throw Errors.decodingFailed
+                }
+                guard let decode = try? JSONDecoder().decode(type, from: data) else {
+                    throw Errors.decodingFailed
+                }
+                return decode
+            case .games:
+                guard let gamesEntity = result as? GamesEntity else {
+                    throw Errors.uncompleted
+                }
+                guard let data = gamesEntity.data else {
+                    throw Errors.decodingFailed
+                }
+                guard let decode = try? JSONDecoder().decode(type, from: data) else {
+                    throw Errors.decodingFailed
+                }
+                return decode
+        }
+    }
 
-    func fetch<T:Codable>(localEndPoint:LocalEndPoint)-> Future<T,Error>{
+    func fetch<T: Codable>(localEndPoint: LocalEndPoint) -> Future<T, Error> {
         let request = generateRequest(from: localEndPoint)
         var allData: [NSFetchRequestResult] = []
         
-        return Future<T, Error>{ promise in
-            do{
+        return Future<T, Error> { promise in
+            do {
                 
                 allData = try self.mainContext.fetch(request)
-                guard let first = allData.first else{
+                guard let result = allData.first else {
                     promise(.failure(Errors.empty))
                     return
                 }
-                
-                switch localEndPoint {
-                    case .leagues:
-                        guard let leagueEntity = first as? LeagueEntity else{
-                            promise(.failure(Errors.uncompleted))
-                            return
-                        }
-                        guard let data = leagueEntity.data else {promise(.failure(Errors.decodingFailed));return}
-                        guard let decode = try? JSONDecoder().decode(T.self, from: data) else{
-                            promise(.failure(Errors.decodingFailed))
-                            return
-                        }
-                        promise(.success(decode))
-                    case .teams:
-                        guard let detailsEntity = first as? LeagueDetailsEntity else{
-                            promise(.failure(Errors.uncompleted))
-                            return
-                        }
-                        guard let data = detailsEntity.data else {promise(.failure(Errors.decodingFailed));return}
-                        guard let decode = try? JSONDecoder().decode(T.self, from: data) else{
-                            promise(.failure(Errors.decodingFailed))
-                            return
-                        }
-                        promise(.success(decode))
-                    case .games:
-                        guard let gamesEntity = first as? GamesEntity else{
-                            promise(.failure(Errors.uncompleted))
-                            return
-                        }
-                        guard let data = gamesEntity.data else {promise(.failure(Errors.decodingFailed));return}
-                        guard let decode = try? JSONDecoder().decode(T.self, from: data) else{
-                            promise(.failure(Errors.decodingFailed))
-                            return
-                        }
-                        promise(.success(decode))
+                let decoded = try? self.decode(result: result, withType: T.self, withEndPoint: localEndPoint)
+                guard let decoded = decoded else {
+                    promise(.failure(Errors.decodingFailed))
+                    return
                 }
                 
-            }catch{
+                promise(.success(decoded))
+            } catch {
                 promise(.failure(error))
                 debugPrint(error.localizedDescription)
             }
         }
     }
     
-    private func truncate(entity:LocalEndPoint,context:NSManagedObjectContext){
+    private func truncate(entity: LocalEndPoint, context: NSManagedObjectContext) {
         var request: NSFetchRequest<NSFetchRequestResult>
         switch entity {
             case .leagues:
@@ -148,39 +153,38 @@ extension CoreDataManager:CoreDataManagerProtocol{
             case .teams(let code):
                 request = LeagueDetailsEntity.fetchRequest()
                 let attribute = "code"
-                let predicate = NSPredicate(format: "%K == %@",attribute,code)
+                let predicate = NSPredicate(format: "%K == %@", attribute, code)
                 request.predicate = predicate
             case .games(let id):
                 request = GamesEntity.fetchRequest()
                 let attribute = "id"
-                let predicate = NSPredicate(format: "%K == %ld",attribute,id)
+                let predicate = NSPredicate(format: "%K == %ld", attribute, id)
                 request.predicate = predicate
         }
-        do{
+        do {
             let allRecord = try context.fetch(request)
             allRecord.forEach { record in
-                if let record = record as? NSManagedObject{
+                if let record = record as? NSManagedObject {
                     context.delete(record)
                 }
             }
             try context.save()
-        }catch{
+        } catch {
             debugPrint(error)
         }
     }
 }
 
+extension CoreDataManager {
 
-extension CoreDataManager{
-
-    enum Errors: Error{
+    enum Errors: Error {
         case empty
         case uncompleted
         case decodingFailed
         case encodingFailed
         case custom(String)
-        var localizedDescription:String{
-            switch self{
+        var localizedDescription: String {
+            switch self {
                 case .empty:
                     return "no local data found"
                 case .uncompleted:
@@ -195,4 +199,3 @@ extension CoreDataManager{
         }
     }
 }
-

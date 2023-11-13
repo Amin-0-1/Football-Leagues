@@ -24,23 +24,18 @@ class GameCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        uiImagesLayer.forEach{$0.layer.cornerRadius = $0.layer.frame.height / 2}
+        uiImagesLayer.forEach { $0.layer.cornerRadius = $0.layer.frame.height / 2 }
         uiAwayTeamScor.layer.cornerRadius = 8
         uiHomeTeamScore.layer.cornerRadius = 8
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-    }
     
-    func configure(model:TeamDetailsViewDataModel){
+    func configure(model: TeamDetailsViewDataModel) {
         let defaultImage = #imageLiteral(resourceName: "logo")
-        if let homeImage = model.homeTeam?.crest, let homeImageUrl = URL(string: homeImage){
-            self.uiHomeImage.sd_setImage(with:homeImageUrl,placeholderImage: defaultImage)
+        if let homeImage = model.homeTeam?.crest, let homeImageUrl = URL(string: homeImage) {
+            self.uiHomeImage.sd_setImage(with: homeImageUrl, placeholderImage: defaultImage)
         }
-        if let awayImage = model.awayTeam?.crest, let awayImageUrl = URL(string: awayImage){
-            self.uiAwayImage.sd_setImage(with: awayImageUrl,placeholderImage: defaultImage)
+        if let awayImage = model.awayTeam?.crest, let awayImageUrl = URL(string: awayImage) {
+            self.uiAwayImage.sd_setImage(with: awayImageUrl, placeholderImage: defaultImage)
         }
         uiHomeName.text = model.homeTeam?.tla
         uiAwayName.text = model.awayTeam?.tla
@@ -50,17 +45,17 @@ class GameCell: UITableViewCell {
         uiStatus.text = model.status?.rawValue
         uiDate.text = model.date
         
-        switch model.status{
+        switch model.status {
             case .finished:
                 uiResultStack.isHidden = false
-            case .timed,.scheduled:
+            case .timed, .scheduled:
                 uiResultStack.isHidden = true
             case .none:
                 break
         }
         
         guard let winner = model.winner else {return}
-        switch winner{
+        switch winner {
             case .home:
                 uiHomeTeamScore.backgroundColor = .systemGreen
                 uiAwayTeamScor.backgroundColor = .systemPink
@@ -71,7 +66,5 @@ class GameCell: UITableViewCell {
                 uiHomeTeamScore.backgroundColor = UIColor.customColor(.mainAuxilary2)
                 uiAwayTeamScor.backgroundColor = UIColor.customColor(.mainAuxilary2)
         }
-    
     }
-    
 }

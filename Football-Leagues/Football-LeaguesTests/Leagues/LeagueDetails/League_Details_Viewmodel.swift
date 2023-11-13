@@ -10,7 +10,7 @@ import Combine
 @testable import Football_Leagues
 final class League_Details_Viewmodel: XCTestCase {
 
-    var cancellables:Set<AnyCancellable> = []
+    var cancellables: Set<AnyCancellable> = []
 
     override func setUpWithError() throws {
     }
@@ -24,17 +24,22 @@ final class League_Details_Viewmodel: XCTestCase {
         let fakeCoordinator = FakeLeagueDetailsCoordinator()
         let fakeUsecase = FakeLeagueDetailUsecase(shouldFetch: true)
         let dummy = "PL"
-        let sut = LeagueDetailsViewModel(params: .init(coordinator: fakeCoordinator,
-                                                       code: dummy,usecase: fakeUsecase))
+        let sut = LeagueDetailsViewModel(
+            params: .init(
+                coordinator: fakeCoordinator,
+                code: dummy,
+                usecase: fakeUsecase
+            )
+        )
         // MARK: - When
         sut.onScreenAppeared.send(true)
 
         sut.teams.sink { completion in
-            switch completion{
+            switch completion {
                 case .finished:
                     exp.fulfill()
-                case .failure(_):
-                    XCTFail()
+                case .failure:
+                    XCTFail("failed")
             }
         } receiveValue: { model in
             XCTAssertEqual(model.models.count, fakeUsecase.teamCount)
@@ -46,14 +51,19 @@ final class League_Details_Viewmodel: XCTestCase {
         waitForExpectations(timeout: 2)
     }
     
-    func test_Should_Fail_FetchData() throws{
+    func test_Should_Fail_FetchData() throws {
         // MARK: - Given
         let exp = expectation(description: "wait for a callback")
         let fakeUsecase = FakeLeagueDetailUsecase(shouldFetch: false)
         let dummy = "PL"
         let fakeCoordinator = FakeLeagueDetailsCoordinator()
-        let sut = LeagueDetailsViewModel(params: .init(coordinator: fakeCoordinator,
-                                                       code: dummy,usecase: fakeUsecase))
+        let sut = LeagueDetailsViewModel(
+            params: .init(
+                coordinator: fakeCoordinator,
+                code: dummy,
+                usecase: fakeUsecase
+            )
+        )
         
         sut.showError.sink { error in
             // MARK: - Then
@@ -67,7 +77,7 @@ final class League_Details_Viewmodel: XCTestCase {
         waitForExpectations(timeout: 2)
     }
     
-    func test_navigateTo_WebView()throws{
+    func test_navigateTo_WebView()throws {
         // MARK: - Givent
         let exp = expectation(description: "wait for a callback")
         let fakeUsecase = FakeLeagueDetailUsecase(shouldFetch: true)
@@ -76,15 +86,20 @@ final class League_Details_Viewmodel: XCTestCase {
             // MARK: - then
             exp.fulfill()
         }
-        let sut = LeagueDetailsViewModel(params: .init(coordinator: fakeCoordinator,
-                                                       code: dummy,usecase: fakeUsecase))
+        let sut = LeagueDetailsViewModel(
+            params: .init(
+                coordinator: fakeCoordinator,
+                code: dummy,
+                usecase: fakeUsecase
+            )
+        )
         
         // MARK: - When
         fakeUsecase.fetchTeams(withData: dummy).sink { completion in
-            switch completion{
+            switch completion {
                 case .finished: break
-                case .failure(_):
-                    XCTFail()
+                case .failure:
+                    XCTFail("failed")
             }
         } receiveValue: { model in
             let mapped = fakeUsecase.prepareForFakePublish(model: model)
@@ -101,5 +116,4 @@ final class League_Details_Viewmodel: XCTestCase {
             // Put the code you want to measure the time of here.
         }
     }
-
 }

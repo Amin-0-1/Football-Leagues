@@ -73,7 +73,6 @@
 		27B330472AE541D800178E61 /* LeagueDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27B330452AE541D800178E61 /* LeagueDetailsViewController.xib */; };
 		27B330482AE541D800178E61 /* LeagueDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B330462AE541D800178E61 /* LeagueDetailsViewController.swift */; };
 		27B3304A2AE5484400178E61 /* TeamViewModelParam.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B330492AE5484400178E61 /* TeamViewModelParam.swift */; };
-		27B3304C2AE54DED00178E61 /* TeamDetailsDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B3304B2AE54DED00178E61 /* TeamDetailsDataModel.swift */; };
 		27B4B94E2AE461100099C1D0 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4B94D2AE461100099C1D0 /* UIColor.swift */; };
 		27B4B9512AE466100099C1D0 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4B9502AE466100099C1D0 /* WebViewController.swift */; };
 		27B4B9532AE466870099C1D0 /* WebViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4B9522AE466870099C1D0 /* WebViewCoordinator.swift */; };
@@ -185,7 +184,6 @@
 		27B330452AE541D800178E61 /* LeagueDetailsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LeagueDetailsViewController.xib; sourceTree = "<group>"; };
 		27B330462AE541D800178E61 /* LeagueDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeagueDetailsViewController.swift; sourceTree = "<group>"; };
 		27B330492AE5484400178E61 /* TeamViewModelParam.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamViewModelParam.swift; sourceTree = "<group>"; };
-		27B3304B2AE54DED00178E61 /* TeamDetailsDataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailsDataModel.swift; sourceTree = "<group>"; };
 		27B4B94D2AE461100099C1D0 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		27B4B9502AE466100099C1D0 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		27B4B9522AE466870099C1D0 /* WebViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewCoordinator.swift; sourceTree = "<group>"; };
@@ -483,7 +481,6 @@
 			children = (
 				271EC4302ADE8E0E0029B86C /* LeaguesDataModel.swift */,
 				2740B2792ADF557A00379194 /* LeagueDetailsDataModel.swift */,
-				27B3304B2AE54DED00178E61 /* TeamDetailsDataModel.swift */,
 				2740B27B2ADF569D00379194 /* TeamDataModel.swift */,
 			);
 			path = Codable;
@@ -931,6 +928,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 271EC3DF2ADDBB460029B86C /* Build configuration list for PBXNativeTarget "Football-Leagues" */;
 			buildPhases = (
+				2724902B2B001760002DC96E /* ShellScript */,
 				271EC3AE2ADDBB450029B86C /* Sources */,
 				271EC3AF2ADDBB450029B86C /* Frameworks */,
 				271EC3B02ADDBB450029B86C /* Resources */,
@@ -938,6 +936,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				2724902E2B0021AF002DC96E /* PBXTargetDependency */,
 			);
 			name = "Football-Leagues";
 			packageProductDependencies = (
@@ -1002,6 +1001,7 @@
 				2740B26F2ADF499D00379194 /* XCRemoteSwiftPackageReference "SDWebImage" */,
 				27CCD6272AE62ED800F3F24D /* XCRemoteSwiftPackageReference "lottie-ios" */,
 				272FEAD32AEB272100F65988 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */,
+				2724902C2B002175002DC96E /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */,
 			);
 			productRefGroup = 271EC3B32ADDBB450029B86C /* Products */;
 			projectDirPath = "";
@@ -1046,6 +1046,28 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		2724902B2B001760002DC96E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n#export PATH=\"$PATH:/opt/homebrew/bin\"\n#if which swiftlint > /dev/null; then\n#  swiftlint\n#else\n#  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\n#fi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		271EC3AE2ADDBB450029B86C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -1061,7 +1083,6 @@
 				271EC43C2ADE9B1A0029B86C /* LeaguesRepository.swift in Sources */,
 				27BC78EA2AE1602700480A44 /* CoreDataManager+.swift in Sources */,
 				275453C52AE350450005B310 /* LeaguesViewModelParams.swift in Sources */,
-				27B3304C2AE54DED00178E61 /* TeamDetailsDataModel.swift in Sources */,
 				271EC4242ADE02210029B86C /* LeaguesEndPoints.swift in Sources */,
 				27F436D12AE487C800C52601 /* TeamDetailsViewController.swift in Sources */,
 				27CCD6302AE6302400F3F24D /* LaunchScreenCoordinator.swift in Sources */,
@@ -1142,6 +1163,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		2724902E2B0021AF002DC96E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 2724902D2B0021AF002DC96E /* SwiftLint */;
+		};
 		27BCAB762AE259BB00A8A10F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 271EC3B12ADDBB450029B86C /* Football-Leagues */;
@@ -1277,6 +1302,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = B6A7UUWXVV;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Football-Leagues/Development.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1308,6 +1334,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = B6A7UUWXVV;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Football-Leagues/Production.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1403,6 +1430,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		2724902C2B002175002DC96E /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lukepistrol/SwiftLintPlugin";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.54.0;
+			};
+		};
 		272FEAD32AEB272100F65988 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImageSVGCoder.git";
@@ -1430,6 +1465,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2724902D2B0021AF002DC96E /* SwiftLint */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2724902C2B002175002DC96E /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
+			productName = "plugin:SwiftLint";
+		};
 		272FEAD42AEB272100F65988 /* SDWebImageSVGCoder */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 272FEAD32AEB272100F65988 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */;

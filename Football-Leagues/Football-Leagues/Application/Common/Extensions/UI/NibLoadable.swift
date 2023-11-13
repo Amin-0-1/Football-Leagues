@@ -17,4 +17,4 @@ extension NibLoadableView where Self: UIView {
     }
 }
 
-extension UIView: NibLoadableView{}
+extension UIView: NibLoadableView {}

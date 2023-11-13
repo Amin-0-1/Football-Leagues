@@ -7,8 +7,8 @@
 
 import Foundation
 
-enum LocalEndPoint{
+enum LocalEndPoint {
     case leagues
-    case teams(code:String)
-    case games(id:Int)
+    case teams(code: String)
+    case games(id: Int)
 }

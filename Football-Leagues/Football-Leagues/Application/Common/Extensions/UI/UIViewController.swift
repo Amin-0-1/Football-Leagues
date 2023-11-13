@@ -7,8 +7,8 @@
 
 import UIKit
 
-extension UIViewController{
-    var indicator:UIActivityIndicatorView{
+extension UIViewController {
+    var indicator: UIActivityIndicatorView {
         let indicator = ActivityIndicator.shared.set().build()
         DispatchQueue.main.async {
             self.view.addSubview(indicator)
@@ -17,7 +17,7 @@ extension UIViewController{
         return indicator
     }
     
-    func showProgress(){
+    func showProgress() {
         DispatchQueue.main.async {
             self.indicator.startAnimating()
             self.indicator.isHidden = false
@@ -25,7 +25,7 @@ extension UIViewController{
         }
     }
     
-    func hideProgress(){
+    func hideProgress() {
         DispatchQueue.main.async {
             self.indicator.stopAnimating()
             self.indicator.isHidden = true
@@ -33,14 +33,14 @@ extension UIViewController{
         }
     }
     
-    func showError(message:String,completion:@escaping()->Void = {}){
+    func showError(message: String, completion: @escaping() -> Void = {}) {
         DispatchQueue.main.async {
-            let controller = UIAlertController(title: "Opps!!", message: message , preferredStyle: .alert)
-            controller.addAction(.init(title: "OK", style: .default,handler: { _ in
+            let controller = UIAlertController(title: "Opps!!", message: message, preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default) { _ in
                 completion()
-            }))
+            }
+            controller.addAction(okAction)
             self.present(controller, animated: true)
         }
     }
 }
-

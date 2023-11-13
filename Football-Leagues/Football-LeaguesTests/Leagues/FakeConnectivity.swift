@@ -6,9 +6,9 @@
 //
 
 import Foundation
-@testable import Football_Leagues
-class FakeConnectivity:ConnectivityProtocol{
-    var connected:Bool
+import Football_Leagues
+class FakeConnectivity: ConnectivityProtocol {
+    var connected: Bool
     init(connected: Bool) {
         self.connected = connected
     }

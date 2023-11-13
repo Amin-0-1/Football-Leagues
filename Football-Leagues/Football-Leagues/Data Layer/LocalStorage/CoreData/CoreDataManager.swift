@@ -9,12 +9,11 @@ import Foundation
 import CoreData
 import Combine
 
-
 class CoreDataManager {
     
-    private static let shared:CoreDataManager = CoreDataManager()
+    private static let shared = CoreDataManager()
     private static var model: String?
-    private var store:StoreType?
+    private var store: StoreType?
     private static var isRunningTests: Bool {
         return ProcessInfo.processInfo.arguments.contains("TESTING")
     }
@@ -24,7 +23,7 @@ class CoreDataManager {
         _ = persistentContainer
     }
     
-    static func configure(model:String,store:CoreDataManager.StoreType)-> CoreDataManager {
+    static func configure(model: String, store: CoreDataManager.StoreType) -> CoreDataManager {
         self.model = model
         return shared
     }
@@ -68,8 +67,8 @@ class CoreDataManager {
 }
 
 // MARK: - StoreType
-extension CoreDataManager{
-    enum StoreType{
+extension CoreDataManager {
+    enum StoreType {
         case memory
         case sqlite
     }

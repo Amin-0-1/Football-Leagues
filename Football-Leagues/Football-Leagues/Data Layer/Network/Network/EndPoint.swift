@@ -39,9 +39,9 @@ extension EndPoint {
         urlRequest.allHTTPHeaderFields = header
         
         if let parameters = parameters {
-            do{
+            do {
                 try encoding.encode(urlRequest: &urlRequest, with: parameters)
-            }catch{
+            } catch {
                 print(error)
                 return nil
             }

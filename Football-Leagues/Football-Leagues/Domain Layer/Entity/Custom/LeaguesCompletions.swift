@@ -7,12 +7,13 @@
 
 import Foundation
 
-typealias leaguesCompletion = (Result<LeagueDataModel,CustomDomainError>)->Void
-typealias seasonsCompletion = (Result<SeasonDataModel,CustomDomainError>)->Void
-typealias teamsCompletion = (Result<TeamsDataModel,CustomDomainError>)->Void
-typealias matchesCompletion = (Result<MatchesDataModel,CustomDomainError>)->Void
-typealias completion = ()->Void
-struct LeaguesCompletions{
+typealias LeaguesCompletion = (Result<LeagueDataModel, CustomDomainError>) -> Void
+typealias SeasonsCompletion = (Result<SeasonDataModel, CustomDomainError>) -> Void
+typealias SeamsCompletion = (Result<TeamsDataModel, CustomDomainError>) -> Void
+typealias MatchesCompletion = (Result<MatchesDataModel, CustomDomainError>) -> Void
+typealias Completion = () -> Void
+
+struct LeaguesCompletions {
     let leaguesCompletion: leaguesCompletion
     let seasonsCompletion: seasonsCompletion
     let teamsCompletion: teamsCompletion

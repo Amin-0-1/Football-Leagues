@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>server_url</key>
-	<string>${server_url}</string>
+	<string>$ {server_url}</string>
 	<key>protocol</key>
 	<string>${protocol}</string>
 	<key>NSAppTransportSecurity</key>

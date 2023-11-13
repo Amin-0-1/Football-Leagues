@@ -7,11 +7,10 @@
 
 import XCTest
 import Combine
-@testable import Football_Leagues
+import Football_Leagues
 final class Leagues_viewmodel: XCTestCase {
     
-    
-    var cancellables:Set<AnyCancellable> = []
+    var cancellables: Set<AnyCancellable> = []
     
     override func setUpWithError() throws {
     }
@@ -30,10 +29,10 @@ final class Leagues_viewmodel: XCTestCase {
         
         // MARK: - Then
         sutViewModel.leagues.sink { completion in
-            switch completion{
-                case .finished : break
-                case .failure(_):
-                    XCTFail()
+            switch completion {
+                case .finished: break
+                case .failure:
+                    XCTFail("failed")
                     exp.fulfill()
             }
         } receiveValue: { data in
@@ -45,7 +44,7 @@ final class Leagues_viewmodel: XCTestCase {
         waitForExpectations(timeout: 2)
     }
     
-    func test_Should_Fail_FetchData() throws{
+    func test_Should_Fail_FetchData() throws {
         // MARK: - Given
         let exp = expectation(description: "wait for response")
         let fakeUsecase = FakeLeaguesUsecase(shouldFail: true)
@@ -66,7 +65,7 @@ final class Leagues_viewmodel: XCTestCase {
         waitForExpectations(timeout: 2)
     }
     
-    func test_Should_Success_NavigateTo_LeagueDetails(){
+    func test_Should_Success_NavigateTo_LeagueDetails() {
         // MARK: - Given
         let exp = expectation(description: "wait for response")
         let fakeUsecase = FakeLeaguesUsecase(shouldFail: false)
@@ -75,13 +74,12 @@ final class Leagues_viewmodel: XCTestCase {
         }
         let sut = LeaguesViewModel(coordinator: fakeCoordinator)
         
-        
         // MARK: - When
         fakeUsecase.fetchLeagues().sink { completion in
-            switch completion{
+            switch completion {
                 case .finished: break
-                case .failure(_):
-                    XCTFail()
+                case .failure:
+                    XCTFail("failed")
             }
         } receiveValue: { model in
             let mapped = fakeUsecase.prepareForFakePublish(model: model)

@@ -7,47 +7,43 @@
 
 import Foundation
 public enum PlistKey {
-    case ServerURL
-    case TimeoutInterval
-    case ConnectionProtocol
+    case serverURL
+    case timeoutInterval
+    case connectionProtocol
     
-    var value:String{
+    var value: String {
         switch self {
-            case .ServerURL:
+            case .serverURL:
                 return "server_url"
-            case .TimeoutInterval:
+            case .timeoutInterval:
                 return "timeout_interval"
-            case .ConnectionProtocol:
+            case .connectionProtocol:
                 return "protocol"
         }
     }
-
 }
 public struct Environment {
-    
-    fileprivate var infoDict: [String: Any]  {
-        get {
-            if let dict = Bundle.main.infoDictionary {
-                return dict
-            }else {
-                fatalError("Plist file not found")
-            }
+    private var infoDict: [String: Any] {
+        if let dict = Bundle.main.infoDictionary {
+            return dict
+        } else {
+            fatalError("Plist file not found")
         }
     }
     public func get(_ key: PlistKey) -> String {
         switch key {
-            case .ServerURL:
-                guard let baseUrl = infoDict[PlistKey.ServerURL.value] as? String else {
+            case .serverURL:
+                guard let baseUrl = infoDict[PlistKey.serverURL.value] as? String else {
                     fatalError("Unable to get environment data with key \(key)")
                 }
                 return baseUrl
-            case .TimeoutInterval:
-                guard let timeout = infoDict[PlistKey.TimeoutInterval.value] as? String else {
+            case .timeoutInterval:
+                guard let timeout = infoDict[PlistKey.timeoutInterval.value] as? String else {
                     fatalError("Unable to get environment data with key \(key)")
                 }
                 return timeout
-            case .ConnectionProtocol:
-                guard let urlProtocol = infoDict[PlistKey.ConnectionProtocol.value] as? String else{
+            case .connectionProtocol:
+                guard let urlProtocol = infoDict[PlistKey.connectionProtocol.value] as? String else {
                     fatalError("Unable to get environment data with key \(key)")
                 }
                 return urlProtocol

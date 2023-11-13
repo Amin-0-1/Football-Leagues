@@ -7,14 +7,14 @@
 
 import Foundation
 
-enum CustomDomainError{
+enum CustomDomainError {
     case connectionError
     case serverError
     case customError(String)
 }
 
-extension CustomDomainError:Error{
-    var localizedDescription: String{
+extension CustomDomainError: Error {
+    var localizedDescription: String {
         switch self {
             case .serverError:
                 return "Server Error"

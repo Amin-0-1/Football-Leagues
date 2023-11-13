@@ -8,9 +8,9 @@
 import XCTest
 
 import Combine
-@testable import Football_Leagues
+import Football_Leagues
 final class Legues_usecase: XCTestCase {
-    var cancellables:Set<AnyCancellable> = []
+    var cancellables: Set<AnyCancellable> = []
     
     override func setUpWithError() throws {
         
@@ -27,7 +27,7 @@ final class Legues_usecase: XCTestCase {
 
         // MARK: - When
         sut.fetchLeagues().sink { completion in
-            switch completion{
+            switch completion {
                 case .finished: break
                 case .failure(let error):
                     XCTFail(error.localizedDescription)
@@ -41,21 +41,22 @@ final class Legues_usecase: XCTestCase {
             
         }.store(in: &self.cancellables)
 
-
         waitForExpectations(timeout: 2)
     }
-
 
     func test_Should_Success_Fetch_Remote_Leagues() throws {
         // MARK: - Given
         let exp = expectation(description: "wait for response")
         let fakeRepo = FakeLeaguesRepository(shouldFailRemote: false)
         let connectivity = FakeConnectivity(connected: true)
-        let sut = LeaguesUsecase(leaguesRepo: fakeRepo,connectivity: connectivity)
+        let sut = LeaguesUsecase(
+            leaguesRepo: fakeRepo,
+            connectivity: connectivity
+        )
 
         // MARK: - When
         sut.fetchLeagues().sink { completion in
-            switch completion{
+            switch completion {
                 case .finished: break
                 case .failure(let error):
                     XCTFail(error.localizedDescription)
@@ -67,32 +68,31 @@ final class Legues_usecase: XCTestCase {
             exp.fulfill()
         }.store(in: &self.cancellables)
 
-
         waitForExpectations(timeout: 2)
     }
-
-
 
     func test_Should_Fail_Fetch_Local_Leagues_WithInternet() throws {
         // MARK: - Given
         let exp = expectation(description: "wait for response")
         let fakeRepo = FakeLeaguesRepository(shouldFailLocal: true)
         let connectivity = FakeConnectivity(connected: true)
-        let sut = LeaguesUsecase(leaguesRepo: fakeRepo,connectivity: connectivity)
+        let sut = LeaguesUsecase(
+            leaguesRepo: fakeRepo,
+            connectivity: connectivity
+        )
 
         // MARK: - When
         sut.fetchLeagues().sink { completion in
-            switch completion{
+            switch completion {
                 case .finished: break
                 case .failure(let error):
                     XCTFail(error.localizedDescription)
                     exp.fulfill()
             }
-        } receiveValue: {  model in
+        } receiveValue: { _ in
             XCTAssertFalse(fakeRepo.isLocalSuccessVisited)
             exp.fulfill()
         }.store(in: &self.cancellables)
-
 
         waitForExpectations(timeout: 2)
     }
@@ -102,23 +102,25 @@ final class Legues_usecase: XCTestCase {
         let exp = expectation(description: "wait for response")
         let fakeRepo = FakeLeaguesRepository(shouldFailLocal: true)
         let connectivity = FakeConnectivity(connected: false)
-        let sut = LeaguesUsecase(leaguesRepo: fakeRepo,connectivity: connectivity)
+        let sut = LeaguesUsecase(
+            leaguesRepo: fakeRepo,
+            connectivity: connectivity
+        )
         
         // MARK: - When
         sut.fetchLeagues().sink { completion in
-            switch completion{
+            switch completion {
                 case .finished: break
-                case .failure(_):
+                case .failure:
                     XCTAssertTrue(true)
                     exp.fulfill()
             }
-        } receiveValue: {  model in
-            XCTFail()
+        } receiveValue: { _ in
+            XCTFail("failed")
             exp.fulfill()
         }.store(in: &self.cancellables)
         waitForExpectations(timeout: 2)
     }
-
 
     func test_Should_Fail_Fetch_Remote_Leagues() throws {
         // MARK: - Given
@@ -126,37 +128,42 @@ final class Legues_usecase: XCTestCase {
         // either shouldFailRemote or connected is equal to
         let fakeRepo = FakeLeaguesRepository(shouldFailRemote: false)
         let fakeConnectivity = FakeConnectivity(connected: false)
-        let sut = LeaguesUsecase(leaguesRepo: fakeRepo,connectivity: fakeConnectivity)
-
+        let sut = LeaguesUsecase(
+            leaguesRepo: fakeRepo,
+            connectivity: fakeConnectivity
+        )
         // MARK: - When
         sut.fetchLeagues().sink { completion in
-            switch completion{
+            switch completion {
                 case .finished: break
                 case .failure(let error):
                     XCTFail(error.localizedDescription)
                     exp.fulfill()
             }
-        } receiveValue: { model in
+        } receiveValue: { _ in
             XCTAssertTrue(!fakeRepo.isRemoteSuccessVisited)
             exp.fulfill()
         }.store(in: &self.cancellables)
 
-
         waitForExpectations(timeout: 2)
     }
 
-
-
-    func test_should_fail_fetch_Local_Leagues_But_Success_Remote() throws{
+    func test_should_fail_fetch_Local_Leagues_But_Success_Remote() throws {
         // MARK: - Given
         let exp = expectation(description: "wait for response")
-        let fakeRepo = FakeLeaguesRepository(shouldFailLocal: true,shouldFailRemote: false)
+        let fakeRepo = FakeLeaguesRepository(
+            shouldFailLocal: true,
+            shouldFailRemote: false
+        )
         let connectivity = FakeConnectivity(connected: true)
-        let sut = LeaguesUsecase(leaguesRepo: fakeRepo,connectivity: connectivity)
+        let sut = LeaguesUsecase(
+            leaguesRepo: fakeRepo,
+            connectivity: connectivity
+        )
 
         // MARK: - When
         sut.fetchLeagues().sink { completion in
-            switch completion{
+            switch completion {
                 case .finished: break
                 case .failure(let error):
                     XCTFail(error.localizedDescription)
@@ -170,26 +177,31 @@ final class Legues_usecase: XCTestCase {
             exp.fulfill()
         }.store(in: &self.cancellables)
 
-
         waitForExpectations(timeout: 2)
     }
 
-    func test_Should_Success_Save_League()throws{
+    func test_Should_Success_Save_League()throws {
         // MARK: - Given
         let exp = expectation(description: "wait for response")
-        let fakeRepo = FakeLeaguesRepository(shouldFailRemote: false,shouldFailSave: false)
+        let fakeRepo = FakeLeaguesRepository(
+            shouldFailRemote: false,
+            shouldFailSave: false
+        )
         let connectivity = FakeConnectivity(connected: true)
-        let sut = LeaguesUsecase(leaguesRepo: fakeRepo,connectivity: connectivity)
+        let sut = LeaguesUsecase(
+            leaguesRepo: fakeRepo,
+            connectivity: connectivity
+        )
 
         // note that saving after remote fetch succeeded in usecase
         sut.fetchLeagues().sink { completion in
-            switch completion{
+            switch completion {
                 case .finished: break
                 case .failure(let erro):
                     XCTFail(erro.localizedDescription)
                     exp.fulfill()
             }
-        } receiveValue: { model in
+        } receiveValue: { _ in
             // MARK: - Then
             XCTAssertTrue(fakeRepo.isRemoteSuccessVisited)
             XCTAssertTrue(fakeRepo.isSavedVisited)
@@ -200,22 +212,25 @@ final class Legues_usecase: XCTestCase {
         waitForExpectations(timeout: 2)
     }
 
-    func test_Should_Fail_Save_League() throws{
+    func test_Should_Fail_Save_League() throws {
         // MARK: - Given
         let exp = expectation(description: "wait for response")
         let fakeRepo = FakeLeaguesRepository(shouldFailRemote: false)
         let connectivity = FakeConnectivity(connected: false)
-        let sut = LeaguesUsecase(leaguesRepo: fakeRepo,connectivity: connectivity)
+        let sut = LeaguesUsecase(
+            leaguesRepo: fakeRepo,
+            connectivity: connectivity
+        )
 
         // note that saving after remote fetch succeeded in usecase
         sut.fetchLeagues().sink { completion in
-            switch completion{
+            switch completion {
                 case .finished: break
                 case .failure(let erro):
                     XCTFail(erro.localizedDescription)
                     exp.fulfill()
             }
-        } receiveValue: { model in
+        } receiveValue: { _ in
             // MARK: - Then
             XCTAssertFalse(fakeRepo.isRemoteSuccessVisited)
             XCTAssertFalse(fakeRepo.isSavedVisited)

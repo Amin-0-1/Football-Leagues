@@ -7,11 +7,15 @@
 
 import Foundation
 
-struct LeaguesViewModelParams{
+struct LeaguesViewModelParams {
     let usecase: LeagueDetailsUsecaseProtocol
     let coordinator: LeagueDetailsCoordinatorProtocol
-    let code:String
-    init(coordinator: LeagueDetailsCoordinatorProtocol, code: String,usecase:LeagueDetailsUsecaseProtocol = LeagueDetailsUsecase()) {
+    let code: String
+    init(
+        coordinator: LeagueDetailsCoordinatorProtocol,
+        code: String,
+        usecase: LeagueDetailsUsecaseProtocol = LeagueDetailsUsecase()
+    ) {
         self.coordinator = coordinator
         self.code = code
         self.usecase = usecase

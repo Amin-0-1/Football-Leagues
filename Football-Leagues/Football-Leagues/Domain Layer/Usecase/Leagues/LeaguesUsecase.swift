@@ -8,43 +8,45 @@
 import Foundation
 import Combine
 
-protocol LeaguesUsecaseProtocol{
-    func fetchLeagues() -> Future<LeaguesDataModel,CustomDomainError>
+protocol LeaguesUsecaseProtocol {
+    func fetchLeagues() -> Future<LeaguesDataModel, CustomDomainError>
 }
 
-class LeaguesUsecase : LeaguesUsecaseProtocol{
+class LeaguesUsecase: LeaguesUsecaseProtocol {
     
-    private var leaguesRepo:LeaguesRepoInterface
-    private var connectivity:ConnectivityProtocol
-    private var cancellables:Set<AnyCancellable> = []
-    init(leaguesRepo: LeaguesRepoInterface = LeaguesReposiotory(),
-         connectivity:ConnectivityProtocol = ConnectivityService()) {
+    private var leaguesRepo: LeaguesRepoInterface
+    private var connectivity: ConnectivityProtocol
+    private var cancellables: Set<AnyCancellable> = []
+    init(
+        leaguesRepo: LeaguesRepoInterface = LeaguesReposiotory(),
+        connectivity: ConnectivityProtocol = ConnectivityService()
+    ) {
         self.leaguesRepo = leaguesRepo
         self.connectivity = connectivity
     }
     
     func fetchLeagues() -> Future<LeaguesDataModel, CustomDomainError> {
-        return .init{ [weak self] promise in
+        return .init { [weak self] promise in
             guard let self = self else {return}
 
             // MARK: - fetch local data
             self.leaguesRepo.fetchLocalLeagues(localEndPoint: .leagues).sink { completion in
-                switch completion{
+                switch completion {
                     case .finished: break
                     case .failure(let error):
                         self.connectivity.isConnected { hasInternet in
-                            if !hasInternet{
-                                if let networkError = error as? NetworkError{
+                            if !hasInternet {
+                                if let networkError = error as? NetworkError {
                                     let customError = CustomDomainError.customError(networkError.localizedDescription)
                                     promise(.failure(customError))
-                                }else if let coreDataError = error as? CoreDataManager.Errors{
+                                } else if let coreDataError = error as? CoreDataManager.Errors {
                                     let customError = CustomDomainError.customError(coreDataError.localizedDescription)
                                     promise(.failure(customError))
                                 }
                                 promise(.failure(.customError(error.localizedDescription)))
-                            }else{
+                            } else {
                                 // MARK: - fetch remote data
-                                self.fetchRemoteLeagues(endPoint:LeaguesEndPoints.getAllLeagues) { result in
+                                self.fetchRemoteLeagues(endPoint: LeaguesEndPoints.getAllLeagues) { result in
                                     switch result {
                                         case .success(let success):
                                             promise(.success(success))
@@ -60,11 +62,11 @@ class LeaguesUsecase : LeaguesUsecaseProtocol{
                 promise(.success(model))
                 // get remote data to update local
                 self.connectivity.isConnected { hasInternet in
-                    if !hasInternet{
+                    if !hasInternet {
                         promise(.failure(.connectionError))
-                    }else{
+                    } else {
                         // MARK: - fetch remote data
-                        self.fetchRemoteLeagues(endPoint:LeaguesEndPoints.getAllLeagues) { result in
+                        self.fetchRemoteLeagues(endPoint: LeaguesEndPoints.getAllLeagues) { result in
                             switch result {
                                 case .success(let success):
                                     promise(.success(success))
@@ -78,17 +80,16 @@ class LeaguesUsecase : LeaguesUsecaseProtocol{
             }.store(in: &self.cancellables)
         }
         
-        
     }
-    private func fetchRemoteLeagues(endPoint:EndPoint,onFinish:@escaping (Result<LeaguesDataModel,CustomDomainError>)->Void){
+    private func fetchRemoteLeagues(endPoint: EndPoint, onFinish: @escaping (Result<LeaguesDataModel, CustomDomainError>) -> Void) {
         leaguesRepo.fetchRemoteLeagues(remoteEndPoint: endPoint).sink { completion in
-            switch completion{
+            switch completion {
                 case .finished: break
                 case .failure(let error):
-                    if let networkError = error as? NetworkError{
+                    if let networkError = error as? NetworkError {
                         let customError = CustomDomainError.customError(networkError.localizedDescription)
                         onFinish(.failure(customError))
-                    }else if let coreDataError = error as? CoreDataManager.Errors{
+                    } else if let coreDataError = error as? CoreDataManager.Errors {
                         let customError = CustomDomainError.customError(coreDataError.localizedDescription)
                         onFinish(.failure(customError))
                     }
@@ -101,9 +102,9 @@ class LeaguesUsecase : LeaguesUsecaseProtocol{
 
     }
     // MARK: - update local data
-    private func save(leagues:LeaguesDataModel,localEntityType:LocalEndPoint){
-        leaguesRepo.saveLeagues(leagues: leagues,localEndPoint: localEntityType).sink { completion in
-            switch completion{
+    private func save(leagues: LeaguesDataModel, localEntityType: LocalEndPoint) {
+        leaguesRepo.saveLeagues(leagues: leagues, localEndPoint: localEntityType).sink { completion in
+            switch completion {
                 case .finished: break
                 case .failure(let error):
                     print(error.localizedDescription)
@@ -114,4 +115,3 @@ class LeaguesUsecase : LeaguesUsecaseProtocol{
         
     }
 }
-

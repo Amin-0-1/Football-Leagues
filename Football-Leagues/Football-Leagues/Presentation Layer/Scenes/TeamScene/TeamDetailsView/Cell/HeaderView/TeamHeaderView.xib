@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22155" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22131"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -142,7 +141,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="252" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" image="pencil" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="7a1-ND-7Y2">
-                                                                    <rect key="frame" x="479.66666666666663" y="4.9999999999999973" width="17.333333333333314" height="15.333333333333339"/>
+                                                                    <rect key="frame" x="479.66666666666663" y="4.6666666666666652" width="17.333333333333314" height="15.333333333333336"/>
                                                                     <color key="tintColor" name="mainColor"/>
                                                                 </imageView>
                                                             </subviews>
@@ -184,7 +183,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="252" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" image="mappin.and.ellipse" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="YBP-Zy-qHa">
-                                                                    <rect key="frame" x="478.33333333333337" y="0.0" width="18.666666666666686" height="20.333333333333332"/>
+                                                                    <rect key="frame" x="478.33333333333337" y="-1.3333333333333357" width="18.666666666666686" height="21.666666666666668"/>
                                                                     <color key="tintColor" name="mainColor"/>
                                                                 </imageView>
                                                             </subviews>
@@ -266,7 +265,7 @@
         <image name="building.columns" catalog="system" width="128" height="112"/>
         <image name="cursorarrow.click.2" catalog="system" width="128" height="125"/>
         <image name="logo" width="626" height="626"/>
-        <image name="mappin.and.ellipse" catalog="system" width="117" height="128"/>
+        <image name="mappin.and.ellipse" catalog="system" width="110" height="128"/>
         <image name="pencil" catalog="system" width="128" height="113"/>
         <image name="stadium" width="108" height="108"/>
         <namedColor name="PurpleColor">
@@ -285,10 +284,10 @@
             <color red="0.090196078431372548" green="0.094117647058823528" blue="0.15686274509803921" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemPinkColor">
-            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="tintColor">
-            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
