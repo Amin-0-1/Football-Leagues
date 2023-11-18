@@ -13,13 +13,12 @@ class CoreDataManager {
     
     private static let shared = CoreDataManager()
     private static var model: String?
-    private var store: StoreType?
-    private static var isRunningTests: Bool {
+    private static var store: StoreType = isRunningTests ? .memory : .sqlite
+    private static var isRunningTests: Bool = {
         return ProcessInfo.processInfo.arguments.contains("TESTING")
-    }
+    }()
 
     private init() {
-        self.store = Self.isRunningTests ? .memory : .sqlite
         _ = persistentContainer
     }
     
@@ -46,11 +45,11 @@ class CoreDataManager {
     
     private lazy var persistentContainer: NSPersistentContainer = {
         guard let modelName = CoreDataManager.model else {
-            print("Core data model doesn't exits")
+            assertionFailure("Core data model doesn't exist")
             return .init()
         }
         let persistentContainer = NSPersistentContainer(name: modelName)
-        switch store {
+        switch Self.store {
             case .memory:
                 let description = NSPersistentStoreDescription()
                 description.type = NSInMemoryStoreType
@@ -59,7 +58,7 @@ class CoreDataManager {
         }
         persistentContainer.loadPersistentStores { _, error in
             if let error = error as NSError? {
-                fatalError("Failed to load store: \(error), \(error.userInfo)")
+                assertionFailure("Failed to load store: \(error), \(error.userInfo)")
             }
         }
         return persistentContainer

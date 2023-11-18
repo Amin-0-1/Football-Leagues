@@ -7,5 +7,7 @@
 
 // Configuration settings file format documentation can be found at: 
 // https: //help.apple.com/xcode/#/dev745c5c974
-server_url = api.football-data.org
-protocol = https
+SERVER_URL = api.football-data.org
+PROTOCOL = https
+LOCAL_DATA_MODEL = Football_Leagues
+TOKEN =  4860e6fcf225488f8a7988607a85c4da

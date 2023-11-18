@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "271EC3B12ADDBB450029B86C"
-               BuildableName = "Football-Leagues.app"
+               BuildableName = "Football Leagues.app"
                BlueprintName = "Football-Leagues"
                ReferencedContainer = "container:Football-Leagues.xcodeproj">
             </BuildableReference>
@@ -23,7 +23,7 @@
       </BuildActionEntries>
    </BuildAction>
    <TestAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Development (DEBUG)"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
@@ -54,7 +54,7 @@
       </Testables>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Development"
+      buildConfiguration = "Development (DEBUG)"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -68,14 +68,14 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "271EC3B12ADDBB450029B86C"
-            BuildableName = "Football-Leagues.app"
+            BuildableName = "Football Leagues.app"
             BlueprintName = "Football-Leagues"
             ReferencedContainer = "container:Football-Leagues.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Development (RELEASE) "
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
@@ -85,17 +85,17 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "271EC3B12ADDBB450029B86C"
-            BuildableName = "Football-Leagues.app"
+            BuildableName = "Football Leagues.app"
             BlueprintName = "Football-Leagues"
             ReferencedContainer = "container:Football-Leagues.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
-      buildConfiguration = "Debug">
+      buildConfiguration = "Development (DEBUG)">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Development (RELEASE) "
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

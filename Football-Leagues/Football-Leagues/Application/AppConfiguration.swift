@@ -9,16 +9,48 @@ import Foundation
 
 class AppConfiguration {
     static var shared = AppConfiguration()
-    private init() {}
+    var env: Environment
     
-    var baseUrl: String {
-        return Environment().get(.connectionProtocol) .appending(": //").appending( Environment().get(.serverURL) )
+    private init() {
+        env = Environment()
     }
-    let authToken = "4860e6fcf225488f8a7988607a85c4da"
     
-    let dataModel: String = "Football_Leagues"
+    lazy var baseUrl: String = {
+        do {
+            return try env
+                .get(.connectionProtocol)
+                .appending("://")
+                .appending( env.get(.serverURL) )
+        } catch {
+            printError(error)
+            return ""
+        }
+    }()
+    
+    lazy var authToken: String = {
+        do {
+            return try env.get(.token)
+        } catch {
+            printError(error)
+            return ""
+        }
+    }()
+    
+    lazy var dataModel: String = {
+        do {
+            return try env.get(.localDataModel)
+        } catch {
+            printError(error)
+            return ""
+        }
+    }()
     
     lazy var header: [String: String] = {
         return ["X-Auth-Token": authToken]
     }()
+    
+    private func printError(_ error: Error) {
+        let separator = "\n**********************\n"
+        print(separator, error, separator)
+    }
 }

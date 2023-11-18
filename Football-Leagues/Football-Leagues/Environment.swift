@@ -6,47 +6,59 @@
 //
 
 import Foundation
-public enum PlistKey {
-    case serverURL
-    case timeoutInterval
-    case connectionProtocol
+public struct Environment {
     
-    var value: String {
-        switch self {
-            case .serverURL:
-                return "server_url"
-            case .timeoutInterval:
-                return "timeout_interval"
-            case .connectionProtocol:
-                return "protocol"
+    private var infoDict: [String: Any]? {
+        guard let dict = Bundle.main.infoDictionary else {
+            return nil
         }
+        return dict
+    }
+    
+    public func get(_ key: EnvKey) throws -> String {
+        guard let infoDict = infoDict else {
+            throw EnvError.plistNotFound
+        }
+        guard let element = infoDict[key.value] as? String else {
+            throw EnvError.keyNotFound(key)
+        }
+        return element
     }
 }
-public struct Environment {
-    private var infoDict: [String: Any] {
-        if let dict = Bundle.main.infoDictionary {
-            return dict
-        } else {
-            fatalError("Plist file not found")
+
+extension Environment {
+    public enum EnvKey {
+        case serverURL
+        case token
+        case connectionProtocol
+        case localDataModel
+        
+        var value: String {
+            switch self {
+                case .serverURL:
+                    return "SERVER_URL"
+                case .connectionProtocol:
+                    return "PROTOCOL"
+                case .token:
+                    return "TOKEN"
+                case .localDataModel:
+                    return "LOCAL_DATA_MODEL"
+            }
         }
     }
-    public func get(_ key: PlistKey) -> String {
-        switch key {
-            case .serverURL:
-                guard let baseUrl = infoDict[PlistKey.serverURL.value] as? String else {
-                    fatalError("Unable to get environment data with key \(key)")
-                }
-                return baseUrl
-            case .timeoutInterval:
-                guard let timeout = infoDict[PlistKey.timeoutInterval.value] as? String else {
-                    fatalError("Unable to get environment data with key \(key)")
-                }
-                return timeout
-            case .connectionProtocol:
-                guard let urlProtocol = infoDict[PlistKey.connectionProtocol.value] as? String else {
-                    fatalError("Unable to get environment data with key \(key)")
-                }
-                return urlProtocol
+    
+    public enum EnvError: Error {
+        case keyNotFound(EnvKey)
+        case plistNotFound
+        
+        var localizedDescription: String {
+            switch self {
+                case .keyNotFound(let envKey):
+                    return "\(envKey.value) not found in the plist file"
+                case .plistNotFound:
+                    return "plist file is not exist"
+            }
         }
     }
+
 }
