@@ -26,9 +26,13 @@
 			</array>
 		</dict>
 	</dict>
-	<key>protocol</key>
-	<string>$ {protocol}</string>
-	<key>server_url</key>
-	<string>${server_url}</string>
+	<key>PROTOCOL</key>
+	<string>${PROTOCOL}</string>
+	<key>SERVER_URL</key>
+	<string>${SERVER_URL}</string>
+	<key>LOCAL_DATA_MODEL</key>
+	<string>$(LOCAL_DATA_MODEL)</string>
+	<key>TOKEN</key>
+	<string>$(TOKEN)</string>
 </dict>
 </plist>

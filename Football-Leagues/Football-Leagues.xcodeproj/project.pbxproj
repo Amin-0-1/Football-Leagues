@@ -119,7 +119,7 @@
 /* Begin PBXFileReference section */
 		270339812ADEB5F2009655E3 /* LeaguesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaguesViewController.swift; sourceTree = "<group>"; };
 		270339822ADEB5F2009655E3 /* LeaguesViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LeaguesViewController.xib; sourceTree = "<group>"; };
-		271EC3B22ADDBB450029B86C /* Football-Leagues.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Football-Leagues.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		271EC3B22ADDBB450029B86C /* Leagues-debug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Leagues-debug.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		271EC3B52ADDBB450029B86C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		271EC3B72ADDBB450029B86C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		271EC3BF2ADDBB450029B86C /* Football_Leagues.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Football_Leagues.xcdatamodel; sourceTree = "<group>"; };
@@ -197,8 +197,6 @@
 		27BCAB712AE259BB00A8A10F /* Football-LeaguesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Football-LeaguesTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27BEEEBB2AE1E3BE008F90CD /* LocalEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalEndPoint.swift; sourceTree = "<group>"; };
 		27C848DA2AED4F6D008315FA /* Development.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Development.xcconfig; sourceTree = "<group>"; };
-		27C848DB2AED4F76008315FA /* Production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Production.xcconfig; sourceTree = "<group>"; };
-		27C848DC2AED506E008315FA /* Production.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Production.plist; sourceTree = "<group>"; };
 		27CCD6172AE5FFB600F3F24D /* UIPaddingLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIPaddingLabel.swift; sourceTree = "<group>"; };
 		27CCD6202AE625C800F3F24D /* TeamsHeaderCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TeamsHeaderCell.xib; sourceTree = "<group>"; };
 		27CCD6222AE625DF00F3F24D /* TeamsHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamsHeaderCell.swift; sourceTree = "<group>"; };
@@ -253,7 +251,7 @@
 		271EC3B32ADDBB450029B86C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				271EC3B22ADDBB450029B86C /* Football-Leagues.app */,
+				271EC3B22ADDBB450029B86C /* Leagues-debug.app */,
 				27BCAB712AE259BB00A8A10F /* Football-LeaguesTests.xctest */,
 			);
 			name = Products;
@@ -266,13 +264,11 @@
 				271EC3EA2ADDBD9C0029B86C /* Data Layer */,
 				271EC3EB2ADDBDA10029B86C /* Domain Layer */,
 				271EC3EC2ADDBDA50029B86C /* Presentation Layer */,
-				271EC3C62ADDBB460029B86C /* Development.plist */,
-				27C848DC2AED506E008315FA /* Production.plist */,
 				271EC3C12ADDBB460029B86C /* Assets.xcassets */,
 				27CCD6252AE62E8C00F3F24D /* start.json */,
 				271EC3BE2ADDBB450029B86C /* Football_Leagues.xcdatamodeld */,
+				271EC3C62ADDBB460029B86C /* Development.plist */,
 				27C848DA2AED4F6D008315FA /* Development.xcconfig */,
-				27C848DB2AED4F76008315FA /* Production.xcconfig */,
 				27FA316F2AEEE26700CF64E7 /* Environment.swift */,
 			);
 			path = "Football-Leagues";
@@ -945,7 +941,7 @@
 				272FEAD42AEB272100F65988 /* SDWebImageSVGCoder */,
 			);
 			productName = "Football-Leagues";
-			productReference = 271EC3B22ADDBB450029B86C /* Football-Leagues.app */;
+			productReference = 271EC3B22ADDBB450029B86C /* Leagues-debug.app */;
 			productType = "com.apple.product-type.application";
 		};
 		27BCAB702AE259BB00A8A10F /* Football-LeaguesTests */ = {
@@ -1175,7 +1171,7 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		271EC3DD2ADDBB460029B86C /* Development */ = {
+		271EC3DD2ADDBB460029B86C /* Development (DEBUG) */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 27C848DA2AED4F6D008315FA /* Development.xcconfig */;
 			buildSettings = {
@@ -1227,19 +1223,20 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "Football-Leagues/Development.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.amin.Football-Leagues.debug";
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
-			name = Development;
+			name = "Development (DEBUG)";
 		};
-		271EC3DE2ADDBB460029B86C /* Production */ = {
+		271EC3DE2ADDBB460029B86C /* Development (RELEASE)  */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 27C848DB2AED4F76008315FA /* Production.xcconfig */;
+			baseConfigurationReference = 27C848DA2AED4F6D008315FA /* Development.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1283,17 +1280,19 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "Football-Leagues/Development.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.amin.Football-Leagues.release";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
-			name = Production;
+			name = "Development (RELEASE) ";
 		};
-		271EC3E02ADDBB460029B86C /* Development */ = {
+		271EC3E02ADDBB460029B86C /* Development (DEBUG) */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 27C848DA2AED4F6D008315FA /* Development.xcconfig */;
 			buildSettings = {
@@ -1318,16 +1317,17 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.amin.Football-Leagues";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Leagues-debug";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = Dev;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Development;
+			name = "Development (DEBUG)";
 		};
-		271EC3E12ADDBB460029B86C /* Production */ = {
+		271EC3E12ADDBB460029B86C /* Development (RELEASE)  */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 27C848DB2AED4F76008315FA /* Production.xcconfig */;
+			baseConfigurationReference = 27C848DA2AED4F6D008315FA /* Development.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1350,14 +1350,15 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.amin.Football-Leagues";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Football Leagues";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = Prod;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Production;
+			name = "Development (RELEASE) ";
 		};
-		27BCAB782AE259BB00A8A10F /* Development */ = {
+		27BCAB782AE259BB00A8A10F /* Development (DEBUG) */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 27C848DA2AED4F6D008315FA /* Development.xcconfig */;
 			buildSettings = {
@@ -1375,11 +1376,11 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Football-Leagues.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Football-Leagues";
 			};
-			name = Development;
+			name = "Development (DEBUG)";
 		};
-		27BCAB792AE259BB00A8A10F /* Production */ = {
+		27BCAB792AE259BB00A8A10F /* Development (RELEASE)  */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 27C848DB2AED4F76008315FA /* Production.xcconfig */;
+			baseConfigurationReference = 27C848DA2AED4F6D008315FA /* Development.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -1395,7 +1396,7 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Football-Leagues.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Football-Leagues";
 			};
-			name = Production;
+			name = "Development (RELEASE) ";
 		};
 /* End XCBuildConfiguration section */
 
@@ -1403,29 +1404,29 @@
 		271EC3AD2ADDBB450029B86C /* Build configuration list for PBXProject "Football-Leagues" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				271EC3DD2ADDBB460029B86C /* Development */,
-				271EC3DE2ADDBB460029B86C /* Production */,
+				271EC3DD2ADDBB460029B86C /* Development (DEBUG) */,
+				271EC3DE2ADDBB460029B86C /* Development (RELEASE)  */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Production;
+			defaultConfigurationName = "Development (RELEASE) ";
 		};
 		271EC3DF2ADDBB460029B86C /* Build configuration list for PBXNativeTarget "Football-Leagues" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				271EC3E02ADDBB460029B86C /* Development */,
-				271EC3E12ADDBB460029B86C /* Production */,
+				271EC3E02ADDBB460029B86C /* Development (DEBUG) */,
+				271EC3E12ADDBB460029B86C /* Development (RELEASE)  */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Production;
+			defaultConfigurationName = "Development (RELEASE) ";
 		};
 		27BCAB772AE259BB00A8A10F /* Build configuration list for PBXNativeTarget "Football-LeaguesTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				27BCAB782AE259BB00A8A10F /* Development */,
-				27BCAB792AE259BB00A8A10F /* Production */,
+				27BCAB782AE259BB00A8A10F /* Development (DEBUG) */,
+				27BCAB792AE259BB00A8A10F /* Development (RELEASE)  */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Production;
+			defaultConfigurationName = "Development (RELEASE) ";
 		};
 /* End XCConfigurationList section */
 

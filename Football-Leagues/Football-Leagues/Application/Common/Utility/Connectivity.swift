@@ -13,7 +13,7 @@ protocol ConnectivityProtocol {
 
 class ConnectivityService: ConnectivityProtocol {
     func isConnected(completion: @escaping (Bool) -> Void) {
-        guard let url = URL(string: "https: //www.google.com") else {
+        guard let url = URL(string: "https://www.google.com") else {
             DispatchQueue.main.async {
                 completion(false)
             }
