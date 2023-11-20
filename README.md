@@ -15,6 +15,7 @@ The Football Leagues Swift Application is a clean and scalable, reusable and mai
 - ```Swift, UIKit, Xib files.```
 - ```Combine for reactive programming.```
 - ```Core data for caching```
+- ```SwiftLint```
 
 ## Architecture
 
