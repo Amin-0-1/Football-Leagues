@@ -119,7 +119,7 @@
 /* Begin PBXFileReference section */
 		270339812ADEB5F2009655E3 /* LeaguesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaguesViewController.swift; sourceTree = "<group>"; };
 		270339822ADEB5F2009655E3 /* LeaguesViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LeaguesViewController.xib; sourceTree = "<group>"; };
-		271EC3B22ADDBB450029B86C /* Leagues-debug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Leagues-debug.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		271EC3B22ADDBB450029B86C /* Leagues.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Leagues.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		271EC3B52ADDBB450029B86C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		271EC3B72ADDBB450029B86C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		271EC3BF2ADDBB450029B86C /* Football_Leagues.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Football_Leagues.xcdatamodel; sourceTree = "<group>"; };
@@ -251,7 +251,7 @@
 		271EC3B32ADDBB450029B86C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				271EC3B22ADDBB450029B86C /* Leagues-debug.app */,
+				271EC3B22ADDBB450029B86C /* Leagues.app */,
 				27BCAB712AE259BB00A8A10F /* Football-LeaguesTests.xctest */,
 			);
 			name = Products;
@@ -941,7 +941,7 @@
 				272FEAD42AEB272100F65988 /* SDWebImageSVGCoder */,
 			);
 			productName = "Football-Leagues";
-			productReference = 271EC3B22ADDBB450029B86C /* Leagues-debug.app */;
+			productReference = 271EC3B22ADDBB450029B86C /* Leagues.app */;
 			productType = "com.apple.product-type.application";
 		};
 		27BCAB702AE259BB00A8A10F /* Football-LeaguesTests */ = {
@@ -1230,6 +1230,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.amin.Football-Leagues.debug";
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = "Development (DEBUG)";
@@ -1317,8 +1318,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.amin.Football-Leagues";
-				PRODUCT_NAME = "Leagues-debug";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = Dev;
+				PRODUCT_NAME = Leagues;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1351,7 +1351,6 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.amin.Football-Leagues";
 				PRODUCT_NAME = "Football Leagues";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = Prod;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

@@ -23,6 +23,10 @@ class LeagueHeaderView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
+        contentView.transform = .init(translationX: -self.contentView.frame.width, y: 0)
+        UIView.animate(withDuration: 0.5, delay: 0.5, usingSpringWithDamping: 0.5, initialSpringVelocity: 10) {
+            self.contentView.transform = .identity
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {

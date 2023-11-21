@@ -9,9 +9,9 @@ import Foundation
 
 extension String? {
     func convertUTCStringToDate(outputFormat: String = "d MMM yyyy", useCurrentLocal: Bool = false) -> String? {
-        guard let self = self, self.isEmpty else {return nil}
+        guard let self = self, !self.isEmpty else {return nil}
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH: mm: ss'Z'"
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = TimeZone(identifier: "UTC")
         
         if let utcDate = dateFormatter.date(from: self) {
