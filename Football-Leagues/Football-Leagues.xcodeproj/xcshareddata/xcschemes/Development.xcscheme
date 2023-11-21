@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "271EC3B12ADDBB450029B86C"
-               BuildableName = "Leagues-prod.app"
+               BuildableName = "Football Leagues.app"
                BlueprintName = "Football-Leagues"
                ReferencedContainer = "container:Football-Leagues.xcodeproj">
             </BuildableReference>
@@ -68,7 +68,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "271EC3B12ADDBB450029B86C"
-            BuildableName = "Leagues-prod.app"
+            BuildableName = "Football Leagues.app"
             BlueprintName = "Football-Leagues"
             ReferencedContainer = "container:Football-Leagues.xcodeproj">
          </BuildableReference>
@@ -85,7 +85,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "271EC3B12ADDBB450029B86C"
-            BuildableName = "Leagues-prod.app"
+            BuildableName = "Football Leagues.app"
             BlueprintName = "Football-Leagues"
             ReferencedContainer = "container:Football-Leagues.xcodeproj">
          </BuildableReference>

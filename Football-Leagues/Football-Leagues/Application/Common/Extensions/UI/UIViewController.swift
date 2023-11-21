@@ -8,6 +8,7 @@
 import UIKit
 
 extension UIViewController {
+    
     var indicator: UIActivityIndicatorView {
         let indicator = ActivityIndicator.shared.set().build()
         DispatchQueue.main.async {
@@ -17,6 +18,7 @@ extension UIViewController {
         return indicator
     }
     
+    /// show native activity indicator Progress and block the user interaction
     func showProgress() {
         DispatchQueue.main.async {
             self.indicator.startAnimating()
@@ -25,6 +27,7 @@ extension UIViewController {
         }
     }
     
+    /// hide the activity indicator and enable user interation
     func hideProgress() {
         DispatchQueue.main.async {
             self.indicator.stopAnimating()
@@ -33,6 +36,10 @@ extension UIViewController {
         }
     }
     
+    /// present native alert controller with specified message
+    /// - Parameters:
+    ///   - message: alert message to show in the alert
+    ///   - completion: completion block of code to be executed after dismissing the alert
     func showError(message: String, completion: @escaping() -> Void = {}) {
         DispatchQueue.main.async {
             let controller = UIAlertController(title: "Opps!!", message: message, preferredStyle: .alert)

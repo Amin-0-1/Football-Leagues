@@ -12,6 +12,7 @@ class UIPaddingLabel: UILabel {
     @IBInspectable var leftInset: CGFloat = 0.0
     @IBInspectable var bottomInset: CGFloat = 0.0
     @IBInspectable var rightInset: CGFloat = 0.0
+    @IBInspectable var masksToBounds: Bool = false
     
     override func drawText(in rect: CGRect) {
         let insets = UIEdgeInsets(top: topInset, left: leftInset, bottom: bottomInset, right: rightInset)
@@ -23,5 +24,12 @@ class UIPaddingLabel: UILabel {
         contentSize.height += topInset + bottomInset
         contentSize.width += leftInset + rightInset
         return contentSize
+    }
+    
+    override var bounds: CGRect {
+        didSet {
+            layer.masksToBounds = masksToBounds
+            preferredMaxLayoutWidth = bounds.width - (leftInset + rightInset)
+        }
     }
 }

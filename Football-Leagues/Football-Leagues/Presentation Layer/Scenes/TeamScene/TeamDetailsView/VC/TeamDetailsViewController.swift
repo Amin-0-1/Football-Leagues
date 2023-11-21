@@ -42,7 +42,8 @@ class TeamDetailsViewController: UIViewController {
         
         uiTableView.register(gameCellNib, forCellReuseIdentifier: GameCell.reuseIdentifier)
         uiTableView.register(gameHeaderCellNib, forHeaderFooterViewReuseIdentifier: GamesHeaderCell.reuseIdentifier)
-        
+        uiTableView.estimatedRowHeight = 100
+        uiTableView.rowHeight = UITableView.automaticDimension
         bind()
     }
     private func bind() {
