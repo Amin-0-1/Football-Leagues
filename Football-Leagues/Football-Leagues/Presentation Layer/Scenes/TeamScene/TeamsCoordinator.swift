@@ -9,6 +9,7 @@ import UIKit
 
 protocol GamesCoordinatorProtocol: AnyCoordinator {
     func navigate(to: URL)
+    func navigateToStaff(withID: Int)
 }
 struct TeamCoordinator: GamesCoordinatorProtocol {
     var navigationController: UINavigationController?
@@ -24,6 +25,10 @@ struct TeamCoordinator: GamesCoordinatorProtocol {
         let vc = WebViewController()
         let coordinator = WebViewCoordinator(navigationController: navigationController, data: url)
         vc.coordinator = coordinator
+        coordinator.start()
+    }
+    func navigateToStaff(withID id: Int) {
+        let coordinator = StaffCoordinator(navigationController: navigationController)
         coordinator.start()
     }
 }

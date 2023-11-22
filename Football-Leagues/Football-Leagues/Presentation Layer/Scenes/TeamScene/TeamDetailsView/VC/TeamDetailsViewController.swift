@@ -115,4 +115,7 @@ extension TeamDetailsViewController: LinkNavigationDelegate {
     func navigateTo(link: String?) {
         viewModl.onTapLink.send(link)
     }
+    func onStaffTapped() {
+        viewModl.onStaffTapped.send()
+    }
 }

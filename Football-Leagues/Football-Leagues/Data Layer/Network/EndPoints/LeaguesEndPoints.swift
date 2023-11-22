@@ -11,6 +11,7 @@ enum LeaguesEndPoints: CustomStringConvertible {
     case getAllLeagues
     case getTeams(code: String)
     case getGames(id: Int)
+    case getStaff(id: Int)
     
     var description: String {
         switch self {
@@ -20,6 +21,8 @@ enum LeaguesEndPoints: CustomStringConvertible {
                 return "/v4/competitions/\(code)/teams"
             case .getGames(let id):
                 return "/v4/teams/\(id)/matches"
+            case .getStaff(let id):
+                return "/v4/teams/\(id)"
         }
     }
     var code: String? {
@@ -30,6 +33,9 @@ enum LeaguesEndPoints: CustomStringConvertible {
                 return code
             case .getGames(let id):
                 return id.description
+            case .getStaff(let id):
+                return id.description
+                
         }
     }
 }
@@ -56,13 +62,14 @@ extension LeaguesEndPoints: EndPoint {
     }
     
     var encoding: Encoding {
-        switch self {
-            case .getAllLeagues:
-                return .JSONEncoding
-            case .getTeams:
-                return .URLEncoding
-            case .getGames:
-                return .URLEncoding
-        }
+        return .URLEncoding
+//        switch self {
+//            case .getAllLeagues:
+//                return .JSONEncoding
+//            case .getTeams:
+//                return .URLEncoding
+//            case .getGames:
+//                return .URLEncoding
+//        }
     }
 }

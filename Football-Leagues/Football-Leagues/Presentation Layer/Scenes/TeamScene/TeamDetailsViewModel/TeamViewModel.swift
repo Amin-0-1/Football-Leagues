@@ -12,6 +12,7 @@ protocol TeamViewModelProtocol {
     // MARK: - a view publish
     var onScreenAppeared: PassthroughSubject<Bool, Never> {get}
     var onTapLink: PassthroughSubject<String?, Never> {get}
+    var onStaffTapped: PassthroughSubject<Void, Never> {get}
     func getModel(index: Int) -> TeamDetailsViewDataModel
     // MARK: - subscribe
     var showError: AnyPublisher<String, Never> {get}
@@ -32,6 +33,7 @@ class TeamViewModel: TeamViewModelProtocol {
     // MARK: - a view can triger these
     var onScreenAppeared: PassthroughSubject<Bool, Never> = .init()
     var onTapLink: PassthroughSubject<String?, Never> = .init()
+    var onStaffTapped: PassthroughSubject<Void, Never> = .init()
     
     // MARK: - a view binds on these
     var leagueDetails: AnyPublisher<LeagueDetailsViewDataModel, Never>
@@ -84,6 +86,12 @@ class TeamViewModel: TeamViewModelProtocol {
             guard let self = self else {return}
             guard let link = link, let url = URL(string: link) else {return}
             self.coordinator.navigate(to: url)
+        }.store(in: &cancellables)
+        
+        onStaffTapped.sink { [weak self] _ in
+            guard let self = self else {return}
+            guard let id = self.headerModel.id else {return}
+            coordinator.navigateToStaff(withID: id)
         }.store(in: &cancellables)
     }
     private func getMappedViewGames(from model: TeamDataModel) -> [TeamDetailsViewDataModel] {
