@@ -28,7 +28,10 @@ struct TeamCoordinator: GamesCoordinatorProtocol {
         coordinator.start()
     }
     func navigateToStaff(withID id: Int) {
-        let coordinator = StaffCoordinator(navigationController: navigationController)
+        let coordinator = StaffCoordinator(
+            navigationController: navigationController,
+            withData: id
+        )
         coordinator.start()
     }
 }

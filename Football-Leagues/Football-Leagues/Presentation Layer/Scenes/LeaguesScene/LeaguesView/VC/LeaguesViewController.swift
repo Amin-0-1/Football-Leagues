@@ -98,7 +98,7 @@ extension LeaguesViewController: UITableViewDataSource {
         return cell
     }
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        cell.transform = .init(scaleX: 0.1, y: 0.1)
+        cell.transform = .init(scaleX: 0.7, y: 0.7)
         UIView.animate(withDuration: 0.5, delay: 0.1, usingSpringWithDamping: 0.5, initialSpringVelocity: 10) {
             cell.transform = .identity
         }

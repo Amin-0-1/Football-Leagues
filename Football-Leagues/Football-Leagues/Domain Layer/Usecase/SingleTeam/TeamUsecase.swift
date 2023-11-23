@@ -119,8 +119,8 @@ class TeamUsecase: TeamUsecaseProtcol {
                 case .failure(let error):
                     debugPrint(error.localizedDescription)
             }
-        } receiveValue: { isSaved in
-            print("local \(localEntityType) saved -> \(isSaved)")
+        } receiveValue: { _ in
+            // print("local \(localEntityType) saved -> \(isSaved)")
         }.store(in: &cancellables)
     }
 }

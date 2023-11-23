@@ -28,7 +28,6 @@ class TeamHeaderView: UIView {
     
     private weak var delegate: LinkNavigationDelegate?
     private var link: String?
-    private var timer: Timer?
     private var count = 0
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -37,7 +36,6 @@ class TeamHeaderView: UIView {
         UIView.animate(withDuration: 0.5, delay: 0.5, usingSpringWithDamping: 0.5, initialSpringVelocity: 10) {
             self.contentView.transform = .identity
         }
-        startAnimateLink()
     }
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -87,31 +85,5 @@ class TeamHeaderView: UIView {
     
     @IBAction func uiStaffTapped(_ sender: UIButton) {
         delegate?.onStaffTapped()
-    }
-    func startAnimateLink() {
-        timer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: true) { timer in
-            guard self.count < 3 else {
-                timer.invalidate()
-                return
-            }
-            
-            UIView.animate(withDuration: 0.5, delay: 0.5) {
-                self.uiLinkButton.transform = .init(scaleX: 0.5, y: 0.5)
-            }completion: { _ in
-                UIView.animate(withDuration: 0.5) {
-                    self.uiLinkButton.transform = .identity
-                }
-            }
-            self.count += 1
-        }
-    }
-    func stopAnimateLink() {
-        timer?.invalidate()
-        timer = nil
-    }
-
-    deinit {
-        timer = nil
-        timer?.invalidate()
     }
 }

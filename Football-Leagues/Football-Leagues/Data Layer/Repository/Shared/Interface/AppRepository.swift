@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import CoreML
 
+// MARK: - FaÇade repository
 class AppRepository: RepositoryInterface {
     
     private var remoteDataSource: RemoteRepositoryInterface

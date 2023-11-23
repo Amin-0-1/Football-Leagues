@@ -34,6 +34,7 @@ class LeagueDetailsViewController: UIViewController {
         super.viewDidLoad()
         configureView()
         bind()
+        viewModel.onScreenAppeared.send(false)
     }
     private func configureView() {
         uiTableView.register(
@@ -60,15 +61,16 @@ class LeagueDetailsViewController: UIViewController {
         }.store(in: &cancellables)
         viewModel.teams.sink { [weak self] model in
             guard let self = self else {return}
-            guard !model.models.isEmpty else {return}
+            guard !model.models.isEmpty else {
+                self.uiNotFound.isHidden = false
+                return
+            }
             self.title = model.header?.name
             self.configureHeaderView(withData: model)
             self.uiNotFound.isHidden = true
             self.uiTableView.reloadData()
 
         }.store(in: &cancellables)
-
-        viewModel.onScreenAppeared.send(false)
     }
     
     @objc func refreshControlValueChanged() {

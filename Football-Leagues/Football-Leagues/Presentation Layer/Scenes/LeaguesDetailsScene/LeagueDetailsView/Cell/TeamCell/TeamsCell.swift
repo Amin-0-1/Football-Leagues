@@ -6,7 +6,6 @@
 //
 
 import UIKit
-
 class TeamsCell: UITableViewCell {
 
     @IBOutlet private weak var uiImage: UIImageView!
@@ -20,7 +19,7 @@ class TeamsCell: UITableViewCell {
     @IBOutlet private weak var uiAddress: UILabel!
     @IBOutlet private weak var uiStadiumStack: UIStackView!
     @IBOutlet private weak var uiStadium: UILabel!
-    @IBOutlet weak var uiLinkButton: UIButton!
+    @IBOutlet private weak var uiLinkButton: UIButton!
     
     private var model: LeagueDetailsViewDataModel?
     private var viewModel: LeagueDetailsViewModelProtocol?
@@ -55,7 +54,14 @@ class TeamsCell: UITableViewCell {
         uiStadium.text = model.stadium
         let defaultImage = #imageLiteral(resourceName: "logo")
         if let image = model.image, let url = URL(string: image) {
-            uiImage.sd_setImage(with: url, placeholderImage: defaultImage)
+            let bitmapSize = CGSize(width: 500, height: 500)
+
+            uiImage.sd_setImage(
+                with: url,
+                placeholderImage: defaultImage,
+                options: [],
+                context: [.imageThumbnailPixelSize: bitmapSize]
+            )
         }
         if uiAddress != nil {
             self.uiAddressStack.isHidden = false

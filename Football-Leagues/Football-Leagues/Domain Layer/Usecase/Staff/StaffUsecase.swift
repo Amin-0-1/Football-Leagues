@@ -1,36 +1,32 @@
 //
-//  LeaguesUsecase.swift
+//  StaffUsecase.swift
 //  Football-Leagues
 //
-//  Created by Amin on 17/10/2023.
+//  Created by Amin on 22/11/2023.
 //
 
 import Foundation
 import Combine
 
-protocol LeaguesUsecaseProtocol {
-    func fetchLeagues() -> Future<LeaguesDataModel, CustomDomainError>
+protocol StaffUsecaseProtocol {
+    func fetchStaff(withTeamID: Int) -> Future<StaffDataModel, CustomDomainError>
 }
-
-class LeaguesUsecase: LeaguesUsecaseProtocol {
-    
-    private var leaguesRepo: LeaguesRepoInterface
-    private var connectivity: ConnectivityProtocol
+class StaffUsecase: StaffUsecaseProtocol {
+    var repo: StaffRepositoryInterface
+    var connectivity: ConnectivityProtocol
     private var cancellables: Set<AnyCancellable> = []
     init(
-        leaguesRepo: LeaguesRepoInterface = LeaguesReposiotory(),
+        repo: StaffRepositoryInterface = StaffRepository(),
         connectivity: ConnectivityProtocol = ConnectivityService()
     ) {
-        self.leaguesRepo = leaguesRepo
+        self.repo = repo
         self.connectivity = connectivity
     }
     
-    func fetchLeagues() -> Future<LeaguesDataModel, CustomDomainError> {
+    func fetchStaff(withTeamID id: Int) -> Future<StaffDataModel, CustomDomainError> {
         return .init { [weak self] promise in
             guard let self = self else {return}
-
-            // MARK: - fetch local data
-            self.leaguesRepo.fetchLocalLeagues(localEndPoint: .leagues).sink { completion in
+            repo.fetchLocalStaff(localEndpoint: .staff(id: id)).sink { completion in
                 switch completion {
                     case .finished: break
                     case .failure(let error):
@@ -38,16 +34,18 @@ class LeaguesUsecase: LeaguesUsecaseProtocol {
                             if !hasInternet {
                                 if let networkError = error as? NetworkError {
                                     let customError = CustomDomainError.customError(networkError.localizedDescription)
+                                    print(error)
                                     promise(.failure(customError))
                                 } else if let coreDataError = error as? CoreDataManager.Errors {
                                     let customError = CustomDomainError.customError(coreDataError.localizedDescription)
+                                    print(error)
                                     promise(.failure(customError))
                                 }
                                 promise(.failure(.customError(error.localizedDescription)))
+                                return
                             } else {
-                                // MARK: - fetch remote data
-                                self.fetchRemoteLeagues(endPoint: LeaguesEndPoints.getAllLeagues) { result in
-                                    switch result {
+                                self.fetchRemoteStaff(endPoint: LeaguesEndPoints.getStaff(id: id)) { completion in
+                                    switch completion {
                                         case .success(let success):
                                             promise(.success(success))
                                         case .failure(let failure):
@@ -55,19 +53,19 @@ class LeaguesUsecase: LeaguesUsecaseProtocol {
                                     }
                                 }
                             }
+                            
                         }
                 }
             } receiveValue: { model in
-                // MARK: - on local data fetched
                 promise(.success(model))
-                // get remote data to update local
+                
+                // MARK: - update local staff
                 self.connectivity.isConnected { hasInternet in
                     if !hasInternet {
                         promise(.failure(.connectionError))
                     } else {
-                        // MARK: - fetch remote data
-                        self.fetchRemoteLeagues(endPoint: LeaguesEndPoints.getAllLeagues) { result in
-                            switch result {
+                        self.fetchRemoteStaff(endPoint: LeaguesEndPoints.getStaff(id: id)) { completion in
+                            switch completion {
                                 case .success(let success):
                                     promise(.success(success))
                                 case .failure(let failure):
@@ -76,13 +74,16 @@ class LeaguesUsecase: LeaguesUsecaseProtocol {
                         }
                     }
                 }
+            }.store(in: &cancellables)
 
-            }.store(in: &self.cancellables)
         }
-        
     }
-    private func fetchRemoteLeagues(endPoint: EndPoint, onFinish: @escaping (Result<LeaguesDataModel, CustomDomainError>) -> Void) {
-        leaguesRepo.fetchRemoteLeagues(remoteEndPoint: endPoint).sink { completion in
+    
+    private func fetchRemoteStaff(
+        endPoint: EndPoint,
+        onFinish: @escaping (Result<StaffDataModel, CustomDomainError>) -> Void
+    ) {
+        self.repo.fetchRemoteStaff(remoteEndPoint: endPoint).sink { completion in
             switch completion {
                 case .finished: break
                 case .failure(let error):
@@ -95,23 +96,25 @@ class LeaguesUsecase: LeaguesUsecaseProtocol {
                     }
                     onFinish(.failure(CustomDomainError.customError(error.localizedDescription)))
             }
-        } receiveValue: { model in
-            self.save(leagues: model, localEntityType: .leagues)
+        } receiveValue: {[weak self] model in
+            guard let self = self else {return}
             onFinish(.success(model))
+            if let endpoint = endPoint as? LeaguesEndPoints, let id = Int(endpoint.code ?? "") {
+                self.save(model: model, localEntityType: .staff(id: id))
+            }
         }.store(in: &self.cancellables)
-
+        
     }
     // MARK: - update local data
-    private func save(leagues: LeaguesDataModel, localEntityType: LocalEndPoint) {
-        leaguesRepo.saveLeagues(leagues: leagues, localEndPoint: localEntityType).sink { completion in
+    private func save(model: StaffDataModel, localEntityType: LocalEndPoint) {
+        repo.saveStaff(model: model, localEndPoint: localEntityType).sink { completion in
             switch completion {
                 case .finished: break
                 case .failure(let error):
-                    print(error.localizedDescription)
+                    debugPrint(error.localizedDescription)
             }
         } receiveValue: { _ in
             // print("local \(localEntityType) saved -> \(isSaved)")
         }.store(in: &cancellables)
-        
     }
 }

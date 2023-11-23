@@ -7,11 +7,19 @@
 
 import UIKit
 
-struct StaffCoordinator: AnyCoordinator {
-    var navigationController: UINavigationController?
+protocol StaffCoordinatorProtocol: AnyCoordinator {
     
+}
+struct StaffCoordinator: StaffCoordinatorProtocol {
+    var navigationController: UINavigationController?
+    private var data: Int
+    init(navigationController: UINavigationController? = nil, withData data: Int) {
+        self.navigationController = navigationController
+        self.data = data
+    }
     func start() {
-        let vc = StaffVC()
+        let viewModel = StaffViewModel(coordinator: self, teamID: data)
+        let vc = StaffVC(viewModel: viewModel)
         navigationController?.pushViewController(vc, animated: true)
     }
 }

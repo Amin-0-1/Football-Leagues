@@ -49,6 +49,15 @@ extension CoreDataManager: CoreDataManagerProtocol {
                         }
                         obj.data = encoded
                         obj.id = Int16(id)
+                    case .staff(let id):
+                        let obj = StaffEntity(context: context)
+                        encodedData = try? JSONEncoder().encode(data)
+                        guard let encodedData = encodedData else {
+                            promise(.failure(Errors.encodingFailed))
+                            return
+                        }
+                        obj.data = encodedData
+                        obj.id = Int16(id)
                 }
                 do {
                     try context.save()
@@ -63,20 +72,28 @@ extension CoreDataManager: CoreDataManagerProtocol {
     
     private func generateRequest(from localEntity: LocalEndPoint) -> NSFetchRequest<NSFetchRequestResult> {
         let request: NSFetchRequest<NSFetchRequestResult>
+        let attribute: String
+        let predicate: NSPredicate
         switch localEntity {
             case .leagues:
                 request = LeagueEntity.fetchRequest()
             case .teams(let code):
                 request = LeagueDetailsEntity.fetchRequest()
-                let attribute = "code"
-                let predicate = NSPredicate(format: "%K == %@", attribute, code)
+                attribute = "code"
+                predicate = NSPredicate(format: "%K == %@", attribute, code)
                 request.predicate = predicate
                 
             case .games(let id):
                 request = GamesEntity.fetchRequest()
-                let attribute = "id"
-                let predicate = NSPredicate(format: "%K == %ld", attribute, id)
+                attribute = "id"
+                predicate = NSPredicate(format: "%K == %ld", attribute, id)
                 request.predicate = predicate
+            case .staff(let id):
+                request = StaffEntity.fetchRequest()
+                attribute = "id"
+                predicate = NSPredicate(format: "%K == %ld", attribute, id)
+                request.predicate = predicate
+                
         }
         return request
     }
@@ -116,6 +133,17 @@ extension CoreDataManager: CoreDataManagerProtocol {
                     throw Errors.decodingFailed
                 }
                 return decode
+            case .staff:
+                guard let staffEntity = result as? StaffEntity else {
+                    throw Errors.uncompleted
+                }
+                guard let data = staffEntity.data else {
+                    throw Errors.decodingFailed
+                }
+                guard let decode = try? JSONDecoder().decode(type, from: data) else {
+                    throw Errors.decodingFailed
+                }
+                return decode
         }
     }
 
@@ -146,19 +174,26 @@ extension CoreDataManager: CoreDataManagerProtocol {
     }
     
     private func truncate(entity: LocalEndPoint, context: NSManagedObjectContext) {
-        var request: NSFetchRequest<NSFetchRequestResult>
+        let request: NSFetchRequest<NSFetchRequestResult>
+        let attribute: String
+        let predicate: NSPredicate
         switch entity {
             case .leagues:
                 request = LeagueEntity.fetchRequest()
             case .teams(let code):
                 request = LeagueDetailsEntity.fetchRequest()
-                let attribute = "code"
-                let predicate = NSPredicate(format: "%K == %@", attribute, code)
+                attribute = "code"
+                predicate = NSPredicate(format: "%K == %@", attribute, code)
                 request.predicate = predicate
             case .games(let id):
                 request = GamesEntity.fetchRequest()
-                let attribute = "id"
-                let predicate = NSPredicate(format: "%K == %ld", attribute, id)
+                attribute = "id"
+                predicate = NSPredicate(format: "%K == %ld", attribute, id)
+                request.predicate = predicate
+            case .staff(let id):
+                request = StaffEntity.fetchRequest()
+                attribute = "id"
+                predicate = NSPredicate(format: "%K == %ld", attribute, id)
                 request.predicate = predicate
         }
         do {

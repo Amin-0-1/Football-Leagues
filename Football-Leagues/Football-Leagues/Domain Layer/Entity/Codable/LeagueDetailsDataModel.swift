@@ -31,9 +31,3 @@ struct Area: Codable {
     let code: String?
     let flag: String?
 }
-
-struct Coach: Codable {
-    let id: Int?
-    let firstName, lastName, name, dateOfBirth: String?
-    let nationality: String?
-}

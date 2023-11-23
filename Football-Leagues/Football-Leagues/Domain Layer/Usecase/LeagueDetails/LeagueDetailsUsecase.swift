@@ -111,8 +111,8 @@ class LeagueDetailsUsecase: LeagueDetailsUsecaseProtocol {
                 case .failure(let error):
                     print(error.localizedDescription)
             }
-        } receiveValue: {isSaved in
-            print("local \(localEntityType) saved -> \(isSaved)")
+        } receiveValue: { _ in
+            // print("local \(localEntityType) saved -> \(isSaved)")
         }.store(in: &cancellables)
     }
 }

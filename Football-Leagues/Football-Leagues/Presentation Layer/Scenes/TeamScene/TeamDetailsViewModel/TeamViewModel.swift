@@ -91,6 +91,7 @@ class TeamViewModel: TeamViewModelProtocol {
         onStaffTapped.sink { [weak self] _ in
             guard let self = self else {return}
             guard let id = self.headerModel.id else {return}
+            
             coordinator.navigateToStaff(withID: id)
         }.store(in: &cancellables)
     }
