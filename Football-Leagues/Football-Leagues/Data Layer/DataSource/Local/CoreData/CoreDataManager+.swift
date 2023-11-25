@@ -221,13 +221,13 @@ extension CoreDataManager {
         var localizedDescription: String {
             switch self {
                 case .empty:
-                    return "no local data found"
+                    return "No local data found"
                 case .uncompleted:
                     return "Uncompleted process, please try again later"
                 case .decodingFailed:
-                    return "Failed to decode local data"
+                    return "Unable to decode local data"
                 case .encodingFailed:
-                    return "Failed to encode local data"
+                    return "Unable to encode local data"
                 case .custom(let string):
                     return string
             }

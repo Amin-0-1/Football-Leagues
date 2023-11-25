@@ -68,7 +68,11 @@ class APIClient: APIClientProtocol {
                         promise(.failure(NetworkError.decodingFailed))
                     } catch {
                         print(error.localizedDescription, error)
-                        promise(.failure(NetworkError.custom(error: error.localizedDescription)))
+                        promise(.failure(
+                            NetworkError.custom(
+                                error: error.localizedDescription,
+                                code: httpResponse.statusCode)
+                        ))
                     }
                 }
             }

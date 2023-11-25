@@ -86,14 +86,8 @@ class LeaguesUsecase: LeaguesUsecaseProtocol {
             switch completion {
                 case .finished: break
                 case .failure(let error):
-                    if let networkError = error as? NetworkError {
-                        let customError = CustomDomainError.customError(networkError.localizedDescription)
-                        onFinish(.failure(customError))
-                    } else if let coreDataError = error as? CoreDataManager.Errors {
-                        let customError = CustomDomainError.customError(coreDataError.localizedDescription)
-                        onFinish(.failure(customError))
-                    }
-                    onFinish(.failure(CustomDomainError.customError(error.localizedDescription)))
+                    let errorDomain = (error as NSError).domain
+                    onFinish(.failure(CustomDomainError.customError(errorDomain)))
             }
         } receiveValue: { model in
             self.save(leagues: model, localEntityType: .leagues)
