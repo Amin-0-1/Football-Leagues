@@ -19,7 +19,7 @@ class PlayerCell: UITableViewCell {
         uiPlayerName.text = squad.name
         uiPosition.text = squad.position
         uiNationality.text = squad.nationality
-        if let urlString = squad.clubImageURL, let url = URL(string: urlString){
+        if let urlString = squad.clubImageURL, let url = URL(string: urlString) {
             uiClupImage.sd_setImage(with: url, placeholderImage: placHolder)
         }
     }
