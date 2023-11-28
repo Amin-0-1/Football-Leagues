@@ -32,6 +32,7 @@ class StaffUsecase: StaffUsecaseProtocol {
                     case .failure(let error):
                         self.connectivity.isConnected { hasInternet in
                             if !hasInternet {
+                                promise(.failure(CustomDomainError.customError(error.localizedDescription)))
                                 if let networkError = error as? NetworkError {
                                     let customError = CustomDomainError.customError(networkError.localizedDescription)
                                     print(error)
@@ -87,14 +88,8 @@ class StaffUsecase: StaffUsecaseProtocol {
             switch completion {
                 case .finished: break
                 case .failure(let error):
-                    if let networkError = error as? NetworkError {
-                        let customError = CustomDomainError.customError(networkError.localizedDescription)
-                        onFinish(.failure(customError))
-                    } else if let coreDataError = error as? CoreDataManager.Errors {
-                        let customError = CustomDomainError.customError(coreDataError.localizedDescription)
-                        onFinish(.failure(customError))
-                    }
-                    onFinish(.failure(CustomDomainError.customError(error.localizedDescription)))
+                    let errorDomain = (error as NSError).domain
+                    onFinish(.failure(CustomDomainError.customError(errorDomain)))
             }
         } receiveValue: {[weak self] model in
             guard let self = self else {return}
