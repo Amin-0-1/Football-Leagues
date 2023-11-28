@@ -25,10 +25,6 @@ class AppRepository: RepositoryInterface {
     }
     
     func fetch<T: Codable>(localEndPoint: LocalEndPoint) -> Future<T, Error> {
-//        return .init { [weak self] promise in
-//            guard let self = self else {return}
-////            localDataSource.fetch(localEndPoint: <#T##LocalEndPoint#>)
-//        }
         return localDataSource.fetch(localEndPoint: localEndPoint)
     }
     

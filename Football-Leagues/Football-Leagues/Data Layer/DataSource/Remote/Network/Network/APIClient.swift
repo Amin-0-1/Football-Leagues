@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 protocol APIClientProtocol {
-    func execute<T: Codable>(request: EndPoint) -> Future<T, Error>
+    func execute<T: Codable>(request: EndPoint) -> AnyPublisher<T, Error>
 }
 
 class APIClient: APIClientProtocol {
@@ -19,66 +19,51 @@ class APIClient: APIClientProtocol {
     init(config: URLSessionConfiguration) {
         self.session = URLSession(configuration: config)
     }
-
-    func execute<T: Codable>(request: EndPoint) -> Future<T, Error> {
-        return Future<T, Error> { promise in
-            guard let request = request.request else {
-                let url = request.urlComponents.string
-                promise(.failure(NetworkError.invalidURL(url)))
-                return
-            }
-            let task = self.session.dataTask(with: request) { data, response, error in
-                DispatchQueue.main.async {
-                    if let error = error {
-                        if let urlError = error as? URLError {
-                            switch urlError.code {
-                                case .notConnectedToInternet:
-                                    promise(.failure(NetworkError.noInternetConnection))
-                                case .timedOut:
-                                    promise(.failure(NetworkError.timeout))
-                                case .badURL:
-                                    promise(.failure(NetworkError.invalidURL(nil)))
-                                default:
-                                    promise(.failure(NetworkError.requestFailed))
-                            }
-                        } else {
-                            promise(.failure(NetworkError.requestFailed))
-                        }
-                        return
-                    }
-                    
-                    guard let data = data else {
-                        promise(.failure(NetworkError.invalidResponse))
-                        return
-                    }
-                    
-                    guard let httpResponse = response as? HTTPURLResponse,
+    
+    func execute<T: Codable>(request: EndPoint) -> AnyPublisher<T, Error> {
+        guard let request = request.request else {
+            let url = request.urlComponents.string
+            return Fail(error: NetworkError.invalidURL(url)).eraseToAnyPublisher()
+        }
+        
+        return session.dataTaskPublisher(for: request)
+            .receive(on: DispatchQueue.main)
+            .tryMap { data, response in
+                guard
+                    let httpResponse = response as? HTTPURLResponse,
                     (200..<300).contains(httpResponse.statusCode) else {
-                        self.serialize(data: data)
-                        promise(.failure(NetworkError.serverError(data)))
-                        return
+                    self.serialize(data: data)
+                    throw NetworkError.serverError(data)
+                }
+                return data
+            }
+            .decode(type: T.self, decoder: JSONDecoder())
+            .mapError { error in
+                if let urlError = error as? URLError {
+                    switch urlError.code {
+                        case .notConnectedToInternet:
+                            return NetworkError.noInternetConnection
+                        case .timedOut:
+                            return NetworkError.timeout
+                        case .badURL:
+                            return NetworkError.invalidURL(nil)
+                        default:
+                            return NetworkError.requestFailed
                     }
-                    
-                    do {
-                        let model = try JSONDecoder().decode(T.self, from: data)
-                        // MARK: - success
-                        promise(.success(model))
-                    } catch let error as DecodingError {
-                        print(error.localizedDescription, error)
-                        promise(.failure(NetworkError.decodingFailed))
-                    } catch {
-                        print(error.localizedDescription, error)
-                        promise(.failure(
-                            NetworkError.custom(
-                                error: error.localizedDescription,
-                                code: httpResponse.statusCode)
-                        ))
-                    }
+                } else if let decodingError = error as? DecodingError {
+                    print(decodingError.localizedDescription, decodingError)
+                    return NetworkError.decodingFailed
+                } else {
+                    print(error.localizedDescription, error)
+                    return NetworkError.custom(
+                        error: error.localizedDescription,
+                        code: (error as NSError).code
+                    )
                 }
             }
-            task.resume()
-        }
+            .eraseToAnyPublisher()
     }
+    
     /// Serialize
     /// - Parameter data: the data object to be serialized
     private func serialize(data: Data) {
