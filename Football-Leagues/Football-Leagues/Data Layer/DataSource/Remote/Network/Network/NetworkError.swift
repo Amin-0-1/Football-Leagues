@@ -42,7 +42,7 @@ public enum NetworkError: Error, Equatable {
                 return "Empty Response: No Available Data"
             case .decodingFailed:
                 return "an error occured in server data please try again later, or" +
-                "contact support if the issue persists."
+                " contact support if the issue persists."
             case .serverError:
                 return "Oops, we've encountered a server response error, please try again later"
             case let .custom(error, code):

@@ -17,7 +17,7 @@ struct MatchModel: Codable {
     let competition: Competition?
     let id: Int?
     let utcDate: String?
-    let status: GameStatus?
+    let status: String?
     let matchday: Int?
     let group: String?
     let homeTeam, awayTeam: Team?
@@ -43,12 +43,6 @@ enum Winner: String, Codable {
     case awayTeam = "AWAY_TEAM"
     case draw = "DRAW"
     case homeTeam = "HOME_TEAM"
-}
-
-enum GameStatus: String, Codable {
-    case finished = "FINISHED"
-    case scheduled = "SCHEDULED"
-    case timed = "TIMED"
 }
 
 struct ResultSet: Codable {

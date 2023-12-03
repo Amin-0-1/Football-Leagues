@@ -98,7 +98,7 @@ class TeamViewModel: TeamViewModelProtocol {
     private func getMappedViewGames(from model: TeamDataModel) -> [TeamDetailsViewDataModel] {
         guard let games = model.matches else {return []}
         return games.compactMap { matchModel in
-            let status = TeamViewStatus(rawValue: matchModel.status?.rawValue ?? "")
+            let status = TeamViewStatus(rawValue: matchModel.status ?? "")
             let home = TeamViewDataModel(
                 shortName: matchModel.homeTeam?.shortName,
                 tla: matchModel.homeTeam?.tla,
